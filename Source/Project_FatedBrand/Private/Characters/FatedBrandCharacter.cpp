@@ -3,6 +3,7 @@
 #include "Characters/FatedBrandCharacter.h"
 
 #include "Camera/CameraComponent.h"
+#include "DataAssets/DataAsset_StartUpDataBase.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 
@@ -23,4 +24,17 @@ AFatedBrandCharacter::AFatedBrandCharacter()
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 4000.f, 0.f);
+}
+
+void AFatedBrandCharacter::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	if (!StartUpData.IsNull())
+	{
+		if (UDataAsset_StartUpDataBase* LoadedData = StartUpData.LoadSynchronous())
+		{
+			LoadedData->GiveToAbilitySystemComponent(FatedBrandAbilitySystemComponent, 1);
+		}
+	}
 }

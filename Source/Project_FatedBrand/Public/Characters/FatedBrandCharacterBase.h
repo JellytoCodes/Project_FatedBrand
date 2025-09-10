@@ -7,6 +7,7 @@
 #include "GameFramework/Character.h"
 #include "FatedBrandCharacterBase.generated.h"
 
+class UDataAsset_StartUpDataBase;
 class UFatedBrandAttributeSet;
 class UFatedBrandAbilitySystemComponent;
 
@@ -32,4 +33,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AbilitySystem")
 	TObjectPtr<UFatedBrandAttributeSet> FatedBrandAttributeSet;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CharacterData")
+	TSoftObjectPtr<UDataAsset_StartUpDataBase> StartUpData;
 };

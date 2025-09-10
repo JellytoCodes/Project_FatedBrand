@@ -19,10 +19,15 @@ class PROJECT_FATEDBRAND_API AFatedBrandCharacter : public AFatedBrandCharacterB
 public :
 	AFatedBrandCharacter();
 
+protected :
+	virtual void PossessedBy(AController* NewController) override;
+
 private :
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<USpringArmComponent> CameraBoom;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UCameraComponent> FollowCamera;
+
+	
 };
