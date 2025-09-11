@@ -27,4 +27,3 @@ void AFatedBrandCharacterBase::PossessedBy(AController* NewController)
 		FatedBrandAbilitySystemComponent->InitAbilityActorInfo(this, this);
 	}
 }
-

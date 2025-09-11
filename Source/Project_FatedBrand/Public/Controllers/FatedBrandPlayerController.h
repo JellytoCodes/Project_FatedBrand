@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GenericTeamAgentInterface.h"
 #include "GameFramework/PlayerController.h"
 #include "FatedBrandPlayerController.generated.h"
 
@@ -10,9 +11,12 @@ struct FInputActionValue;
 class UDataAsset_InputConfig;
 
 UCLASS()
-class PROJECT_FATEDBRAND_API AFatedBrandPlayerController : public APlayerController
+class PROJECT_FATEDBRAND_API AFatedBrandPlayerController : public APlayerController, public IGenericTeamAgentInterface
 {
 	GENERATED_BODY()
+
+public :
+	virtual FGenericTeamId GetGenericTeamId() const override;
 
 protected :
 	virtual void BeginPlay() override;

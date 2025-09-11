@@ -8,14 +8,18 @@
 #include "DataAssets/DataAsset_InputConfig.h"
 #include "GameFramework/Character.h"
 
+FGenericTeamId AFatedBrandPlayerController::GetGenericTeamId() const
+{
+	return FGenericTeamId(0);
+}
+
 void AFatedBrandPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
 	check(InputConfigDataAsset);
 
-	auto* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
-	if (Subsystem)
+	if (auto* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
 	{
 		Subsystem->AddMappingContext(InputConfigDataAsset->DefaultMappingContext, 0);
 	}
@@ -25,7 +29,7 @@ void AFatedBrandPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
-	UFatedBrandEnhancedInputComponent* FatedBrandEnhancedInputComponent = CastChecked<UFatedBrandEnhancedInputComponent>(InputComponent);
+	auto* FatedBrandEnhancedInputComponent = CastChecked<UFatedBrandEnhancedInputComponent>(InputComponent);
 
 	FatedBrandEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, FatedBrandGameplayTags::Input_Move, ETriggerEvent::Triggered, this, &ThisClass::Input_Move);
 	FatedBrandEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, FatedBrandGameplayTags::Input_Jump, ETriggerEvent::Started, this, &ThisClass::Input_Jump);
