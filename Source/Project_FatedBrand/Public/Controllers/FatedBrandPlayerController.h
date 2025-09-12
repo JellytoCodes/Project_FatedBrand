@@ -3,10 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "GenericTeamAgentInterface.h"
 #include "GameFramework/PlayerController.h"
 #include "FatedBrandPlayerController.generated.h"
 
+class AFatedBrandCharacter;
 struct FInputActionValue;
 class UDataAsset_InputConfig;
 
@@ -26,6 +28,12 @@ private :
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CharacterData", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UDataAsset_InputConfig> InputConfigDataAsset;
 
+	UPROPERTY()
+	TSoftObjectPtr<AFatedBrandCharacter> OwnerCharacter;
+
 	void Input_Move(const FInputActionValue &InputActionValue);
 	void Input_Jump(const FInputActionValue &InputActionValue);
+
+	void Input_AbilityInputPressed(const FGameplayTag InInputTag);
+	void Input_AbilityInputReleased(const FGameplayTag InInputTag);
 };

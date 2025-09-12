@@ -2,8 +2,10 @@
 
 #include "Controllers/FatedBrandPlayerController.h"
 
+#include "AbilitySystem/FatedBrandAbilitySystemComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "FatedBrandGameplayTags.h"
+#include "Characters/FatedBrandCharacter.h"
 #include "Components/Input/FatedBrandEnhancedInputComponent.h"
 #include "DataAssets/DataAsset_InputConfig.h"
 #include "GameFramework/Character.h"
@@ -18,6 +20,8 @@ void AFatedBrandPlayerController::BeginPlay()
 	Super::BeginPlay();
 
 	check(InputConfigDataAsset);
+
+	OwnerCharacter = Cast<AFatedBrandCharacter>(GetPawn());
 
 	if (auto* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
 	{
@@ -53,8 +57,24 @@ void AFatedBrandPlayerController::Input_Move(const FInputActionValue &InputActio
 
 void AFatedBrandPlayerController::Input_Jump(const FInputActionValue& InputActionValue)
 {
-	if (ACharacter* OwnerPawn = Cast<ACharacter>(GetPawn()))
+	if (OwnerCharacter)
 	{
-		OwnerPawn->Jump();
+		OwnerCharacter->Jump();
+	}
+}
+
+void AFatedBrandPlayerController::Input_AbilityInputPressed(const FGameplayTag InInputTag)
+{
+	if (OwnerCharacter)
+	{
+		OwnerCharacter->GetFatedBrandAbilitySystemComponent()->OnAbilityInputPressed(InInputTag);
+	}
+}
+
+void AFatedBrandPlayerController::Input_AbilityInputReleased(const FGameplayTag InInputTag)
+{
+	if (OwnerCharacter)
+	{
+		OwnerCharacter->GetFatedBrandAbilitySystemComponent()->OnAbilityInputReleased(InInputTag);
 	}
 }

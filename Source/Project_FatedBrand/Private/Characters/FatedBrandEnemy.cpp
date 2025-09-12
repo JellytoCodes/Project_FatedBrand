@@ -23,7 +23,6 @@ void AFatedBrandEnemy::PossessedBy(AController* NewController)
 			if (UDataAsset_StartUpDataBase* LoadedData = StartUpData.LoadSynchronous())
 			{
 				LoadedData->GiveToAbilitySystemComponent(FatedBrandAbilitySystemComponent, 1);
-				Debug::Print("ApplyAbility");
 			}	
 		}));
 	}
