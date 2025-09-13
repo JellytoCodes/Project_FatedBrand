@@ -2,6 +2,7 @@
 
 #include "Characters/FatedBrandCharacter.h"
 
+#include "AbilitySystem/FatedBrandAbilitySystemComponent.h"
 #include "Camera/CameraComponent.h"
 #include "DataAssets/DataAsset_StartUpDataBase.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -34,7 +35,9 @@ void AFatedBrandCharacter::PossessedBy(AController* NewController)
 	{
 		if (UDataAsset_StartUpDataBase* LoadedData = StartUpData.LoadSynchronous())
 		{
-			LoadedData->GiveToAbilitySystemComponent(FatedBrandAbilitySystemComponent, 1);
+			LoadedData->InitializeGameplayEffect(FatedBrandAbilitySystemComponent, 1);
+			FatedBrandAbilitySystemComponent->AddCharacterActivateAbilities(LoadedData->ActivateOnGivenAbilities);
+			FatedBrandAbilitySystemComponent->AddCharacterPassiveAbilities(LoadedData->PassiveOnGivenAbilities);
 		}
 	}
 }

@@ -12,6 +12,9 @@ UCLASS()
 class PROJECT_FATEDBRAND_API UFatedBrandGameplayAbility : public UGameplayAbility
 {
 	GENERATED_BODY()
+public :
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	FGameplayTag StartupInputTag;
 
 protected :
 	virtual void OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) override;

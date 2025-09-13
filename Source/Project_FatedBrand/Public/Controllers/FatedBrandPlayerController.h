@@ -8,6 +8,7 @@
 #include "GameFramework/PlayerController.h"
 #include "FatedBrandPlayerController.generated.h"
 
+class UFatedBrandAbilitySystemComponent;
 class AFatedBrandCharacter;
 struct FInputActionValue;
 class UDataAsset_InputConfig;
@@ -20,6 +21,8 @@ class PROJECT_FATEDBRAND_API AFatedBrandPlayerController : public APlayerControl
 public :
 	virtual FGenericTeamId GetGenericTeamId() const override;
 
+	UFatedBrandAbilitySystemComponent* GetFatedBrandASC();
+
 protected :
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
@@ -29,7 +32,12 @@ private :
 	TObjectPtr<UDataAsset_InputConfig> InputConfigDataAsset;
 
 	UPROPERTY()
-	TSoftObjectPtr<AFatedBrandCharacter> OwnerCharacter;
+	TObjectPtr<UFatedBrandAbilitySystemComponent> FatedBrandAbilitySystemComponent;
+	
+	UPROPERTY()
+	TSoftObjectPtr<AFatedBrandCharacter> FatedBrandCharacter;
+
+	
 
 	void Input_Move(const FInputActionValue &InputActionValue);
 	void Input_Jump(const FInputActionValue &InputActionValue);

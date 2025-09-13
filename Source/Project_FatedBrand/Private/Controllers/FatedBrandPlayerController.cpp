@@ -2,6 +2,7 @@
 
 #include "Controllers/FatedBrandPlayerController.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystem/FatedBrandAbilitySystemComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "FatedBrandGameplayTags.h"
@@ -9,6 +10,7 @@
 #include "Components/Input/FatedBrandEnhancedInputComponent.h"
 #include "DataAssets/DataAsset_InputConfig.h"
 #include "GameFramework/Character.h"
+#include "Project_FatedBrand/Project_FatedBrand.h"
 
 FGenericTeamId AFatedBrandPlayerController::GetGenericTeamId() const
 {
@@ -21,7 +23,10 @@ void AFatedBrandPlayerController::BeginPlay()
 
 	check(InputConfigDataAsset);
 
-	OwnerCharacter = Cast<AFatedBrandCharacter>(GetPawn());
+	if (GetFatedBrandASC())
+	{
+		FatedBrandCharacter = Cast<AFatedBrandCharacter>(GetFatedBrandASC()->GetAvatarActor());
+	}
 
 	if (auto* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
 	{
@@ -37,6 +42,8 @@ void AFatedBrandPlayerController::SetupInputComponent()
 
 	FatedBrandEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, FatedBrandGameplayTags::Input_Move, ETriggerEvent::Triggered, this, &ThisClass::Input_Move);
 	FatedBrandEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, FatedBrandGameplayTags::Input_Jump, ETriggerEvent::Started, this, &ThisClass::Input_Jump);
+
+	FatedBrandEnhancedInputComponent->BindAbilityInputAction(InputConfigDataAsset, this, &ThisClass::Input_AbilityInputPressed, &ThisClass::Input_AbilityInputReleased);
 }
 
 void AFatedBrandPlayerController::Input_Move(const FInputActionValue &InputActionValue)
@@ -57,24 +64,33 @@ void AFatedBrandPlayerController::Input_Move(const FInputActionValue &InputActio
 
 void AFatedBrandPlayerController::Input_Jump(const FInputActionValue& InputActionValue)
 {
-	if (OwnerCharacter)
+	if (FatedBrandCharacter)
 	{
-		OwnerCharacter->Jump();
+		FatedBrandCharacter->Jump();
 	}
 }
 
 void AFatedBrandPlayerController::Input_AbilityInputPressed(const FGameplayTag InInputTag)
 {
-	if (OwnerCharacter)
+	if (GetFatedBrandASC())
 	{
-		OwnerCharacter->GetFatedBrandAbilitySystemComponent()->OnAbilityInputPressed(InInputTag);
+		GetFatedBrandASC()->OnAbilityInputPressed(InInputTag);
 	}
 }
 
 void AFatedBrandPlayerController::Input_AbilityInputReleased(const FGameplayTag InInputTag)
 {
-	if (OwnerCharacter)
+	if (GetFatedBrandASC())
 	{
-		OwnerCharacter->GetFatedBrandAbilitySystemComponent()->OnAbilityInputReleased(InInputTag);
+		GetFatedBrandASC()->OnAbilityInputReleased(InInputTag);
 	}
+}
+
+UFatedBrandAbilitySystemComponent* AFatedBrandPlayerController::GetFatedBrandASC()
+{
+	if (FatedBrandAbilitySystemComponent == nullptr)
+	{
+		FatedBrandAbilitySystemComponent = Cast<UFatedBrandAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetPawn<APawn>()));
+	}
+	return FatedBrandAbilitySystemComponent;
 }

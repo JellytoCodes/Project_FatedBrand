@@ -17,7 +17,7 @@ public :
 	void BindNativeInputAction(UDataAsset_InputConfig* InInputConfig, const FGameplayTag& InInputTag, ETriggerEvent TriggerEvent, UserObject* ContextObject, CallbackFunc Func);
 
 	template<class UserObject, typename CallbackFunc>
-	void BindAbilityInputAction(UDataAsset_InputConfig* InInputConfig, ETriggerEvent TriggerEvent, UserObject* ContextObject, CallbackFunc InputPressedFunc, CallbackFunc InputReleasedFunc);
+	void BindAbilityInputAction(UDataAsset_InputConfig* InInputConfig, UserObject* ContextObject, CallbackFunc InputPressedFunc, CallbackFunc InputReleasedFunc);
 };
 
 template <class UserObject, typename CallbackFunc>
@@ -32,7 +32,7 @@ void UFatedBrandEnhancedInputComponent::BindNativeInputAction(UDataAsset_InputCo
 }
 
 template <class UserObject, typename CallbackFunc>
-void UFatedBrandEnhancedInputComponent::BindAbilityInputAction(UDataAsset_InputConfig* InInputConfig, ETriggerEvent TriggerEvent, UserObject* ContextObject,  CallbackFunc InputPressedFunc, CallbackFunc InputReleasedFunc)
+void UFatedBrandEnhancedInputComponent::BindAbilityInputAction(UDataAsset_InputConfig* InInputConfig, UserObject* ContextObject,  CallbackFunc InputPressedFunc, CallbackFunc InputReleasedFunc)
 {
 	check(InInputConfig);
 

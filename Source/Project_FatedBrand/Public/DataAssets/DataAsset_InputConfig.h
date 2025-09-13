@@ -15,7 +15,7 @@ struct FFatedBrandInputAction
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (Categories = "InputTag"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (Categories = "Input"))
 	FGameplayTag InputTag;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)

@@ -2,6 +2,45 @@
 
 #include "AbilitySystem/FatedBrandAbilitySystemComponent.h"
 
+#include "Project_FatedBrand/Project_FatedBrand.h"
+#include "AbilitySystem/Abilities/FatedBrandGameplayAbility.h"
+
+void UFatedBrandAbilitySystemComponent::AddCharacterActivateAbilities(const TArray<TSubclassOf<UFatedBrandGameplayAbility>>& ActivateAbilities)
+{
+	for (const TSubclassOf<UFatedBrandGameplayAbility> AbilityClass : ActivateAbilities)
+	{
+		const UFatedBrandGameplayAbility* FatedBrandAbility = AbilityClass.GetDefaultObject();
+		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
+		
+		if (FatedBrandAbility && FatedBrandAbility->StartupInputTag.IsValid())
+		{
+			AbilitySpec.DynamicAbilityTags.AddTag(FatedBrandAbility->StartupInputTag);
+		}
+		GiveAbility(AbilitySpec);
+	}
+}
+
+void UFatedBrandAbilitySystemComponent::AddCharacterPassiveAbilities(const TArray<TSubclassOf<UFatedBrandGameplayAbility>>& PassiveAbilities)
+{
+	for (const TSubclassOf<UFatedBrandGameplayAbility> AbilityClass : PassiveAbilities)
+	{
+		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
+		GiveAbilityAndActivateOnce(AbilitySpec);
+	}
+}
+
+FGameplayTag UFatedBrandAbilitySystemComponent::GetInputTagFromSpec(const FGameplayAbilitySpec& AbilitySpec)
+{
+	for (FGameplayTag Tag : AbilitySpec.DynamicAbilityTags)
+	{
+		if (Tag.MatchesTag(FGameplayTag::RequestGameplayTag(FName("Input"))))
+		{
+			return Tag;
+		}
+	}
+	return FGameplayTag();
+}
+
 void UFatedBrandAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag& InInputTag)
 {
 	if (!InInputTag.IsValid()) return;
@@ -10,11 +49,29 @@ void UFatedBrandAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag
 	{
 		if (!AbilitySpec.DynamicAbilityTags.HasTagExact(InInputTag)) continue;
 
+		AbilitySpecInputPressed(AbilitySpec);
 		TryActivateAbility(AbilitySpec.Handle);
+		if (AbilitySpec.IsActive())
+		{
+			InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputPressed, AbilitySpec.Handle, AbilitySpec.ActivationInfo.GetActivationPredictionKey());
+		}
+		Debug::Print("Pressed");
 	}
 }
 
 void UFatedBrandAbilitySystemComponent::OnAbilityInputReleased(const FGameplayTag& InInputTag)
 {
+	if (!InInputTag.IsValid()) return;
 
+	for (FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
+	{
+		AbilitySpec.InputPressed = false;
+
+		if (!AbilitySpec.DynamicAbilityTags.HasTagExact(InInputTag) && AbilitySpec.IsActive())
+		{
+			AbilitySpecInputReleased(AbilitySpec);
+			InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputReleased, AbilitySpec.Handle, AbilitySpec.ActivationInfo.GetActivationPredictionKey());
+			Debug::Print("Released");
+		}
+	}
 }

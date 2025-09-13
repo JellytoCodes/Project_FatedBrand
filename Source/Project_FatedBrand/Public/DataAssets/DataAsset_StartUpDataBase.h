@@ -16,17 +16,14 @@ class PROJECT_FATEDBRAND_API UDataAsset_StartUpDataBase : public UDataAsset
 	GENERATED_BODY()
 
 public :
-	virtual void GiveToAbilitySystemComponent(UFatedBrandAbilitySystemComponent* InASCToGive, int32 ApplyLevel = 1);
+	virtual void InitializeGameplayEffect(UFatedBrandAbilitySystemComponent* InASCToGive, int32 ApplyLevel = 1);
 
-protected :
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "StartUpData")
 	TArray<TSubclassOf<UFatedBrandGameplayAbility>> ActivateOnGivenAbilities;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "StartUpData")
-	TArray<TSubclassOf<UFatedBrandGameplayAbility>> ReactiveAbilities;
+	TArray<TSubclassOf<UFatedBrandGameplayAbility>> PassiveOnGivenAbilities;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "StartUpData")
 	TArray<TSubclassOf<UGameplayEffect>> StartUpGameplayEffects;
-
-	void GrantAbilities(const TArray<TSubclassOf<UFatedBrandGameplayAbility>>& InAbilitiesToGive, UFatedBrandAbilitySystemComponent* InASCToGive, int32 ApplyLevel);
 };

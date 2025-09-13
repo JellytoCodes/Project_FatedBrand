@@ -22,10 +22,10 @@ public :
 
 private :
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	TSoftObjectPtr<UAIPerceptionComponent> EnemyPerceptionComponent;
+	TObjectPtr<UAIPerceptionComponent> EnemyPerceptionComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	TSoftObjectPtr<UAISenseConfig_Sight> AISenseConfig_Sight;
+	TObjectPtr<UAISenseConfig_Sight> AISenseConfig_Sight;
 
 	UFUNCTION()
 	void OnEnemyPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus);
