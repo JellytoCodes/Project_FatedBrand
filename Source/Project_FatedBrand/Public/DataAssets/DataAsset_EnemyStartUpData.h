@@ -10,5 +10,5 @@ UCLASS()
 class PROJECT_FATEDBRAND_API UDataAsset_EnemyStartUpData : public UDataAsset_StartUpDataBase
 {
 	GENERATED_BODY()
-	
+
 };

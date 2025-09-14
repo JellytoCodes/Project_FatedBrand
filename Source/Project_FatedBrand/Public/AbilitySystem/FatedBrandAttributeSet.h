@@ -21,6 +21,8 @@ class PROJECT_FATEDBRAND_API UFatedBrandAttributeSet : public UAttributeSet
 public :
     UFatedBrandAttributeSet();
 
+    virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
+    
     UPROPERTY(BlueprintReadOnly, Category = "Health")
     FGameplayAttributeData CurrentHealth;
     ATTRIBUTE_ACCESSORS(UFatedBrandAttributeSet, CurrentHealth)
