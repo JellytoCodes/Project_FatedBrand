@@ -30,7 +30,8 @@ void AFatedBrandEffectActor::ApplyEffectToTarget(AActor* TargetActor, FFatedBran
 	{
 		ActiveEffectHandles.Add(ActiveEffectHandle, TargetASC);
 	}
-	else
+
+	if (bDestroyOnEffectApplication && !bIsInfinite)
 	{
 		Destroy();
 	}
