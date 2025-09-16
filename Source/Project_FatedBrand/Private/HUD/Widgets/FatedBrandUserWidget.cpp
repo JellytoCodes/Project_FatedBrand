@@ -3,3 +3,8 @@
 
 #include "HUD/Widgets/FatedBrandUserWidget.h"
 
+void UFatedBrandUserWidget::SetWidgetController(UObject* InWidgetController)
+{
+	WidgetController = InWidgetController;
+	WidgetControllerSet();
+}

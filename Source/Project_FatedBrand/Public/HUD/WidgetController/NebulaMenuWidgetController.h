@@ -6,12 +6,12 @@
 #include "HUD/WidgetController/FatedBrandWidgetController.h"
 #include "NebulaMenuWidgetController.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class PROJECT_FATEDBRAND_API UNebulaMenuWidgetController : public UFatedBrandWidgetController
 {
 	GENERATED_BODY()
-	
+
+public:
+	virtual void BroadcastInitialValues() override;
+	virtual void BindCallbacksToDependencies() override;
 };

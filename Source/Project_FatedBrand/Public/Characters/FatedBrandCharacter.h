@@ -22,6 +22,8 @@ public :
 protected :
 	virtual void PossessedBy(AController* NewController) override;
 
+	virtual void InitAbilityActorInfo() override;
+
 private :
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<USpringArmComponent> CameraBoom;

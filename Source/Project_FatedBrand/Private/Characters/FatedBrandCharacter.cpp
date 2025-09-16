@@ -4,9 +4,12 @@
 
 #include "AbilitySystem/FatedBrandAbilitySystemComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Controllers/FatedBrandPlayerController.h"
 #include "DataAssets/DataAsset_StartUpDataBase.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "HUD/FatedBrandHUD.h"
+#include "Project_FatedBrand/Project_FatedBrand.h"
 
 AFatedBrandCharacter::AFatedBrandCharacter()
 {
@@ -38,6 +41,20 @@ void AFatedBrandCharacter::PossessedBy(AController* NewController)
 			LoadedData->InitializeGameplayEffect(FatedBrandAbilitySystemComponent, 1);
 			FatedBrandAbilitySystemComponent->AddCharacterActivateAbilities(LoadedData->ActivateOnGivenAbilities);
 			FatedBrandAbilitySystemComponent->AddCharacterPassiveAbilities(LoadedData->PassiveOnGivenAbilities);
+		}
+	}
+	InitAbilityActorInfo();
+}
+
+void AFatedBrandCharacter::InitAbilityActorInfo()
+{
+	
+	if (AFatedBrandPlayerController* FatedBrandPlayerController = Cast<AFatedBrandPlayerController>(GetController()))
+	{
+		if (AFatedBrandHUD* FatedBrandHUD = Cast<AFatedBrandHUD>(FatedBrandPlayerController->GetHUD()))
+		{
+			//FatedBrandHUD->InitOverlay(FatedBrandPlayerController, GetAbilitySystemComponent(), AS);
+			Debug::Print("Init");
 		}
 	}
 }

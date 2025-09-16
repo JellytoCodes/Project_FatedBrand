@@ -35,4 +35,6 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CharacterData")
 	TSoftObjectPtr<UDataAsset_StartUpDataBase> StartUpData;
+
+	virtual void InitAbilityActorInfo() { }
 };
