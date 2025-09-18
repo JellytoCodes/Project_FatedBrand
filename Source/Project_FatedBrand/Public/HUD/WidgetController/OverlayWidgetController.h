@@ -8,7 +8,7 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttribueChangedSignature, float, NewValue);
 
-UCLASS()
+UCLASS(BlueprintType, Blueprintable)
 class PROJECT_FATEDBRAND_API UOverlayWidgetController : public UFatedBrandWidgetController
 {
 	GENERATED_BODY()

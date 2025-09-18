@@ -53,8 +53,7 @@ void AFatedBrandCharacter::InitAbilityActorInfo()
 	{
 		if (AFatedBrandHUD* FatedBrandHUD = Cast<AFatedBrandHUD>(FatedBrandPlayerController->GetHUD()))
 		{
-			//FatedBrandHUD->InitOverlay(FatedBrandPlayerController, GetAbilitySystemComponent(), AS);
-			Debug::Print("Init");
+			FatedBrandHUD->InitOverlay(FatedBrandPlayerController, GetAbilitySystemComponent(), FatedBrandAttributeSet);
 		}
 	}
 }

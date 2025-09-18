@@ -10,6 +10,7 @@
 class UDataAsset_StartUpDataBase;
 class UFatedBrandAttributeSet;
 class UFatedBrandAbilitySystemComponent;
+class UAttributeSet;
 
 UCLASS()
 class PROJECT_FATEDBRAND_API AFatedBrandCharacterBase : public ACharacter, public IAbilitySystemInterface
@@ -22,7 +23,7 @@ public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
 	FORCEINLINE UFatedBrandAbilitySystemComponent* GetFatedBrandAbilitySystemComponent() const { return FatedBrandAbilitySystemComponent; }
-	FORCEINLINE UFatedBrandAttributeSet* GetFatedBrandAttributeSet() const { return FatedBrandAttributeSet; }
+	FORCEINLINE UAttributeSet* GetFatedBrandAttributeSet() const { return FatedBrandAttributeSet; }
 
 protected:
 	virtual void PossessedBy(AController* NewController) override;
@@ -31,7 +32,7 @@ protected:
 	TObjectPtr<UFatedBrandAbilitySystemComponent> FatedBrandAbilitySystemComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AbilitySystem")
-	TObjectPtr<UFatedBrandAttributeSet> FatedBrandAttributeSet;
+	TObjectPtr<UAttributeSet> FatedBrandAttributeSet;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CharacterData")
 	TSoftObjectPtr<UDataAsset_StartUpDataBase> StartUpData;

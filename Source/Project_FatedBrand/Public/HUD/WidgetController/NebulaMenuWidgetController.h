@@ -6,7 +6,7 @@
 #include "HUD/WidgetController/FatedBrandWidgetController.h"
 #include "NebulaMenuWidgetController.generated.h"
 
-UCLASS()
+UCLASS(BlueprintType, Blueprintable)
 class PROJECT_FATEDBRAND_API UNebulaMenuWidgetController : public UFatedBrandWidgetController
 {
 	GENERATED_BODY()
