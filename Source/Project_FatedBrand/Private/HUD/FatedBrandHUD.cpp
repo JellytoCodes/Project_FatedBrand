@@ -5,9 +5,7 @@
 
 #include "HUD/Widgets/FatedBrandUserWidget.h"
 #include "HUD/WidgetController/OverlayWidgetController.h"
-#include "AbilitySystem/FatedBrandAbilitySystemComponent.h"
-#include "AbilitySystem/FatedBrandAttributeSet.h"
-
+#include "HUD/WidgetController/NebulaMenuWidgetController.h"
 
 UOverlayWidgetController* AFatedBrandHUD::GetOverlayWidgetController(const FWidgetControllerParams& WCParams)
 {
@@ -18,6 +16,17 @@ UOverlayWidgetController* AFatedBrandHUD::GetOverlayWidgetController(const FWidg
 		OverlayWidgetController->BindCallbacksToDependencies();
 	}
 	return OverlayWidgetController;
+}
+
+UNebulaMenuWidgetController* AFatedBrandHUD::GetNebulaMenuWidgetController(const FWidgetControllerParams& WCParams)
+{
+	if (NebulaWidgetController == nullptr)
+	{
+		NebulaWidgetController = NewObject<UNebulaMenuWidgetController>(this, NebulaWidgetControllerClass);
+		NebulaWidgetController->SetWidgetControllerParams(WCParams);
+		NebulaWidgetController->BindCallbacksToDependencies();
+	}
+	return NebulaWidgetController;
 }
 
 void AFatedBrandHUD::InitOverlay(APlayerController* PC, UAbilitySystemComponent* ASC, UAttributeSet* AS)

@@ -20,4 +20,22 @@ namespace FatedBrandGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Input_Key_3, "Input.Key.3")
 	/** ~End Ability Input */
 #pragma endregion
+
+	
+#pragma region Abilities Status
+	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Abilities_None, "Abilities.None")
+
+	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Abilities_Status_Equipped, "Abilities.Status.Equipped")
+	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Abilities_Status_Eligible, "Abilities.Status.Eligible")
+	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Abilities_Status_Unlocked, "Abilities.Status.Unlocked")
+	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Abilities_Status_Locked, "Abilities.Status.Locked")
+#pragma endregion
+
+#pragma region Abilities Active
+
+#pragma endregion
+
+#pragma region Abilities Passive
+	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Abilities_Passive_DoubleJump, "Abilities.Passive.DoubleJump")
+#pragma endregion
 }

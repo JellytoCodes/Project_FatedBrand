@@ -6,6 +6,7 @@
 #include "GameFramework/HUD.h"
 #include "FatedBrandHUD.generated.h"
 
+class UNebulaMenuWidgetController;
 class UFatedBrandUserWidget;
 class UAttributeSet;
 class UAbilitySystemComponent;
@@ -20,6 +21,7 @@ class PROJECT_FATEDBRAND_API AFatedBrandHUD : public AHUD
 
 public :
 	UOverlayWidgetController* GetOverlayWidgetController(const FWidgetControllerParams& WCParams);
+	UNebulaMenuWidgetController* GetNebulaMenuWidgetController(const FWidgetControllerParams& WCParams);
 	void InitOverlay(APlayerController* PC, UAbilitySystemComponent* ASC, UAttributeSet* AS);
 
 private :
@@ -34,4 +36,11 @@ private :
 
 	UPROPERTY(EditDefaultsOnly, Category = "WidgetClass")
 	TSubclassOf<UOverlayWidgetController> OverlayWidgetControllerClass;
+
+	
+	UPROPERTY()
+	TObjectPtr<UNebulaMenuWidgetController> NebulaWidgetController;
+
+	UPROPERTY(EditDefaultsOnly, Category = "WidgetClass")
+	TSubclassOf<UNebulaMenuWidgetController> NebulaWidgetControllerClass;
 };
