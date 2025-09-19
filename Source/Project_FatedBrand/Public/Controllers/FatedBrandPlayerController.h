@@ -37,11 +37,33 @@ private :
 	UPROPERTY()
 	TSoftObjectPtr<AFatedBrandCharacter> FatedBrandCharacter;
 
-	
-
 	void Input_Move(const FInputActionValue &InputActionValue);
-	void Input_Jump(const FInputActionValue &InputActionValue);
+	void Input_JumpStart();
+	void Input_JumpEnd();
 
 	void Input_AbilityInputPressed(const FGameplayTag InInputTag);
 	void Input_AbilityInputReleased(const FGameplayTag InInputTag);
+
+	UPROPERTY(EditDefaultsOnly, Category="Input|Jump")
+	float WallJumpTraceDistance = 50.0f;
+
+	UPROPERTY(EditDefaultsOnly, Category="Input|Jump")
+	float WallJumpHorizontalImpulse = 500.0f;
+
+	UPROPERTY(EditDefaultsOnly, Category="Input|Jump")
+	float WallJumpVerticalMultiplier = 1.4f;
+
+	UPROPERTY(EditDefaultsOnly, Category="Input|Jump")
+	float DelayBetweenWallJumps = 0.3f;
+
+	UPROPERTY(EditAnywhere, Category="Input|Jump", meta = (ClampMin = 0, ClampMax = 5, Units = "s"))
+	float MaxCoyoteTime = 0.16f;
+
+	FTimerHandle WallJumpTimer;
+	bool bHasWallJumped = false;
+	bool bHasDoubleJumped = false;
+	float ActionValueY = 0.0f;
+	float LastFallTime = 0.0f;
+
+	void ResetWallJump();
 };

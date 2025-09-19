@@ -10,6 +10,8 @@
 #include "Components/Input/FatedBrandEnhancedInputComponent.h"
 #include "DataAssets/DataAsset_InputConfig.h"
 #include "GameFramework/Character.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Project_FatedBrand/Project_FatedBrand.h"
 
 FGenericTeamId AFatedBrandPlayerController::GetGenericTeamId() const
@@ -41,7 +43,8 @@ void AFatedBrandPlayerController::SetupInputComponent()
 	auto* FatedBrandEnhancedInputComponent = CastChecked<UFatedBrandEnhancedInputComponent>(InputComponent);
 
 	FatedBrandEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, FatedBrandGameplayTags::Input_Move, ETriggerEvent::Triggered, this, &ThisClass::Input_Move);
-	FatedBrandEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, FatedBrandGameplayTags::Input_Jump, ETriggerEvent::Started, this, &ThisClass::Input_Jump);
+	FatedBrandEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, FatedBrandGameplayTags::Input_Jump, ETriggerEvent::Started, this, &ThisClass::Input_JumpStart);
+	FatedBrandEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, FatedBrandGameplayTags::Input_Jump, ETriggerEvent::Completed, this, &ThisClass::Input_JumpEnd);
 
 	FatedBrandEnhancedInputComponent->BindAbilityInputAction(InputConfigDataAsset, this, &ThisClass::Input_AbilityInputPressed, &ThisClass::Input_AbilityInputReleased);
 }
@@ -49,24 +52,89 @@ void AFatedBrandPlayerController::SetupInputComponent()
 void AFatedBrandPlayerController::Input_Move(const FInputActionValue &InputActionValue)
 {
 	const FVector2D InputAxisVector = InputActionValue.Get<FVector2D>();
-	const FRotator Rotation = GetControlRotation();
-	const FRotator YawRotation(0.f, Rotation.Yaw, 0.f);
-	
-	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 
-	if(APawn* ControlledPawn = GetPawn<APawn>())
+	if (!bHasWallJumped)
 	{
-		ControlledPawn->AddMovementInput(ForwardDirection, InputAxisVector.Y);
-		ControlledPawn->AddMovementInput(RightDirection, InputAxisVector.X);
+		ActionValueY = InputAxisVector.Y;
+
+		const FVector MoveDir = FVector(1.0f, InputAxisVector.Y > 0.0f ? 0.1f : -0.1f, 0.0f);
+
+		if(APawn* ControlledPawn = GetPawn<APawn>())
+		{
+			ControlledPawn->AddMovementInput(MoveDir, InputAxisVector.Y);
+		}
 	}
 }
 
-void AFatedBrandPlayerController::Input_Jump(const FInputActionValue& InputActionValue)
+void AFatedBrandPlayerController::Input_JumpStart()
 {
 	if (FatedBrandCharacter)
 	{
-		FatedBrandCharacter->Jump();
+		if (!FatedBrandCharacter->GetCharacterMovement()->IsFalling())
+		{
+			FatedBrandCharacter->Jump();
+			return;
+		}
+
+		if (!bHasWallJumped && !FMath::IsNearlyZero(ActionValueY))
+		{
+			FHitResult OutHit;
+
+			const FVector Start = FatedBrandCharacter->GetActorLocation();
+			const FVector End = Start + (FVector(ActionValueY > 0.0f ? 1.0f : -1.0f, 0.0f, 0.0f) * WallJumpTraceDistance);
+
+			FCollisionQueryParams QueryParams;
+			QueryParams.AddIgnoredActor(this);
+
+			GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECC_Visibility, QueryParams);
+
+			if (OutHit.bBlockingHit)
+			{
+				const FRotator BounceRot = UKismetMathLibrary::MakeRotFromX(OutHit.ImpactNormal);
+				FatedBrandCharacter->SetActorRotation(FRotator(0.0f, BounceRot.Yaw, 0.0f));
+
+				FVector WallJumpImpulse = OutHit.ImpactNormal * WallJumpHorizontalImpulse;
+				WallJumpImpulse.Z = FatedBrandCharacter->GetCharacterMovement()->JumpZVelocity * WallJumpVerticalMultiplier;
+
+				FatedBrandCharacter->LaunchCharacter(WallJumpImpulse, true, true);
+
+				bHasWallJumped = true;
+
+				GetWorld()->GetTimerManager().SetTimer(WallJumpTimer, this, &ThisClass::ResetWallJump, DelayBetweenWallJumps, false);
+
+				return;
+			}
+		}
+
+		if (!bHasWallJumped)
+		{
+			if (GetWorld()->GetTimeSeconds() - LastFallTime < MaxCoyoteTime)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Coyote Jump"));
+				FatedBrandCharacter->Jump();
+			}
+			else 
+			{
+				if (!bHasDoubleJumped)
+				{
+					bHasDoubleJumped = true;
+
+					FatedBrandCharacter->Jump();
+				}
+			}
+		}
+	}
+}
+void AFatedBrandPlayerController::ResetWallJump()
+{
+	bHasWallJumped = false;
+}
+
+void AFatedBrandPlayerController::Input_JumpEnd()
+{
+	if (FatedBrandCharacter)
+	{
+		FatedBrandCharacter->StopJumping();
 	}
 }
 
