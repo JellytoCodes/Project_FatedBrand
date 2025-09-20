@@ -9,7 +9,6 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "HUD/FatedBrandHUD.h"
-#include "Project_FatedBrand/Project_FatedBrand.h"
 
 AFatedBrandCharacter::AFatedBrandCharacter()
 {
@@ -38,9 +37,8 @@ void AFatedBrandCharacter::PossessedBy(AController* NewController)
 	{
 		if (UDataAsset_StartUpDataBase* LoadedData = StartUpData.LoadSynchronous())
 		{
-			LoadedData->InitializeGameplayEffect(FatedBrandAbilitySystemComponent, 1);
-			FatedBrandAbilitySystemComponent->AddCharacterActivateAbilities(LoadedData->ActivateOnGivenAbilities);
-			FatedBrandAbilitySystemComponent->AddCharacterPassiveAbilities(LoadedData->PassiveOnGivenAbilities);
+			LoadedData->InitializeGameplayEffect(FatedBrandAbilitySystemComponent, StartUpCharacterName, 1);
+
 		}
 	}
 	InitAbilityActorInfo();

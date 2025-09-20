@@ -22,7 +22,7 @@ void AFatedBrandEnemy::PossessedBy(AController* NewController)
 		{
 			if (UDataAsset_StartUpDataBase* LoadedData = StartUpData.LoadSynchronous())
 			{
-				LoadedData->InitializeGameplayEffect(FatedBrandAbilitySystemComponent, 1);
+				LoadedData->InitializeGameplayEffect(FatedBrandAbilitySystemComponent, StartUpCharacterName, 1);
 			}	
 		}));
 	}

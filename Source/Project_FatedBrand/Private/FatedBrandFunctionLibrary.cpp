@@ -7,6 +7,7 @@
 #include "HUD/FatedBrandHUD.h"
 #include "HUD/WidgetController/FatedBrandWidgetController.h"
 #include "Kismet/GameplayStatics.h"
+#include "Project_FatedBrand/Project_FatedBrand.h"
 
 bool UFatedBrandFunctionLibrary::MakeWidgetControllerParams(const UObject* WorldContextObject, FWidgetControllerParams& OutWCParams, AFatedBrandHUD*& OutFatedBrandHUD)
 {
@@ -15,7 +16,7 @@ bool UFatedBrandFunctionLibrary::MakeWidgetControllerParams(const UObject* World
 		OutFatedBrandHUD = Cast<AFatedBrandHUD>(PC->GetHUD());
 		if (OutFatedBrandHUD == nullptr) return false;
 		
-		if (const AFatedBrandCharacter* FatedBrandCharacter = Cast<AFatedBrandCharacter>(PC->GetOwner()))
+		if (const AFatedBrandCharacter* FatedBrandCharacter = Cast<AFatedBrandCharacter>(PC->GetPawn()))
 		{
 			OutWCParams.AttributeSet = FatedBrandCharacter->GetFatedBrandAttributeSet();
 			OutWCParams.AbilitySystemComponent = FatedBrandCharacter->GetAbilitySystemComponent();

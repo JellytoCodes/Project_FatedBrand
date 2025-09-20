@@ -8,6 +8,7 @@ namespace FatedBrandGameplayTags
 	/** ~Begin Native Input */
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Input_Move, "Input.Move")
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Input_Jump, "Input.Jump")
+	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Input_NebulaMenu, "Input.NebulaMenu")
 	/** ~End Native Input */
 
 	/** ~Begin Ability Input */

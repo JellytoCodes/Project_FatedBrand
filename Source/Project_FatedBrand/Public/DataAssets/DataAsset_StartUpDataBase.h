@@ -10,20 +10,33 @@ class UGameplayEffect;
 class UFatedBrandGameplayAbility;
 class UFatedBrandAbilitySystemComponent;
 
+UENUM()
+enum class EStartUpCharacterName : uint8
+{
+	PlayerCharacter,
+	TutorialEnemy
+};
+
+USTRUCT(BlueprintType)
+struct FFatedBrandStartUpAttributeInfo
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	EStartUpCharacterName StartUpCharacterName;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSubclassOf<UGameplayEffect> StartUpGameplayEffect;
+};
+
 UCLASS()
 class PROJECT_FATEDBRAND_API UDataAsset_StartUpDataBase : public UDataAsset
 {
 	GENERATED_BODY()
 
 public :
-	virtual void InitializeGameplayEffect(UFatedBrandAbilitySystemComponent* InASCToGive, int32 ApplyLevel = 1);
+	virtual void InitializeGameplayEffect(UFatedBrandAbilitySystemComponent* InASCToGive,EStartUpCharacterName StartUpCharacterName, int32 ApplyLevel = 1);
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "StartUpData")
-	TArray<TSubclassOf<UFatedBrandGameplayAbility>> ActivateOnGivenAbilities;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "StartUpData")
-	TArray<TSubclassOf<UFatedBrandGameplayAbility>> PassiveOnGivenAbilities;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "StartUpData")
-	TArray<TSubclassOf<UGameplayEffect>> StartUpGameplayEffects;
+	TArray<FFatedBrandStartUpAttributeInfo> StartUpAttributeInfo;
 };

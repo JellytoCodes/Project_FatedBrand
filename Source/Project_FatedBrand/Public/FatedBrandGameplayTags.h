@@ -11,6 +11,7 @@ namespace FatedBrandGameplayTags
 	/** ~Begin Native Input */
 	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Move)
 	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Jump)
+	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_NebulaMenu)
 	/** ~End Native Input */
 
 	/** ~Begin Ability Input */

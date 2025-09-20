@@ -10,6 +10,7 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FNebulaSelectedSignature, bool, bEquipButtonEnabled, FString, DescriptionString);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FWaitForEquipSelectionSignature, const FGameplayTag&, AbilityType);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FNebulaReassignedSignature, const FGameplayTag&, AbilityTag);
 
 struct FSelectedAbility
 {
@@ -28,6 +29,9 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FNebulaSelectedSignature NebulaSelectedDelegate;
+
+	UPROPERTY(BlueprintAssignable)
+	FNebulaReassignedSignature NebulaReassignedDelegate;
 
 	UPROPERTY(BlueprintAssignable)
 	FWaitForEquipSelectionSignature WaitForEquipDelegate;

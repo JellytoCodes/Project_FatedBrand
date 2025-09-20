@@ -23,6 +23,8 @@ public :
 	UOverlayWidgetController* GetOverlayWidgetController(const FWidgetControllerParams& WCParams);
 	UNebulaMenuWidgetController* GetNebulaMenuWidgetController(const FWidgetControllerParams& WCParams);
 	void InitOverlay(APlayerController* PC, UAbilitySystemComponent* ASC, UAttributeSet* AS);
+	void CreateNebulaMenu(APlayerController* PC, UAbilitySystemComponent* ASC, UAttributeSet* AS);
+	void RemoveNebulaMenu();
 
 private :
 	UPROPERTY()
@@ -37,6 +39,11 @@ private :
 	UPROPERTY(EditDefaultsOnly, Category = "WidgetClass")
 	TSubclassOf<UOverlayWidgetController> OverlayWidgetControllerClass;
 
+	UPROPERTY()
+	TObjectPtr<UFatedBrandUserWidget> NebulaWidget;
+
+	UPROPERTY(EditDefaultsOnly, Category = "WidgetClass")
+	TSubclassOf<UFatedBrandUserWidget> NebulaWidgetClass;
 	
 	UPROPERTY()
 	TObjectPtr<UNebulaMenuWidgetController> NebulaWidgetController;

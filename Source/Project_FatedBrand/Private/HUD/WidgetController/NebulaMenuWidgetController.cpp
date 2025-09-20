@@ -86,7 +86,22 @@ void UNebulaMenuWidgetController::EquipButtonPressed()
 
 void UNebulaMenuWidgetController::OnAbilityEquipped(const FGameplayTag& AbilityTag, const FGameplayTag& Status, const FGameplayTag& Slot, const FGameplayTag& PreviousSlot)
 {
-	
+	bWaitingForEquipSelection = false;
+
+	FFatedBrandAbilityInfo LastSlotInfo;
+	LastSlotInfo.StatusTag = FatedBrandGameplayTags::Abilities_Status_Unlocked;
+	LastSlotInfo.InputTag = PreviousSlot;
+	LastSlotInfo.AbilityTag = FatedBrandGameplayTags::Abilities_None;
+	AbilityInfoDelegate.Broadcast(LastSlotInfo);
+
+	FFatedBrandAbilityInfo Info = AbilityInfo->FindAbilityInfoForTag(AbilityTag);
+	Info.StatusTag = Status;
+	Info.InputTag = Slot;
+	AbilityInfoDelegate.Broadcast(Info);
+
+	StopWaitForEquipDelegate.Broadcast(AbilityInfo->FindAbilityInfoForTag(AbilityTag).AbilityType);
+	NebulaReassignedDelegate.Broadcast(AbilityTag);
+	NebulaDeselect();
 }
 
 void UNebulaMenuWidgetController::ShouldEnableButtons(const FGameplayTag& AbilityStatus, bool& bShouldEnableEquipButton)

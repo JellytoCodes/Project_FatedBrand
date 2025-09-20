@@ -41,8 +41,12 @@ private :
 	void Input_JumpStart();
 	void Input_JumpEnd();
 
+	void Input_NebulaMenu();
+
 	void Input_AbilityInputPressed(const FGameplayTag InInputTag);
 	void Input_AbilityInputReleased(const FGameplayTag InInputTag);
+
+	bool bIsNebulaMenu = false;
 
 	UPROPERTY(EditDefaultsOnly, Category="Input|Jump")
 	float WallJumpTraceDistance = 50.0f;

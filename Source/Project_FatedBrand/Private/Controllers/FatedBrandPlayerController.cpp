@@ -12,6 +12,7 @@
 #include "GameFramework/Character.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "HUD/FatedBrandHUD.h"
 #include "Project_FatedBrand/Project_FatedBrand.h"
 
 FGenericTeamId AFatedBrandPlayerController::GetGenericTeamId() const
@@ -45,6 +46,7 @@ void AFatedBrandPlayerController::SetupInputComponent()
 	FatedBrandEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, FatedBrandGameplayTags::Input_Move, ETriggerEvent::Triggered, this, &ThisClass::Input_Move);
 	FatedBrandEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, FatedBrandGameplayTags::Input_Jump, ETriggerEvent::Started, this, &ThisClass::Input_JumpStart);
 	FatedBrandEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, FatedBrandGameplayTags::Input_Jump, ETriggerEvent::Completed, this, &ThisClass::Input_JumpEnd);
+	FatedBrandEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, FatedBrandGameplayTags::Input_NebulaMenu, ETriggerEvent::Started, this, &ThisClass::Input_NebulaMenu);
 
 	FatedBrandEnhancedInputComponent->BindAbilityInputAction(InputConfigDataAsset, this, &ThisClass::Input_AbilityInputPressed, &ThisClass::Input_AbilityInputReleased);
 }
@@ -110,7 +112,6 @@ void AFatedBrandPlayerController::Input_JumpStart()
 		{
 			if (GetWorld()->GetTimeSeconds() - LastFallTime < MaxCoyoteTime)
 			{
-				UE_LOG(LogTemp, Warning, TEXT("Coyote Jump"));
 				FatedBrandCharacter->Jump();
 			}
 			else 
@@ -136,6 +137,28 @@ void AFatedBrandPlayerController::Input_JumpEnd()
 	{
 		FatedBrandCharacter->StopJumping();
 	}
+}
+
+void AFatedBrandPlayerController::Input_NebulaMenu()
+{
+	if (FatedBrandCharacter == nullptr) return;
+
+	if (AFatedBrandHUD* FatedBrandHUD = Cast<AFatedBrandHUD>(GetHUD()))
+	{
+		if (!bIsNebulaMenu)
+		{
+			FatedBrandHUD->CreateNebulaMenu(this, FatedBrandCharacter->GetAbilitySystemComponent(), FatedBrandCharacter->GetFatedBrandAttributeSet());
+			bShowMouseCursor = true;
+			bIsNebulaMenu = true;
+		}
+		else
+		{
+			FatedBrandHUD->RemoveNebulaMenu();
+			bShowMouseCursor = false;
+			bIsNebulaMenu = false;
+		}
+	}
+
 }
 
 void AFatedBrandPlayerController::Input_AbilityInputPressed(const FGameplayTag InInputTag)

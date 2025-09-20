@@ -42,3 +42,25 @@ void AFatedBrandHUD::InitOverlay(APlayerController* PC, UAbilitySystemComponent*
 
 	Widget->AddToViewport();
 }
+
+void AFatedBrandHUD::CreateNebulaMenu(APlayerController* PC, UAbilitySystemComponent* ASC, UAttributeSet* AS)
+{
+	UUserWidget* Widget = CreateWidget<UUserWidget>(GetWorld(), NebulaWidgetClass);
+	NebulaWidget = Cast<UFatedBrandUserWidget>(Widget);
+
+	const FWidgetControllerParams WidgetControllerParams(PC, ASC, AS);
+	UNebulaMenuWidgetController* WidgetController = GetNebulaMenuWidgetController(WidgetControllerParams);
+
+	NebulaWidget->SetWidgetController(NebulaWidgetController);
+	WidgetController->BroadcastInitialValues();
+
+	Widget->AddToViewport();
+}
+
+void AFatedBrandHUD::RemoveNebulaMenu()
+{
+	if (NebulaWidget)
+	{
+		NebulaWidget->RemoveFromParent();
+	}
+}
