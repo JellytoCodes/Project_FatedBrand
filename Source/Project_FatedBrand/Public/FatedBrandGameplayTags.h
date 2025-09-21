@@ -35,11 +35,12 @@ namespace FatedBrandGameplayTags
 	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Status_Locked)
 #pragma endregion
 
-#pragma region Abilities Active
-
+#pragma region Abilities Offensive
+	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Offensive_Type)
 #pragma endregion
 
 #pragma region Abilities Passive
+	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Passive_Type)
 	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Passive_DoubleJump)
 #pragma endregion
 }

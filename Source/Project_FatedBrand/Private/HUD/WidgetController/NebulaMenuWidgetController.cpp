@@ -102,6 +102,8 @@ void UNebulaMenuWidgetController::OnAbilityEquipped(const FGameplayTag& AbilityT
 	StopWaitForEquipDelegate.Broadcast(AbilityInfo->FindAbilityInfoForTag(AbilityTag).AbilityType);
 	NebulaReassignedDelegate.Broadcast(AbilityTag);
 	NebulaDeselect();
+
+	GetFatedBrandASC()->EquipAbility(AbilityTag, Slot);
 }
 
 void UNebulaMenuWidgetController::ShouldEnableButtons(const FGameplayTag& AbilityStatus, bool& bShouldEnableEquipButton)

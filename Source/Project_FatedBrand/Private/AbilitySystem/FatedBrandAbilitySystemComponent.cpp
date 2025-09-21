@@ -143,3 +143,11 @@ FGameplayAbilitySpec* UFatedBrandAbilitySystemComponent::GetSpecFromAbilityTag(c
 	}
 	return nullptr;
 }
+
+void UFatedBrandAbilitySystemComponent::EquipAbility(const FGameplayTag& AbilityTag, const FGameplayTag& Slot)
+{
+	if (FGameplayAbilitySpec* AbilitySpec = GetSpecFromAbilityTag(AbilityTag))
+	{
+		TryActivateAbility(AbilitySpec->Handle);
+	}
+}

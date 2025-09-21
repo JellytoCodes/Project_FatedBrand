@@ -32,4 +32,6 @@ public :
 	FGameplayTag GetSlotFromAbilityTag(const FGameplayTag& AbilityTag);
 
 	FGameplayAbilitySpec* GetSpecFromAbilityTag(const FGameplayTag& AbilityTag);
+
+	void EquipAbility(const FGameplayTag& AbilityTag, const FGameplayTag& Slot);
 };
