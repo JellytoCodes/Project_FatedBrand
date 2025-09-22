@@ -32,11 +32,12 @@ namespace FatedBrandGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Abilities_Status_Locked, "Abilities.Status.Locked")
 #pragma endregion
 
-#pragma region Abilities Active
-
+#pragma region Abilities Offensive
+	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Abilities_Offensive_Type, "Abilities.Offensive.Type")
 #pragma endregion
 
 #pragma region Abilities Passive
+	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Abilities_Passive_Type, "Abilities.Passive.Type")
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Abilities_Passive_DoubleJump, "Abilities.Passive.DoubleJump")
 #pragma endregion
 }

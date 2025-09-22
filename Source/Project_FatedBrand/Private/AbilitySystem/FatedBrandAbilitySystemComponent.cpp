@@ -1,9 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "AbilitySystem/FatedBrandAbilitySystemComponent.h"
-
-#include "Project_FatedBrand/Project_FatedBrand.h"
 #include "AbilitySystem/Abilities/FatedBrandGameplayAbility.h"
+#include "Project_FatedBrand/Project_FatedBrand.h"
 
 void UFatedBrandAbilitySystemComponent::AddCharacterActivateAbilities(const TArray<TSubclassOf<UFatedBrandGameplayAbility>>& ActivateAbilities)
 {
@@ -79,7 +78,6 @@ void UFatedBrandAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag
 		{
 			InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputPressed, AbilitySpec.Handle, AbilitySpec.ActivationInfo.GetActivationPredictionKey());
 		}
-		Debug::Print("Pressed");
 	}
 }
 
@@ -95,7 +93,6 @@ void UFatedBrandAbilitySystemComponent::OnAbilityInputReleased(const FGameplayTa
 		{
 			AbilitySpecInputReleased(AbilitySpec);
 			InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputReleased, AbilitySpec.Handle, AbilitySpec.ActivationInfo.GetActivationPredictionKey());
-			Debug::Print("Released");
 		}
 	}
 }
@@ -139,6 +136,18 @@ FGameplayAbilitySpec* UFatedBrandAbilitySystemComponent::GetSpecFromAbilityTag(c
 			{
 				return &AbilitySpec;
 			}
+		}
+	}
+	return nullptr;
+}
+
+FGameplayAbilitySpec* UFatedBrandAbilitySystemComponent::GetSpecWithNebulaSlot(const FGameplayTag& NebulaSlot)
+{
+	for (FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
+	{
+		if (AbilitySpec.DynamicAbilityTags.HasTagExact(NebulaSlot))
+		{
+			return &AbilitySpec;
 		}
 	}
 	return nullptr;

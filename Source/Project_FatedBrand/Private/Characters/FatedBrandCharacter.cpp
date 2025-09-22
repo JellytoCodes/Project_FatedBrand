@@ -38,7 +38,6 @@ void AFatedBrandCharacter::PossessedBy(AController* NewController)
 		if (UDataAsset_StartUpDataBase* LoadedData = StartUpData.LoadSynchronous())
 		{
 			LoadedData->InitializeGameplayEffect(FatedBrandAbilitySystemComponent, StartUpCharacterName, 1);
-
 		}
 	}
 	InitAbilityActorInfo();
@@ -46,7 +45,6 @@ void AFatedBrandCharacter::PossessedBy(AController* NewController)
 
 void AFatedBrandCharacter::InitAbilityActorInfo()
 {
-	
 	if (AFatedBrandPlayerController* FatedBrandPlayerController = Cast<AFatedBrandPlayerController>(GetController()))
 	{
 		if (AFatedBrandHUD* FatedBrandHUD = Cast<AFatedBrandHUD>(FatedBrandPlayerController->GetHUD()))
@@ -54,4 +52,5 @@ void AFatedBrandCharacter::InitAbilityActorInfo()
 			FatedBrandHUD->InitOverlay(FatedBrandPlayerController, GetAbilitySystemComponent(), FatedBrandAttributeSet);
 		}
 	}
+	GetFatedBrandAbilitySystemComponent()->AddCharacterActivateAbilities(StartUpAbilities);
 }
