@@ -52,5 +52,8 @@ void AFatedBrandCharacter::InitAbilityActorInfo()
 			FatedBrandHUD->InitOverlay(FatedBrandPlayerController, GetAbilitySystemComponent(), FatedBrandAttributeSet);
 		}
 	}
-	GetFatedBrandAbilitySystemComponent()->AddCharacterActivateAbilities(StartUpAbilities);
+
+	//캐릭터 기본 소유 액티브/패시브 스킬 ASC에 등록
+	GetFatedBrandAbilitySystemComponent()->AddCharacterActivateAbilities(StartUpOffensiveAbilities);
+	GetFatedBrandAbilitySystemComponent()->AddCharacterPassiveAbilities(StartUpPassiveAbilities);
 }

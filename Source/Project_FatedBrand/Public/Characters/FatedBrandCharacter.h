@@ -32,5 +32,8 @@ private :
 	TObjectPtr<UCameraComponent> FollowCamera;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "StartUp|Abilities", meta = (AllowPrivateAccess = "true"))
-	TArray<TSubclassOf<UFatedBrandGameplayAbility>> StartUpAbilities;
+	TArray<TSubclassOf<UFatedBrandGameplayAbility>> StartUpOffensiveAbilities;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "StartUp|Abilities", meta = (AllowPrivateAccess = "true"))
+	TArray<TSubclassOf<UFatedBrandGameplayAbility>> StartUpPassiveAbilities;
 };
