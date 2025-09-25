@@ -33,18 +33,23 @@ void AFatedBrandCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 
-	if (!StartUpData.IsNull())
-	{
-		if (UDataAsset_StartUpDataBase* LoadedData = StartUpData.LoadSynchronous())
-		{
-			LoadedData->InitializeGameplayEffect(FatedBrandAbilitySystemComponent, StartUpCharacterName, 1);
-		}
-	}
 	InitAbilityActorInfo();
 }
 
 void AFatedBrandCharacter::InitAbilityActorInfo()
 {
+	if (!StartUpData.IsNull())
+	{
+		if (UDataAsset_StartUpDataBase* LoadedData = StartUpData.LoadSynchronous())
+		{
+			LoadedData->InitializeGameplayEffect(FatedBrandAbilitySystemComponent, StartUpCharacterName, 1);
+
+			//캐릭터 기본 소유 액티브/패시브 스킬 ASC에 등록
+			GetFatedBrandAbilitySystemComponent()->AddCharacterActivateAbilities(LoadedData->StartUpOffensiveAbilities);
+			GetFatedBrandAbilitySystemComponent()->AddCharacterPassiveAbilities(LoadedData->StartUpPassiveAbilities);
+		}
+	}
+
 	if (AFatedBrandPlayerController* FatedBrandPlayerController = Cast<AFatedBrandPlayerController>(GetController()))
 	{
 		if (AFatedBrandHUD* FatedBrandHUD = Cast<AFatedBrandHUD>(FatedBrandPlayerController->GetHUD()))
@@ -52,8 +57,4 @@ void AFatedBrandCharacter::InitAbilityActorInfo()
 			FatedBrandHUD->InitOverlay(FatedBrandPlayerController, GetAbilitySystemComponent(), FatedBrandAttributeSet);
 		}
 	}
-
-	//캐릭터 기본 소유 액티브/패시브 스킬 ASC에 등록
-	GetFatedBrandAbilitySystemComponent()->AddCharacterActivateAbilities(StartUpOffensiveAbilities);
-	GetFatedBrandAbilitySystemComponent()->AddCharacterPassiveAbilities(StartUpPassiveAbilities);
 }

@@ -39,4 +39,10 @@ public :
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "StartUpData")
 	TArray<FFatedBrandStartUpAttributeInfo> StartUpAttributeInfo;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "StartUp|Abilities", meta = (AllowPrivateAccess = "true"))
+	TArray<TSubclassOf<UFatedBrandGameplayAbility>> StartUpOffensiveAbilities;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "StartUp|Abilities", meta = (AllowPrivateAccess = "true"))
+	TArray<TSubclassOf<UFatedBrandGameplayAbility>> StartUpPassiveAbilities;
 };

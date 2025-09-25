@@ -4,6 +4,7 @@
 #include "FatedBrandFunctionLibrary.h"
 
 #include "Characters/FatedBrandCharacter.h"
+#include "Game/FatedBrandGameModeBase.h"
 #include "HUD/FatedBrandHUD.h"
 #include "HUD/WidgetController/FatedBrandWidgetController.h"
 #include "Kismet/GameplayStatics.h"
@@ -50,4 +51,12 @@ UNebulaMenuWidgetController* UFatedBrandFunctionLibrary::GetNebulaMenuWidgetCont
 		return FatedBrandHUD->GetNebulaMenuWidgetController(WCParams);
 	}
 	return nullptr;
+}
+
+UDataAsset_AbilityInfo* UFatedBrandFunctionLibrary::GetAbilityInfo(const UObject* WorldContextObject)
+{
+	const AFatedBrandGameModeBase* FatedBrandGameMode = Cast<AFatedBrandGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
+	if (FatedBrandGameMode == nullptr) return nullptr;
+
+	return FatedBrandGameMode->AbilityInfo;
 }

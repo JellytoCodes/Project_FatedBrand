@@ -101,6 +101,7 @@ void AFatedBrandPlayerController::Input_JumpStart()
 				FatedBrandCharacter->LaunchCharacter(WallJumpImpulse, true, true);
 
 				bHasWallJumped = true;
+				FatedBrandCharacter->WallJumping();
 
 				GetWorld()->GetTimerManager().SetTimer(WallJumpTimer, this, &ThisClass::ResetWallJump, DelayBetweenWallJumps, false);
 

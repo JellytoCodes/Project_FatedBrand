@@ -19,6 +19,9 @@ class PROJECT_FATEDBRAND_API AFatedBrandCharacter : public AFatedBrandCharacterB
 public :
 	AFatedBrandCharacter();
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void WallJumping();
+
 protected :
 	virtual void PossessedBy(AController* NewController) override;
 
@@ -30,10 +33,4 @@ private :
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UCameraComponent> FollowCamera;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "StartUp|Abilities", meta = (AllowPrivateAccess = "true"))
-	TArray<TSubclassOf<UFatedBrandGameplayAbility>> StartUpOffensiveAbilities;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "StartUp|Abilities", meta = (AllowPrivateAccess = "true"))
-	TArray<TSubclassOf<UFatedBrandGameplayAbility>> StartUpPassiveAbilities;
 };

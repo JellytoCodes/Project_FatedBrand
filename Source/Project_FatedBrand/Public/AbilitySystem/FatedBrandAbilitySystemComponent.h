@@ -34,5 +34,8 @@ public :
 	FGameplayAbilitySpec* GetSpecFromAbilityTag(const FGameplayTag& AbilityTag);
 	FGameplayAbilitySpec* GetSpecWithNebulaSlot(const FGameplayTag& NebulaSlot);
 
+	UFUNCTION(BlueprintCallable, Category = "UpdateAbility")
+	void UpdateAbilityStatuses(const FGameplayTag& AbilityTag);
+
 	void EquipAbility(const FGameplayTag& AbilityTag, const FGameplayTag& Slot);
 };

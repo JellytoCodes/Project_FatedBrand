@@ -1,7 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "AbilitySystem/FatedBrandAbilitySystemComponent.h"
+
+#include "FatedBrandFunctionLibrary.h"
+#include "FatedBrandGameplayTags.h"
 #include "AbilitySystem/Abilities/FatedBrandGameplayAbility.h"
+#include "DataAssets/DataAsset_AbilityInfo.h"
 #include "Project_FatedBrand/Project_FatedBrand.h"
 
 void UFatedBrandAbilitySystemComponent::AddCharacterActivateAbilities(const TArray<TSubclassOf<UFatedBrandGameplayAbility>>& ActivateAbilities)
@@ -13,7 +17,7 @@ void UFatedBrandAbilitySystemComponent::AddCharacterActivateAbilities(const TArr
 		
 		if (FatedBrandAbility && FatedBrandAbility->StartupInputTag.IsValid())
 		{
-			AbilitySpec.DynamicAbilityTags.AddTag(FatedBrandAbility->StartupInputTag);
+			AbilitySpec.GetDynamicSpecSourceTags().AddTag(FatedBrandAbility->StartupInputTag);
 		}
 		GiveAbility(AbilitySpec);
 	}
@@ -30,7 +34,7 @@ void UFatedBrandAbilitySystemComponent::AddCharacterPassiveAbilities(const TArra
 
 FGameplayTag UFatedBrandAbilitySystemComponent::GetInputTagFromSpec(const FGameplayAbilitySpec& AbilitySpec)
 {
-	for (FGameplayTag Tag : AbilitySpec.DynamicAbilityTags)
+	for (FGameplayTag Tag : AbilitySpec.GetDynamicSpecSourceTags())
 	{
 		if (Tag.MatchesTag(FGameplayTag::RequestGameplayTag(FName("Input"))))
 		{
@@ -42,7 +46,7 @@ FGameplayTag UFatedBrandAbilitySystemComponent::GetInputTagFromSpec(const FGamep
 
 FGameplayTag UFatedBrandAbilitySystemComponent::GetAbilityTagFromSpec(const FGameplayAbilitySpec& AbilitySpec)
 {
-	for (FGameplayTag Tag : AbilitySpec.DynamicAbilityTags)
+	for (FGameplayTag Tag : AbilitySpec.GetDynamicSpecSourceTags())
 	{
 		if (Tag.MatchesTag(FGameplayTag::RequestGameplayTag(FName("Abilities"))))
 		{
@@ -54,7 +58,7 @@ FGameplayTag UFatedBrandAbilitySystemComponent::GetAbilityTagFromSpec(const FGam
 
 FGameplayTag UFatedBrandAbilitySystemComponent::GetStatusFromSpec(const FGameplayAbilitySpec& AbilitySpec)
 {
-	for (FGameplayTag Tag : AbilitySpec.DynamicAbilityTags)
+	for (FGameplayTag Tag : AbilitySpec.GetDynamicSpecSourceTags())
 	{
 		if (Tag.MatchesTag(FGameplayTag::RequestGameplayTag(FName("Abilities.Status"))))
 		{
@@ -70,7 +74,7 @@ void UFatedBrandAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag
 
 	for (FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
 	{
-		if (!AbilitySpec.DynamicAbilityTags.HasTagExact(InInputTag)) continue;
+		if (!AbilitySpec.GetDynamicSpecSourceTags().HasTagExact(InInputTag)) continue;
 
 		AbilitySpecInputPressed(AbilitySpec);
 		TryActivateAbility(AbilitySpec.Handle);
@@ -89,7 +93,7 @@ void UFatedBrandAbilitySystemComponent::OnAbilityInputReleased(const FGameplayTa
 	{
 		AbilitySpec.InputPressed = false;
 
-		if (!AbilitySpec.DynamicAbilityTags.HasTagExact(InInputTag) && AbilitySpec.IsActive())
+		if (!AbilitySpec.GetDynamicSpecSourceTags().HasTagExact(InInputTag) && AbilitySpec.IsActive())
 		{
 			AbilitySpecInputReleased(AbilitySpec);
 			InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputReleased, AbilitySpec.Handle, AbilitySpec.ActivationInfo.GetActivationPredictionKey());
@@ -145,12 +149,30 @@ FGameplayAbilitySpec* UFatedBrandAbilitySystemComponent::GetSpecWithNebulaSlot(c
 {
 	for (FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
 	{
-		if (AbilitySpec.DynamicAbilityTags.HasTagExact(NebulaSlot))
+		if (AbilitySpec.GetDynamicSpecSourceTags().HasTagExact(NebulaSlot))
 		{
 			return &AbilitySpec;
 		}
 	}
 	return nullptr;
+}
+
+void UFatedBrandAbilitySystemComponent::UpdateAbilityStatuses(const FGameplayTag& AbilityTag)
+{
+	UDataAsset_AbilityInfo* AbilityInfo = UFatedBrandFunctionLibrary::GetAbilityInfo(GetAvatarActor());
+
+	for (const FFatedBrandAbilityInfo& Info : AbilityInfo->AbilityInformation)
+	{
+		if (AbilityTag != Info.AbilityTag || !Info.AbilityTag.IsValid()) continue;
+
+		if (GetSpecFromAbilityTag(Info.AbilityTag) == nullptr)
+		{
+			FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(Info.Ability, 1);
+			AbilitySpec.GetDynamicSpecSourceTags().AddTag(FatedBrandGameplayTags::Abilities_Status_Eligible);
+			GiveAbility(AbilitySpec);
+			MarkAbilitySpecDirty(AbilitySpec);
+		}
+	}
 }
 
 void UFatedBrandAbilitySystemComponent::EquipAbility(const FGameplayTag& AbilityTag, const FGameplayTag& Slot)

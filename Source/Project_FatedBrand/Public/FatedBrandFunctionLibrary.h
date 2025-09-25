@@ -3,9 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "FatedBrandFunctionLibrary.generated.h"
 
+class UDataAsset_AbilityInfo;
 class UNebulaMenuWidgetController;
 class UOverlayWidgetController;
 class AFatedBrandHUD;
@@ -26,6 +28,10 @@ public :
 
 	UFUNCTION(BlueprintPure, Category = "FatedBrandFunctionBibrary", meta = (DefaultToSelf = "WorldContextObject"))
 	static UNebulaMenuWidgetController* GetNebulaMenuWidgetController(const UObject* WorldContextObject); 
+#pragma endregion
 
+#pragma region Ability System
+	UFUNCTION(BlueprintCallable, Category = "AbilitySystem")
+	static UDataAsset_AbilityInfo* GetAbilityInfo(const UObject* WorldContextObject);
 #pragma endregion
 };
