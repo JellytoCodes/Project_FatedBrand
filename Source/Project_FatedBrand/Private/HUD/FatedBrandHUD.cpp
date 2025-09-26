@@ -55,6 +55,7 @@ void AFatedBrandHUD::CreateNebulaMenu(APlayerController* PC, UAbilitySystemCompo
 	WidgetController->BroadcastInitialValues();
 
 	Widget->AddToViewport();
+	Widget->SetPositionInViewport(FVector2D(400,100), true);
 }
 
 void AFatedBrandHUD::RemoveNebulaMenu()
