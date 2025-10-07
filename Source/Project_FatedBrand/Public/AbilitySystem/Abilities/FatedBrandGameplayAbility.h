@@ -7,7 +7,7 @@
 #include "FatedBrandGameplayAbility.generated.h"
 
 class UFatedBrandAbilitySystemComponent;
-
+class AFatedBrandCharacter;
 UCLASS()
 class PROJECT_FATEDBRAND_API UFatedBrandGameplayAbility : public UGameplayAbility
 {
@@ -23,8 +23,14 @@ protected :
 	UFUNCTION(BlueprintPure, Category = "FatedBrand|Ability")
 	UFatedBrandAbilitySystemComponent* GetFatedBrandAbilitySystemComponentFromActorInfo() const;
 
+	UFUNCTION(BlueprintPure, Category = "FatedBrand|Ability")
+	AFatedBrandCharacter* GetFatedBrandCharacterFromActorInfo();
+
 	FActiveGameplayEffectHandle NativeApplyEffectSpecHandleToTarget(AActor* TargetActor, const FGameplayEffectSpecHandle& InSpecHandle);
 
 	UFUNCTION(BlueprintCallable, Category = "FatedBrand|Ability", meta = (DisplayName = "ApplyGameplayEffectSpecHandleToTargetActor"))
 	FActiveGameplayEffectHandle BP_ApplyEffectSpecHandleToTarget(AActor* TargetActor, const FGameplayEffectSpecHandle& InSpecHandle);
+
+private :
+	TWeakObjectPtr<AFatedBrandCharacter> CachedFatedBrandCharacter;
 };

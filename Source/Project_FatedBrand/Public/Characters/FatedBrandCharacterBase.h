@@ -12,6 +12,8 @@ class UFatedBrandAttributeSet;
 class UFatedBrandAbilitySystemComponent;
 class UAttributeSet;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FWeaponEquippedStatusSignature, bool, bIsEquip);
+
 UCLASS()
 class PROJECT_FATEDBRAND_API AFatedBrandCharacterBase : public ACharacter, public IAbilitySystemInterface
 {
@@ -24,6 +26,12 @@ public:
 
 	FORCEINLINE UFatedBrandAbilitySystemComponent* GetFatedBrandAbilitySystemComponent() const { return FatedBrandAbilitySystemComponent; }
 	FORCEINLINE UAttributeSet* GetFatedBrandAttributeSet() const { return FatedBrandAttributeSet; }
+
+	UPROPERTY(BlueprintAssignable, Category = "AbilitySystem")
+	FWeaponEquippedStatusSignature WeaponEquippedStatusDelegate;
+
+	UFUNCTION(BlueprintCallable, Category = "AbilitySystem")
+	void SendWeaponEquippedDelegate(const bool bIsEquip) const;
 
 protected:
 	virtual void PossessedBy(AController* NewController) override;

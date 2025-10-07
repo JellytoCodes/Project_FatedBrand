@@ -22,6 +22,11 @@ UAbilitySystemComponent* AFatedBrandCharacterBase::GetAbilitySystemComponent() c
 	return GetFatedBrandAbilitySystemComponent();
 }
 
+void AFatedBrandCharacterBase::SendWeaponEquippedDelegate(const bool bIsEquip) const
+{
+	WeaponEquippedStatusDelegate.Broadcast(bIsEquip);
+}
+
 void AFatedBrandCharacterBase::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
