@@ -33,6 +33,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AbilitySystem")
 	void SendWeaponEquippedDelegate(const bool bIsEquip) const;
 
+	UFUNCTION(BlueprintCallable, Category = "AbilitySystem")
+	void ToggleCurrentEquippedWeapon(const bool bShouldEnable);
+
 protected:
 	virtual void PossessedBy(AController* NewController) override;
 
@@ -52,4 +55,7 @@ protected:
 	TSoftObjectPtr<UDataAsset_StartUpDataBase> StartUpData;
 
 	virtual void InitAbilityActorInfo() { }
+
+	UFUNCTION()
+	void OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
 };
