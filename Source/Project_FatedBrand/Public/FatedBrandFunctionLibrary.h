@@ -6,6 +6,7 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "FatedBrandFunctionLibrary.generated.h"
 
+class AFatedBrandCharacterBase;
 class AFatedBrandCharacter;
 class UDataAsset_AbilityInfo;
 class UNebulaMenuWidgetController;

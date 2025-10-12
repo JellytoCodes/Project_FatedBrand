@@ -3,6 +3,8 @@
 
 #include "FatedBrandFunctionLibrary.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystemComponent.h"
 #include "Characters/FatedBrandCharacter.h"
 #include "Game/FatedBrandGameModeBase.h"
 #include "HUD/FatedBrandHUD.h"

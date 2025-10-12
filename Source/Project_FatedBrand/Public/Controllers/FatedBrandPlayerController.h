@@ -52,13 +52,13 @@ private :
 	float WallJumpTraceDistance = 50.0f;
 
 	UPROPERTY(EditDefaultsOnly, Category="Input|Jump")
-	float WallJumpHorizontalImpulse = 500.0f;
+	float WallJumpHorizontalImpulse = 200.0f;
 
 	UPROPERTY(EditDefaultsOnly, Category="Input|Jump")
 	float WallJumpVerticalMultiplier = 1.4f;
 
 	UPROPERTY(EditDefaultsOnly, Category="Input|Jump")
-	float DelayBetweenWallJumps = 0.3f;
+	float DelayBetweenWallJumps = 0.2f;
 
 	UPROPERTY(EditAnywhere, Category="Input|Jump", meta = (ClampMin = 0, ClampMax = 5, Units = "s"))
 	float MaxCoyoteTime = 0.16f;
