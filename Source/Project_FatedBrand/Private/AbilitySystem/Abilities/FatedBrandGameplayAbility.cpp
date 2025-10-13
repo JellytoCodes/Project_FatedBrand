@@ -6,6 +6,19 @@
 #include "AbilitySystem/FatedBrandAbilitySystemComponent.h"
 #include "Characters/FatedBrandCharacter.h"
 
+FDamageEffectParams UFatedBrandGameplayAbility::MakeDamageEffectParamsFromClassDefaults(AActor* TargetActor)
+{
+	FDamageEffectParams Params;
+
+	Params.WorldContextObject = GetAvatarActorFromActorInfo();
+	Params.DamageGameplayEffectClass = DamageEffectClass;
+	Params.SourceAbilitySystemComponent = GetAbilitySystemComponentFromActorInfo();
+	Params.TargetAbilitySystemComponent = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
+	Params.BaseDamage = Damage;
+	Params.AbilityLevel = GetAbilityLevel();
+	return Params;
+}
+
 void UFatedBrandGameplayAbility::OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
 {
 	Super::OnGiveAbility(ActorInfo, Spec);

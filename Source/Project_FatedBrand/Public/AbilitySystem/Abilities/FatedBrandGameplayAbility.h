@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "FatedBrandStructTypes.h"
 #include "Abilities/GameplayAbility.h"
 #include "FatedBrandGameplayAbility.generated.h"
 
@@ -15,6 +16,9 @@ class PROJECT_FATEDBRAND_API UFatedBrandGameplayAbility : public UGameplayAbilit
 public :
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	FGameplayTag StartupInputTag;
+
+	UFUNCTION(BlueprintCallable)
+	FDamageEffectParams MakeDamageEffectParamsFromClassDefaults(AActor* TargetActor = nullptr);
 
 protected :
 	virtual void OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) override;
@@ -30,6 +34,12 @@ protected :
 
 	UFUNCTION(BlueprintCallable, Category = "FatedBrand|Ability", meta = (DisplayName = "ApplyGameplayEffectSpecHandleToTargetActor"))
 	FActiveGameplayEffectHandle BP_ApplyEffectSpecHandleToTarget(AActor* TargetActor, const FGameplayEffectSpecHandle& InSpecHandle);
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSubclassOf<UGameplayEffect> DamageEffectClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	float Damage;
 
 private :
 	TWeakObjectPtr<AFatedBrandCharacter> CachedFatedBrandCharacter;

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "FatedBrandStructTypes.h"
 #include "Characters/FatedBrandCharacterBase.h"
 #include "FatedBrandCharacter.generated.h"
 
@@ -22,10 +23,15 @@ public :
 	UFUNCTION(BlueprintImplementableEvent)
 	void WallJumping();
 
+	UPROPERTY(BlueprintReadWrite)
+	FDamageEffectParams SwordDamageEffectParams;
+
 protected :
 	virtual void PossessedBy(AController* NewController) override;
 
 	virtual void InitAbilityActorInfo() override;
+
+	virtual void OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult) override;
 
 private :
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))

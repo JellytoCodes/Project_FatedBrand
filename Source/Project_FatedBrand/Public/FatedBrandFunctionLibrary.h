@@ -4,8 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
+#include "FatedBrandStructTypes.h"
 #include "FatedBrandFunctionLibrary.generated.h"
 
+struct FGameplayEffectContextHandle;
 class AFatedBrandCharacterBase;
 class AFatedBrandCharacter;
 class UDataAsset_AbilityInfo;
@@ -36,5 +38,8 @@ public :
 #pragma region Ability System
 	UFUNCTION(BlueprintCallable, Category = "AbilitySystem")
 	static UDataAsset_AbilityInfo* GetAbilityInfo(const UObject* WorldContextObject);
+
+	UFUNCTION(BlueprintCallable, Category = "AbilitySystem|Damage")
+	static FGameplayEffectContextHandle ApplyDamageEffect(FDamageEffectParams DamageEffectParams);
 #pragma endregion
 };
