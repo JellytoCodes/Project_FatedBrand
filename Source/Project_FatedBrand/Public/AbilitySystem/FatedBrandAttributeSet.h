@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AttributeSet.h"
+#include "FatedBrandStructTypes.h"
 #include "AbilitySystem/FatedBrandAbilitySystemComponent.h"
 #include "FatedBrandAttributeSet.generated.h"
 
@@ -34,4 +35,12 @@ public :
     UPROPERTY(BlueprintReadOnly, Category = "Damage")
     FGameplayAttributeData AttackPower;
     ATTRIBUTE_ACCESSORS(UFatedBrandAttributeSet, AttackPower)
+
+    UPROPERTY(BlueprintReadOnly, Category = "IncomingDamage")
+    FGameplayAttributeData IncomingDamage;
+    ATTRIBUTE_ACCESSORS(UFatedBrandAttributeSet, IncomingDamage)
+
+private :
+    void HandleIncomingDamage(FEffectProperties& Props);
+	void SetEffectProperties(const FGameplayEffectModCallbackData &Data, FEffectProperties& Props) const;
 };

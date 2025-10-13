@@ -1,5 +1,6 @@
 #pragma once
 
+#include "GameplayEffectTypes.h"
 #include "FatedBrandStructTypes.generated.h"
 
 class UAbilitySystemComponent;
@@ -19,6 +20,9 @@ struct FDamageEffectParams
 	TSubclassOf<UGameplayEffect> DamageGameplayEffectClass = nullptr;
 
 	UPROPERTY(BlueprintReadWrite)
+	FGameplayTag DamageType;
+
+	UPROPERTY(BlueprintReadWrite)
 	TObjectPtr<UAbilitySystemComponent> SourceAbilitySystemComponent;
 
 	UPROPERTY(BlueprintReadWrite)
@@ -29,4 +33,38 @@ struct FDamageEffectParams
 
 	UPROPERTY(BlueprintReadWrite)
 	float AbilityLevel = 1.f;
+};
+
+USTRUCT(BlueprintType)
+struct FEffectProperties
+{
+	GENERATED_BODY()
+
+	FEffectProperties() {}
+
+	FGameplayEffectContextHandle EffectContextHandle;
+	
+	UPROPERTY()
+	UAbilitySystemComponent* TargetASC = nullptr;
+
+	UPROPERTY()
+	AActor* TargetAvatarActor = nullptr;
+
+	UPROPERTY()
+	AController* TargetController = nullptr;
+
+	UPROPERTY()
+	ACharacter* TargetCharacter = nullptr;
+
+	UPROPERTY()
+	UAbilitySystemComponent* SourceASC = nullptr;
+
+	UPROPERTY()
+	AActor* SourceAvatarActor = nullptr;
+
+	UPROPERTY()
+	AController* SourceController = nullptr;
+
+	UPROPERTY()
+	ACharacter* SourceCharacter = nullptr;
 };

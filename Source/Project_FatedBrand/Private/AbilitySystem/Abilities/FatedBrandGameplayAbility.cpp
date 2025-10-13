@@ -12,6 +12,7 @@ FDamageEffectParams UFatedBrandGameplayAbility::MakeDamageEffectParamsFromClassD
 
 	Params.WorldContextObject = GetAvatarActorFromActorInfo();
 	Params.DamageGameplayEffectClass = DamageEffectClass;
+	Params.DamageType = DamageType;
 	Params.SourceAbilitySystemComponent = GetAbilitySystemComponentFromActorInfo();
 	Params.TargetAbilitySystemComponent = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
 	Params.BaseDamage = Damage;

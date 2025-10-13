@@ -72,6 +72,7 @@ FGameplayEffectContextHandle UFatedBrandFunctionLibrary::ApplyDamageEffect(FDama
 	EffectContextHandle.AddSourceObject(SourceAvatarActor);
 
 	const FGameplayEffectSpecHandle SpecHandle = DamageEffectParams.SourceAbilitySystemComponent->MakeOutgoingSpec(DamageEffectParams.DamageGameplayEffectClass, DamageEffectParams.AbilityLevel, EffectContextHandle);
+	SpecHandle.Data->SetSetByCallerMagnitude(DamageEffectParams.DamageType, DamageEffectParams.BaseDamage);
 
 	DamageEffectParams.TargetAbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data);
 	return EffectContextHandle;

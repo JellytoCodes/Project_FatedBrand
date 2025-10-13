@@ -40,4 +40,9 @@ namespace FatedBrandGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Abilities_Passive_Type, "Abilities.Passive.Type")
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Abilities_Passive_DoubleJump, "Abilities.Passive.DoubleJump")
 #pragma endregion
+
+#pragma region Damage
+	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Damage_MeleeAttack, "Damage.MeleeAttack")
+
+#pragma endregion
 }

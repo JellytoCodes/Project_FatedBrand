@@ -41,6 +41,9 @@ protected :
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	float Damage;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FGameplayTag DamageType;
+
 private :
 	TWeakObjectPtr<AFatedBrandCharacter> CachedFatedBrandCharacter;
 };
