@@ -2,11 +2,8 @@
 
 #include "Characters/FatedBrandCharacterBase.h"
 
-#include "AbilitySystemBlueprintLibrary.h"
-#include "FatedBrandFunctionLibrary.h"
 #include "AbilitySystem/FatedBrandAbilitySystemComponent.h"
 #include "AbilitySystem/FatedBrandAttributeSet.h"
-#include "Project_FatedBrand/Project_FatedBrand.h"
 
 AFatedBrandCharacterBase::AFatedBrandCharacterBase()
 {

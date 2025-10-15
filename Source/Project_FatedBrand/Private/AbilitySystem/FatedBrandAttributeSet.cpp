@@ -29,10 +29,16 @@ void UFatedBrandAttributeSet::HandleIncomingDamage(FEffectProperties& Props)
 {
 	const float LocalIncomingDamage = GetIncomingDamage();
 	SetIncomingDamage(0.f);
+
 	if (LocalIncomingDamage > 0.f)
 	{
 		const float NewHealth = GetCurrentHealth() - LocalIncomingDamage;
 		SetCurrentHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth()));
+
+		if (NewHealth <= 0.f)
+		{
+			//Props.TargetAvatarActor->Destroy();
+		}
 	}
 }
 
