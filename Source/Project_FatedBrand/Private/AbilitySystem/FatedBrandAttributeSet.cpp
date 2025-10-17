@@ -5,6 +5,7 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "GameFramework/Character.h"
 #include "GameplayEffectExtension.h"
+#include "Interfaces/CombatInterface.h"
 
 UFatedBrandAttributeSet::UFatedBrandAttributeSet()
 {
@@ -37,7 +38,10 @@ void UFatedBrandAttributeSet::HandleIncomingDamage(FEffectProperties& Props)
 
 		if (NewHealth <= 0.f)
 		{
-			//Props.TargetAvatarActor->Destroy();
+			if (ICombatInterface* CombatInterface = Cast<ICombatInterface>(Props.TargetAvatarActor))
+			{
+				CombatInterface->Die();
+			}
 		}
 	}
 }

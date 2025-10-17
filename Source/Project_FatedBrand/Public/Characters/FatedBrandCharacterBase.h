@@ -6,6 +6,7 @@
 #include "AbilitySystemInterface.h"
 #include "DataAssets/DataAsset_StartUpDataBase.h"
 #include "GameFramework/Character.h"
+#include "Interfaces/CombatInterface.h"
 #include "FatedBrandCharacterBase.generated.h"
 
 class UFatedBrandAttributeSet;
@@ -15,7 +16,7 @@ class UAttributeSet;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FWeaponEquippedStatusSignature, bool, bIsEquip);
 
 UCLASS()
-class PROJECT_FATEDBRAND_API AFatedBrandCharacterBase : public ACharacter, public IAbilitySystemInterface
+class PROJECT_FATEDBRAND_API AFatedBrandCharacterBase : public ACharacter, public IAbilitySystemInterface, public ICombatInterface
 {
 	GENERATED_BODY()
 
@@ -35,6 +36,17 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "AbilitySystem")
 	void ToggleCurrentEquippedWeapon(const bool bShouldEnable);
+
+#pragma region CombatInterface
+	// ~Begin Function
+	virtual void Die() override;
+	// ~End Function
+
+	// ~Begin Delegate
+	UPROPERTY(BlueprintAssignable, Category = "CombatInterface|Delegate")
+	FOnDeathSignature OnDeathDelegate;
+	// ~End Delegate
+#pragma endregion
 
 protected:
 	virtual void PossessedBy(AController* NewController) override;
@@ -58,4 +70,6 @@ protected:
 
 	UFUNCTION()
 	virtual void OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+
+	bool bIsDeath = false;
 };
