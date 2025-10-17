@@ -6,6 +6,9 @@
 #include "Characters/FatedBrandCharacterBase.h"
 #include "FatedBrandEnemy.generated.h"
 
+class AFatedBrandAIController;
+class UBehaviorTree;
+
 UCLASS()
 class PROJECT_FATEDBRAND_API AFatedBrandEnemy : public AFatedBrandCharacterBase
 {
@@ -16,5 +19,11 @@ public :
 
 protected :
 	virtual void PossessedBy(AController* NewController) override;
+
+	UPROPERTY(EditDefaultsOnly, Category = "AI")
+	TObjectPtr<UBehaviorTree> BehaviorTree;
+
+	UPROPERTY()
+	TObjectPtr<AFatedBrandAIController> FatedBrandAIController;
 
 };
