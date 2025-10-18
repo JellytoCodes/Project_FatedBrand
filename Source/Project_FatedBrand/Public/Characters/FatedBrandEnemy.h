@@ -17,6 +17,12 @@ class PROJECT_FATEDBRAND_API AFatedBrandEnemy : public AFatedBrandCharacterBase
 public :
 	AFatedBrandEnemy();
 
+#pragma region CombatInterface
+	// ~Begin Function
+	virtual void Die() override;
+	// ~End Function
+#pragma endregion
+
 protected :
 	virtual void PossessedBy(AController* NewController) override;
 

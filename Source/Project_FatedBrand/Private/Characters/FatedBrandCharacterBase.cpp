@@ -63,7 +63,6 @@ void AFatedBrandCharacterBase::ToggleCurrentEquippedWeapon(const bool bShouldEna
 void AFatedBrandCharacterBase::Die()
 {
 	if (bIsDeath) return;
-
 	OnDeathDelegate.Broadcast(this);
 	bIsDeath = true;
 }

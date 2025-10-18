@@ -27,8 +27,14 @@ AFatedBrandCharacter::AFatedBrandCharacter()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
 
+	GetCharacterMovement()->PerchRadiusThreshold = 15.0f;
+	GetCharacterMovement()->LedgeCheckThreshold = 6.0f;
+
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 4000.f, 0.f);
+
+	GetCharacterMovement()->SetPlaneConstraintNormal(FVector(0.0f, 1.0f, 0.0f));
+	GetCharacterMovement()->bConstrainToPlane = true;
 }
 
 void AFatedBrandCharacter::PossessedBy(AController* NewController)

@@ -52,10 +52,10 @@ private :
 	float WallJumpTraceDistance = 50.0f;
 
 	UPROPERTY(EditDefaultsOnly, Category="Input|Jump")
-	float WallJumpHorizontalImpulse = 200.0f;
+	float WallJumpHorizontalImpulse = 150.0f;
 
 	UPROPERTY(EditDefaultsOnly, Category="Input|Jump")
-	float WallJumpVerticalMultiplier = 1.4f;
+	float WallJumpVerticalMultiplier = 2.f;
 
 	UPROPERTY(EditDefaultsOnly, Category="Input|Jump")
 	float DelayBetweenWallJumps = 0.2f;

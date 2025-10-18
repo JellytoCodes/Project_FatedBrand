@@ -14,9 +14,9 @@ AFatedBrandAIController::AFatedBrandAIController()
 	AISenseConfig_Sight->DetectionByAffiliation.bDetectFriendlies = false;
 	AISenseConfig_Sight->DetectionByAffiliation.bDetectNeutrals = false;
 
-	AISenseConfig_Sight->SightRadius = 1000.f;
-	AISenseConfig_Sight->LoseSightRadius = 0.f;
-	AISenseConfig_Sight->PeripheralVisionAngleDegrees = 180.f;
+	AISenseConfig_Sight->SightRadius = 300.f;
+	AISenseConfig_Sight->LoseSightRadius = 350.f;
+	AISenseConfig_Sight->PeripheralVisionAngleDegrees = 360.f;
 
 	EnemyPerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>("EnemyPerceptionComponent");
 	EnemyPerceptionComponent->ConfigureSense(*AISenseConfig_Sight);
@@ -46,6 +46,13 @@ void AFatedBrandAIController::OnEnemyPerceptionUpdated(AActor* Actor, FAIStimulu
 			if (Stimulus.WasSuccessfullySensed() && Actor)
 			{
 				BlackboardComponent->SetValueAsObject("TargetActor", Actor);
+			}
+		}
+		else
+		{
+			if (!Stimulus.WasSuccessfullySensed())
+			{
+				BlackboardComponent->SetValueAsObject("TargetActor", nullptr);
 			}
 		}
 	}

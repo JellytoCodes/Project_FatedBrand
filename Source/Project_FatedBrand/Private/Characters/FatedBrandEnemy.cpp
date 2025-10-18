@@ -2,7 +2,6 @@
 
 #include "Characters/FatedBrandEnemy.h"
 
-#include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Controllers/FatedBrandAIController.h"
 #include "DataAssets/DataAsset_StartUpDataBase.h"
@@ -16,7 +15,16 @@ AFatedBrandEnemy::AFatedBrandEnemy()
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
 
+	GetCharacterMovement()->RotationRate = FRotator(0.f, 720.f, 0.f);
+
 	GetCharacterMovement()->bUseControllerDesiredRotation = true;
+}
+
+void AFatedBrandEnemy::Die()
+{
+	FatedBrandAIController->GetBlackboardComponent()->SetValueAsBool("IsDeath", true);
+
+	Super::Die();
 }
 
 void AFatedBrandEnemy::PossessedBy(AController* NewController)

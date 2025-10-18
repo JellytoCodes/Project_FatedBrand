@@ -59,7 +59,7 @@ void AFatedBrandPlayerController::Input_Move(const FInputActionValue &InputActio
 	{
 		ActionValueY = InputAxisVector.Y;
 
-		const FVector MoveDir = FVector(1.0f, InputAxisVector.Y > 0.0f ? 0.1f : -0.1f, 0.0f);
+		const FVector MoveDir = FVector(1.0f, 0.0f, 0.0f);
 
 		if(APawn* ControlledPawn = GetPawn<APawn>())
 		{
