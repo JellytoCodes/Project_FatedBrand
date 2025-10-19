@@ -55,7 +55,7 @@ private :
 	float WallJumpHorizontalImpulse = 150.0f;
 
 	UPROPERTY(EditDefaultsOnly, Category="Input|Jump")
-	float WallJumpVerticalMultiplier = 2.f;
+	float WallJumpVerticalMultiplier = 1.7f;
 
 	UPROPERTY(EditDefaultsOnly, Category="Input|Jump")
 	float DelayBetweenWallJumps = 0.2f;

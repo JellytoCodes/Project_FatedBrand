@@ -7,7 +7,7 @@
 #include "DataAssets/DataAsset_StartUpDataBase.h"
 #include "Engine/AssetManager.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "Project_FatedBrand/Project_FatedBrand.h"
+#include "AbilitySystem/FatedBrandAbilitySystemComponent.h"
 
 AFatedBrandEnemy::AFatedBrandEnemy()
 {
@@ -39,6 +39,7 @@ void AFatedBrandEnemy::PossessedBy(AController* NewController)
 			if (UDataAsset_StartUpDataBase* LoadedData = StartUpData.LoadSynchronous())
 			{
 				LoadedData->InitializeGameplayEffect(FatedBrandAbilitySystemComponent, StartUpCharacterName, 1);
+				GetFatedBrandAbilitySystemComponent()->AddCharacterActivateAbilities(LoadedData->StartUpOffensiveAbilities);
 			}	
 		}));
 	}

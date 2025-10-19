@@ -41,5 +41,8 @@ public :
 
 	UFUNCTION(BlueprintCallable, Category = "AbilitySystem|Damage")
 	static FGameplayEffectContextHandle ApplyDamageEffect(FDamageEffectParams DamageEffectParams);
+
+	UFUNCTION(BlueprintCallable, Category = "AbilitySystem|Hostile")
+	static bool IsTargetPawnHostile(const APawn* QueryPawn, const APawn* TargetPawn);
 #pragma endregion
 };

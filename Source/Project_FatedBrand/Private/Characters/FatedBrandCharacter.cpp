@@ -2,8 +2,6 @@
 
 #include "Characters/FatedBrandCharacter.h"
 
-#include "AbilitySystemBlueprintLibrary.h"
-#include "FatedBrandFunctionLibrary.h"
 #include "AbilitySystem/FatedBrandAbilitySystemComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Controllers/FatedBrandPlayerController.h"
@@ -64,16 +62,5 @@ void AFatedBrandCharacter::InitAbilityActorInfo()
 		{
 			FatedBrandHUD->InitOverlay(FatedBrandPlayerController, GetAbilitySystemComponent(), FatedBrandAttributeSet);
 		}
-	}
-}
-
-void AFatedBrandCharacter::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-	if (OtherActor == this) return;
-
-	if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
-	{
-		SwordDamageEffectParams.TargetAbilitySystemComponent = TargetASC;
-		UFatedBrandFunctionLibrary::ApplyDamageEffect(SwordDamageEffectParams);
 	}
 }

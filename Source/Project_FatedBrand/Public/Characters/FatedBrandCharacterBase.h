@@ -4,10 +4,21 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystemInterface.h"
+#include "FatedBrandStructTypes.h"
 #include "DataAssets/DataAsset_StartUpDataBase.h"
 #include "GameFramework/Character.h"
 #include "Interfaces/CombatInterface.h"
 #include "FatedBrandCharacterBase.generated.h"
+
+class UBoxComponent;
+
+UENUM(BlueprintType)
+enum class EToggleDamageType : uint8
+{
+	EquippedWeapon,
+	LeftHand,
+	RightHand
+};
 
 class UFatedBrandAttributeSet;
 class UFatedBrandAbilitySystemComponent;
@@ -28,15 +39,20 @@ public:
 	FORCEINLINE UFatedBrandAbilitySystemComponent* GetFatedBrandAbilitySystemComponent() const { return FatedBrandAbilitySystemComponent; }
 	FORCEINLINE UAttributeSet* GetFatedBrandAttributeSet() const { return FatedBrandAttributeSet; }
 
+	// -----------------------------
 	UPROPERTY(BlueprintAssignable, Category = "AbilitySystem")
 	FWeaponEquippedStatusSignature WeaponEquippedStatusDelegate;
 
 	UFUNCTION(BlueprintCallable, Category = "AbilitySystem")
 	void SendWeaponEquippedDelegate(const bool bIsEquip) const;
+	// ~ Use Weapon Dissolve Material
 
 	UFUNCTION(BlueprintCallable, Category = "AbilitySystem")
-	void ToggleCurrentEquippedWeapon(const bool bShouldEnable);
+	void ToggleCurrentCollision(const bool bShouldEnable, const EToggleDamageType ToggleDamageType = EToggleDamageType::EquippedWeapon);
 
+	UPROPERTY(BlueprintReadWrite)
+	FDamageEffectParams CombatDamageEffectParams;
+	
 #pragma region CombatInterface
 	// ~Begin Function
 	virtual void Die() override;
@@ -51,8 +67,33 @@ public:
 protected:
 	virtual void PossessedBy(AController* NewController) override;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
+#if WITH_EDITOR
+	virtual void PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent) override;
+#endif
+
+#pragma region CombatCollision
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat|Weapon")
 	TObjectPtr<UStaticMeshComponent> Weapon;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat|Body")
+	TObjectPtr<UBoxComponent> LeftHandCollisionBox;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat|Body")
+	TObjectPtr<UBoxComponent> RightHandCollisionBox;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat|Body")
+	FName LeftHandCollisionBoxAttachBoneName;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat|Body")
+	FName RightHandCollisionBoxAttachBoneName;
+
+	UFUNCTION()
+	virtual void OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+
+	UFUNCTION()
+	virtual void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
+#pragma endregion
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AbilitySystem")
 	TObjectPtr<UFatedBrandAbilitySystemComponent> FatedBrandAbilitySystemComponent;
@@ -68,8 +109,7 @@ protected:
 
 	virtual void InitAbilityActorInfo() { }
 
-	UFUNCTION()
-	virtual void OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+	
 
 	bool bIsDeath = false;
 };

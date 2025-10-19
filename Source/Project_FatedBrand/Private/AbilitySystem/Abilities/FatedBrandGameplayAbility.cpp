@@ -5,6 +5,7 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystem/FatedBrandAbilitySystemComponent.h"
 #include "Characters/FatedBrandCharacter.h"
+#include "Characters/FatedBrandEnemy.h"
 
 FDamageEffectParams UFatedBrandGameplayAbility::MakeDamageEffectParamsFromClassDefaults(AActor* TargetActor)
 {
@@ -42,6 +43,15 @@ AFatedBrandCharacter* UFatedBrandGameplayAbility::GetFatedBrandCharacterFromActo
 		CachedFatedBrandCharacter = Cast<AFatedBrandCharacter>(CurrentActorInfo->AvatarActor);
 	}
 	return CachedFatedBrandCharacter.IsValid() ? CachedFatedBrandCharacter.Get() : nullptr;
+}
+
+AFatedBrandEnemy* UFatedBrandGameplayAbility::GetFatedBrandEnemyFromActorInfo()
+{
+	if (!CachedFatedBrandEnemy.IsValid())
+	{
+		CachedFatedBrandEnemy = Cast<AFatedBrandEnemy>(CurrentActorInfo->AvatarActor);
+	}
+	return CachedFatedBrandEnemy.IsValid() ? CachedFatedBrandEnemy.Get() : nullptr;
 }
 
 FActiveGameplayEffectHandle UFatedBrandGameplayAbility::NativeApplyEffectSpecHandleToTarget(AActor* TargetActor, const FGameplayEffectSpecHandle& InSpecHandle)

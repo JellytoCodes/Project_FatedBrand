@@ -137,6 +137,8 @@ void AFatedBrandPlayerController::Input_JumpEnd()
 	if (FatedBrandCharacter)
 	{
 		FatedBrandCharacter->StopJumping();
+
+		if (bHasDoubleJumped) bHasDoubleJumped = false;
 	}
 }
 
