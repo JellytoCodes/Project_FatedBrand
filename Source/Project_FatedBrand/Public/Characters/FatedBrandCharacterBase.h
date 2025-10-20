@@ -86,13 +86,13 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat|Body")
 	FName RightHandCollisionBoxAttachBoneName;
+	
+	void SetToggleCollisionEnabled(const EToggleDamageType ToggleDamageType, const ECollisionEnabled::Type CurrentCollisionType) const;
 
 	UFUNCTION()
 	virtual void OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
 
-	UFUNCTION()
-	virtual void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
-
+	EToggleDamageType CurrentDamageType = EToggleDamageType::EquippedWeapon;
 #pragma endregion
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AbilitySystem")
@@ -108,8 +108,6 @@ protected:
 	TSoftObjectPtr<UDataAsset_StartUpDataBase> StartUpData;
 
 	virtual void InitAbilityActorInfo() { }
-
-	
 
 	bool bIsDeath = false;
 };

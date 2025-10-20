@@ -16,21 +16,18 @@ AFatedBrandCharacterBase::AFatedBrandCharacterBase()
 	Weapon = CreateDefaultSubobject<UStaticMeshComponent>("Weapon");
 	Weapon->SetupAttachment(GetMesh(), FName("WeaponHandSocket"));
 	Weapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	//Weapon->OnComponentBeginOverlap.AddUniqueDynamic(this, &ThisClass::OnComponentBeginOverlap);
-	Weapon->OnComponentHit.AddUniqueDynamic(this, &ThisClass::OnHit);
+	Weapon->OnComponentBeginOverlap.AddUniqueDynamic(this, &ThisClass::OnComponentBeginOverlap);
 	
 	LeftHandCollisionBox = CreateDefaultSubobject<UBoxComponent>("LeftHandCollisionBox");
 	LeftHandCollisionBox->SetupAttachment(GetMesh());
 	LeftHandCollisionBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	//LeftHandCollisionBox->OnComponentBeginOverlap.AddUniqueDynamic(this, &ThisClass::OnComponentBeginOverlap);
-	LeftHandCollisionBox->OnComponentHit.AddUniqueDynamic(this, &ThisClass::OnHit);
+	LeftHandCollisionBox->OnComponentBeginOverlap.AddUniqueDynamic(this, &ThisClass::OnComponentBeginOverlap);
 	
 	RightHandCollisionBox = CreateDefaultSubobject<UBoxComponent>("RightHandCollisionBox");
 	RightHandCollisionBox->SetupAttachment(GetMesh());
 	RightHandCollisionBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	//RightHandCollisionBox->OnComponentBeginOverlap.AddUniqueDynamic(this, &ThisClass::OnComponentBeginOverlap);
-	RightHandCollisionBox->OnComponentHit.AddUniqueDynamic(this, &ThisClass::OnHit);
-
+	RightHandCollisionBox->OnComponentBeginOverlap.AddUniqueDynamic(this, &ThisClass::OnComponentBeginOverlap);
+	
 	FatedBrandAbilitySystemComponent = CreateDefaultSubobject<UFatedBrandAbilitySystemComponent>("FatedBrandAbilitySystemComponent");
 	FatedBrandAttributeSet = CreateDefaultSubobject<UFatedBrandAttributeSet>("FatedBrandAttributeSet");
 }
@@ -73,6 +70,13 @@ void AFatedBrandCharacterBase::ToggleCurrentCollision(const bool bShouldEnable, 
 {
 	const ECollisionEnabled::Type CurrentCollisionType = bShouldEnable ? ECollisionEnabled::QueryOnly : ECollisionEnabled::NoCollision;
 
+	CurrentDamageType = ToggleDamageType;
+
+	SetToggleCollisionEnabled(CurrentDamageType, CurrentCollisionType);
+}
+
+void AFatedBrandCharacterBase::SetToggleCollisionEnabled(const EToggleDamageType ToggleDamageType, const ECollisionEnabled::Type CurrentCollisionType) const
+{
 	switch (ToggleDamageType)
 	{
 	case EToggleDamageType::EquippedWeapon :
@@ -107,23 +111,8 @@ void AFatedBrandCharacterBase::OnComponentBeginOverlap(UPrimitiveComponent* Over
 
 			CombatDamageEffectParams.TargetAbilitySystemComponent = TargetASC;
 			UFatedBrandFunctionLibrary::ApplyDamageEffect(CombatDamageEffectParams);
-		}
-	}
-}
 
-void AFatedBrandCharacterBase::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
-{
-	Debug::Print(OtherActor->GetActorNameOrLabel());
-	if (OtherActor == this) return;
-
-	if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
-	{
-		if (const APawn* HitPawn = Cast<APawn>(TargetASC->GetAvatarActor()))
-		{
-			if (UFatedBrandFunctionLibrary::IsTargetPawnHostile(this, HitPawn) == false) return;
-
-			CombatDamageEffectParams.TargetAbilitySystemComponent = TargetASC;
-			UFatedBrandFunctionLibrary::ApplyDamageEffect(CombatDamageEffectParams);
+			SetToggleCollisionEnabled(CurrentDamageType, ECollisionEnabled::NoCollision);
 		}
 	}
 }
