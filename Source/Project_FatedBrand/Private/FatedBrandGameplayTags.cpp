@@ -9,6 +9,7 @@ namespace FatedBrandGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Input_Move, "Input.Move")
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Input_Jump, "Input.Jump")
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Input_NebulaMenu, "Input.NebulaMenu")
+	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Input_Block, "Input.Block")
 	/** ~End Native Input */
 
 	/** ~Begin Ability Input */
@@ -42,7 +43,14 @@ namespace FatedBrandGameplayTags
 #pragma endregion
 
 #pragma region Damage
+	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Damage_Status_Attack, "Damage.Status.Attack")
+	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Damage_Status_Blocking, "Damage.Status.Blocking")
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Damage_MeleeAttack, "Damage.MeleeAttack")
 
+#pragma endregion
+
+#pragma region Event
+	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Event_SuccessfulBlock, "Event.SuccessfulBlock")
+	
 #pragma endregion
 }

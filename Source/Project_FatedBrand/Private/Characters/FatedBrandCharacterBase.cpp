@@ -4,6 +4,7 @@
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "FatedBrandFunctionLibrary.h"
+#include "FatedBrandGameplayTags.h"
 #include "AbilitySystem/FatedBrandAbilitySystemComponent.h"
 #include "AbilitySystem/FatedBrandAttributeSet.h"
 #include "Components/BoxComponent.h"
@@ -99,21 +100,38 @@ void AFatedBrandCharacterBase::SetToggleCollisionEnabled(const EToggleDamageType
 	}
 }
 
+void AFatedBrandCharacterBase::OnHitTargetActor(AActor* HitActor)
+{
+	UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(HitActor);
+
+	const bool bIsBlocking = TargetASC->HasMatchingGameplayTag(FatedBrandGameplayTags::Damage_Status_Blocking);
+
+	FGameplayEventData EventData;
+	EventData.Instigator = CombatDamageEffectParams.SourceAbilitySystemComponent->GetAvatarActor();
+	EventData.Target = TargetASC->GetAvatarActor();
+
+	if (bIsBlocking)
+	{
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(TargetASC->GetAvatarActor(), FatedBrandGameplayTags::Event_SuccessfulBlock, EventData);
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(CombatDamageEffectParams.SourceAbilitySystemComponent->GetAvatarActor(), FatedBrandGameplayTags::Event_SuccessfulBlock, EventData);
+	}
+	else
+	{
+		CombatDamageEffectParams.TargetAbilitySystemComponent = TargetASC;
+		UFatedBrandFunctionLibrary::ApplyDamageEffect(CombatDamageEffectParams);
+	}
+}
+
 void AFatedBrandCharacterBase::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (OtherActor == this) return;
-
-	if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
+	
+	if (APawn* HitPawn = Cast<APawn>(OtherActor))
 	{
-		if (const APawn* HitPawn = Cast<APawn>(TargetASC->GetAvatarActor()))
-		{
-			if (UFatedBrandFunctionLibrary::IsTargetPawnHostile(this, HitPawn) == false) return;
+		if (UFatedBrandFunctionLibrary::IsTargetPawnHostile(this, HitPawn) == false) return;
 
-			CombatDamageEffectParams.TargetAbilitySystemComponent = TargetASC;
-			UFatedBrandFunctionLibrary::ApplyDamageEffect(CombatDamageEffectParams);
-
-			SetToggleCollisionEnabled(CurrentDamageType, ECollisionEnabled::NoCollision);
-		}
+		OnHitTargetActor(HitPawn);
+		SetToggleCollisionEnabled(CurrentDamageType, ECollisionEnabled::NoCollision);
 	}
 }
 

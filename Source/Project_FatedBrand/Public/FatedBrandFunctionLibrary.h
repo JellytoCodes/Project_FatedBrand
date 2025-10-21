@@ -16,8 +16,6 @@ class UOverlayWidgetController;
 class AFatedBrandHUD;
 struct FWidgetControllerParams;
 
-
-
 UCLASS()
 class PROJECT_FATEDBRAND_API UFatedBrandFunctionLibrary : public UBlueprintFunctionLibrary
 {

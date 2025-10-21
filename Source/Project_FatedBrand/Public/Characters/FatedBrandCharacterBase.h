@@ -88,6 +88,7 @@ protected:
 	FName RightHandCollisionBoxAttachBoneName;
 	
 	void SetToggleCollisionEnabled(const EToggleDamageType ToggleDamageType, const ECollisionEnabled::Type CurrentCollisionType) const;
+	void OnHitTargetActor(AActor* HitActor);
 
 	UFUNCTION()
 	virtual void OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);

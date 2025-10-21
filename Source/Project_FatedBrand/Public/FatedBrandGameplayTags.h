@@ -13,6 +13,7 @@ namespace FatedBrandGameplayTags
 	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Jump)
 	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_NebulaMenu)
 	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_MeleeAttack)
+	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Block)
 	/** ~End Native Input */
 
 	/** ~Begin Ability Input */
@@ -46,7 +47,14 @@ namespace FatedBrandGameplayTags
 #pragma endregion
 
 #pragma region Damage
+	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Damage_Status_Attack)
+	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Damage_Status_Blocking)
 	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Damage_MeleeAttack)
 
+#pragma endregion
+
+#pragma region Event
+	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_SuccessfulBlock)
+	
 #pragma endregion
 }
