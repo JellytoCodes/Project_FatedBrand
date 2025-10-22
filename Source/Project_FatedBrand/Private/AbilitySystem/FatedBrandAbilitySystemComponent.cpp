@@ -72,13 +72,17 @@ void UFatedBrandAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag
 {
 	if (!InInputTag.IsValid()) return;
 
+	FScopedAbilityListLock Lock(*this);
 	for (FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
 	{
-		if (!AbilitySpec.GetDynamicSpecSourceTags().HasTagExact(InInputTag)) continue;
+		if (!AbilitySpec.DynamicAbilityTags.HasTagExact(InInputTag)) continue;
 
 		AbilitySpecInputPressed(AbilitySpec);
-		TryActivateAbility(AbilitySpec.Handle);
-		if (AbilitySpec.IsActive())
+		if (!AbilitySpec.IsActive())
+		{
+			TryActivateAbility(AbilitySpec.Handle);
+		}
+		else
 		{
 			InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputPressed, AbilitySpec.Handle, AbilitySpec.ActivationInfo.GetActivationPredictionKey());
 		}
@@ -89,15 +93,21 @@ void UFatedBrandAbilitySystemComponent::OnAbilityInputReleased(const FGameplayTa
 {
 	if (!InInputTag.IsValid()) return;
 
+	FScopedAbilityListLock Lock(*this);
 	for (FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
 	{
-		AbilitySpec.InputPressed = false;
+		if (!AbilitySpec.DynamicAbilityTags.HasTagExact(InInputTag)) continue;
 
-		if (!AbilitySpec.GetDynamicSpecSourceTags().HasTagExact(InInputTag) && AbilitySpec.IsActive())
+		if (!AbilitySpec.IsActive())
 		{
 			AbilitySpecInputReleased(AbilitySpec);
+		}
+		else
+		{
 			InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputReleased, AbilitySpec.Handle, AbilitySpec.ActivationInfo.GetActivationPredictionKey());
 		}
+
+		// CancelAbilityHandle(AbilitySpec.Handle);
 	}
 }
 

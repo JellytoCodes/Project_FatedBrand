@@ -32,6 +32,10 @@ public :
     FGameplayAttributeData MaxHealth;
     ATTRIBUTE_ACCESSORS(UFatedBrandAttributeSet, MaxHealth)
 
+    UPROPERTY(BlueprintReadOnly, Category = "VitalSurge")
+    FGameplayAttributeData VitalSurge;
+    ATTRIBUTE_ACCESSORS(UFatedBrandAttributeSet, VitalSurge)
+
     UPROPERTY(BlueprintReadOnly, Category = "Damage")
     FGameplayAttributeData AttackPower;
     ATTRIBUTE_ACCESSORS(UFatedBrandAttributeSet, AttackPower)

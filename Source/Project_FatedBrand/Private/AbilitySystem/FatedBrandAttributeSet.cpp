@@ -9,6 +9,7 @@
 
 UFatedBrandAttributeSet::UFatedBrandAttributeSet()
 {
+	InitVitalSurge(0.f);
 }
 
 void UFatedBrandAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data)
@@ -18,11 +19,14 @@ void UFatedBrandAttributeSet::PostGameplayEffectExecute(const struct FGameplayEf
 	FEffectProperties Props;
 	SetEffectProperties(Data, Props);
 
-	//if (Data.EvaluatedData.Attribute == GetCurrentHealthAttribute()) SetCurrentHealth(FMath::Clamp(GetCurrentHealth(), 0.f, GetMaxHealth()));
-
 	if (Data.EvaluatedData.Attribute == GetIncomingDamageAttribute())
 	{
 		HandleIncomingDamage(Props);
+	}
+
+	if (Data.EvaluatedData.Attribute == GetVitalSurgeAttribute())
+	{
+		SetVitalSurge(FMath::Clamp(GetVitalSurge(),0.f, 100.f));
 	}
 }
 
