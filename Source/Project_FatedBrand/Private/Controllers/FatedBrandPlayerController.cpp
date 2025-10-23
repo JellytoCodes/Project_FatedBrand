@@ -13,7 +13,6 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "HUD/FatedBrandHUD.h"
-#include "Project_FatedBrand/Project_FatedBrand.h"
 
 FGenericTeamId AFatedBrandPlayerController::GetGenericTeamId() const
 {
@@ -35,6 +34,11 @@ void AFatedBrandPlayerController::BeginPlay()
 	{
 		Subsystem->AddMappingContext(InputConfigDataAsset->DefaultMappingContext, 0);
 	}
+
+	if (!CachedFatedBrandHUD.IsValid())
+	{
+		CachedFatedBrandHUD = Cast<AFatedBrandHUD>(GetHUD());
+	}
 }
 
 void AFatedBrandPlayerController::SetupInputComponent()
@@ -48,29 +52,39 @@ void AFatedBrandPlayerController::SetupInputComponent()
 	FatedBrandEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, FatedBrandGameplayTags::Input_Jump, ETriggerEvent::Completed, this, &ThisClass::Input_JumpEnd);
 	FatedBrandEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, FatedBrandGameplayTags::Input_NebulaMenu, ETriggerEvent::Started, this, &ThisClass::Input_NebulaMenu);
 
-	FatedBrandEnhancedInputComponent->BindAbilityInputAction(InputConfigDataAsset, this, &ThisClass::Input_AbilityInputPressed, &ThisClass::Input_AbilityInputReleased);
+	FatedBrandEnhancedInputComponent->BindAbilityInputAction(InputConfigDataAsset, this, &ThisClass::Input_AbilityInputPressed, &ThisClass::Input_AbilityInputReleased, &ThisClass::Input_AbilityInputHeld);
 }
 
 void AFatedBrandPlayerController::Input_Move(const FInputActionValue &InputActionValue)
 {
 	const FVector2D InputAxisVector = InputActionValue.Get<FVector2D>();
 
-	if (!bHasWallJumped)
+	if (bIsNebulaMenu)
 	{
-		ActionValueY = InputAxisVector.Y;
+		CachedFatedBrandHUD->OnMoveToLocationDelegate.Broadcast(InputAxisVector);
+	}
 
-		const FVector MoveDir = FVector(1.0f, 0.0f, 0.0f);
-
-		if(APawn* ControlledPawn = GetPawn<APawn>())
+	else
+	{
+		if (!bHasWallJumped)
 		{
-			ControlledPawn->AddMovementInput(MoveDir, InputAxisVector.Y);
-		}
+			ActionValueY = InputAxisVector.Y;
+
+			const FVector MoveDir = FVector(1.0f, 0.0f, 0.0f);
+
+			if(APawn* ControlledPawn = GetPawn<APawn>())
+			{
+				ControlledPawn->AddMovementInput(MoveDir, InputAxisVector.Y);
+			}
+		}	
 	}
 }
 
 void AFatedBrandPlayerController::Input_JumpStart()
 {
-	if (FatedBrandCharacter)
+	if (bIsNebulaMenu) return;
+
+	if (FatedBrandCharacter.IsValid())
 	{
 		if (!FatedBrandCharacter->GetCharacterMovement()->IsFalling())
 		{
@@ -134,7 +148,7 @@ void AFatedBrandPlayerController::ResetWallJump()
 
 void AFatedBrandPlayerController::Input_JumpEnd()
 {
-	if (FatedBrandCharacter)
+	if (FatedBrandCharacter.IsValid())
 	{
 		FatedBrandCharacter->StopJumping();
 
@@ -146,19 +160,21 @@ void AFatedBrandPlayerController::Input_NebulaMenu()
 {
 	if (FatedBrandCharacter == nullptr) return;
 
-	if (AFatedBrandHUD* FatedBrandHUD = Cast<AFatedBrandHUD>(GetHUD()))
+	if (CachedFatedBrandHUD.IsValid())
 	{
+		auto* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
+		
 		if (!bIsNebulaMenu)
 		{
-			FatedBrandHUD->CreateNebulaMenu(this, FatedBrandCharacter->GetAbilitySystemComponent(), FatedBrandCharacter->GetFatedBrandAttributeSet());
-			bShowMouseCursor = true;
+			CachedFatedBrandHUD->CreateNebulaMenu(this, FatedBrandCharacter->GetAbilitySystemComponent(), FatedBrandCharacter->GetFatedBrandAttributeSet());
 			bIsNebulaMenu = true;
+			if (Subsystem) Subsystem->AddMappingContext(CachedFatedBrandHUD->GetWidgetMappingContext(), 1);
 		}
 		else
 		{
-			FatedBrandHUD->RemoveNebulaMenu();
-			bShowMouseCursor = false;
+			CachedFatedBrandHUD->RemoveNebulaMenu();
 			bIsNebulaMenu = false;
+			if (Subsystem) Subsystem->RemoveMappingContext(CachedFatedBrandHUD->GetWidgetMappingContext());
 		}
 	}
 
@@ -166,6 +182,8 @@ void AFatedBrandPlayerController::Input_NebulaMenu()
 
 void AFatedBrandPlayerController::Input_AbilityInputPressed(const FGameplayTag InInputTag)
 {
+	if (bIsNebulaMenu) return;
+
 	if (GetFatedBrandASC())
 	{
 		GetFatedBrandASC()->OnAbilityInputPressed(InInputTag);
@@ -174,9 +192,21 @@ void AFatedBrandPlayerController::Input_AbilityInputPressed(const FGameplayTag I
 
 void AFatedBrandPlayerController::Input_AbilityInputReleased(const FGameplayTag InInputTag)
 {
+	if (bIsNebulaMenu) return;
+
 	if (GetFatedBrandASC())
 	{
 		GetFatedBrandASC()->OnAbilityInputReleased(InInputTag);
+	}
+}
+
+void AFatedBrandPlayerController::Input_AbilityInputHeld(const FGameplayTag InInputTag)
+{
+	if (bIsNebulaMenu) return;
+
+	if (GetFatedBrandASC())
+	{
+		GetFatedBrandASC()->OnAbilityInputHeld(InInputTag);
 	}
 }
 

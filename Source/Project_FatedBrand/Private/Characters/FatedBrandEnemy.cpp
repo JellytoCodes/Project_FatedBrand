@@ -15,6 +15,9 @@ AFatedBrandEnemy::AFatedBrandEnemy()
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
 
+	FatedBrandAbilitySystemComponent->SetIsReplicated(true);
+	FatedBrandAbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Full);
+
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 720.f, 0.f);
 
 	GetCharacterMovement()->bUseControllerDesiredRotation = true;

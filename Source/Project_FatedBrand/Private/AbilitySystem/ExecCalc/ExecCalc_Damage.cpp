@@ -51,7 +51,6 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 		Damage = TagMagnitude.Value;
 	}
 
-
 	const FGameplayModifierEvaluatedData EvaluatedData(UFatedBrandAttributeSet::GetIncomingDamageAttribute(), EGameplayModOp::Additive, Damage);
 	OutExecutionOutput.AddOutputModifier(EvaluatedData);
 }

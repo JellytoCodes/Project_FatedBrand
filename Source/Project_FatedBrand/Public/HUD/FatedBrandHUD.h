@@ -6,6 +6,7 @@
 #include "GameFramework/HUD.h"
 #include "FatedBrandHUD.generated.h"
 
+class UInputMappingContext;
 class UNebulaMenuWidgetController;
 class UFatedBrandUserWidget;
 class UAttributeSet;
@@ -13,6 +14,8 @@ class UAbilitySystemComponent;
 class UOverlayWidgetController;
 
 struct FWidgetControllerParams;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMoveToLocationSignature, FVector2D, AxisVector);
 
 UCLASS()
 class PROJECT_FATEDBRAND_API AFatedBrandHUD : public AHUD
@@ -25,6 +28,10 @@ public :
 	void InitOverlay(APlayerController* PC, UAbilitySystemComponent* ASC, UAttributeSet* AS);
 	void CreateNebulaMenu(APlayerController* PC, UAbilitySystemComponent* ASC, UAttributeSet* AS);
 	void RemoveNebulaMenu();
+
+	FORCEINLINE UInputMappingContext* GetWidgetMappingContext() { return WidgetMappingContext; }
+
+	FOnMoveToLocationSignature OnMoveToLocationDelegate;
 
 private :
 	UPROPERTY()
@@ -50,4 +57,10 @@ private :
 
 	UPROPERTY(EditDefaultsOnly, Category = "WidgetClass")
 	TSubclassOf<UNebulaMenuWidgetController> NebulaWidgetControllerClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "WidgetContext")
+	TObjectPtr<UInputMappingContext> WidgetMappingContext;
+
+	UFUNCTION()
+	void MoveToAxis(const FVector2D InAxis);
 };

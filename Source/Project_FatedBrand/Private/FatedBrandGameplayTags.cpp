@@ -25,7 +25,6 @@ namespace FatedBrandGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Input_VitalSurge, "Input.VitalSurge")
 	/** ~End Ability Input */
 #pragma endregion
-
 	
 #pragma region Abilities Status
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Abilities_None, "Abilities.None")

@@ -26,6 +26,7 @@ public :
 
 	void OnAbilityInputPressed(const FGameplayTag& InInputTag);
 	void OnAbilityInputReleased(const FGameplayTag& InInputTag);
+	void OnAbilityInputHeld(const FGameplayTag& InInputTag);
 	void ForEachAbility(const FForEachAbility& Delegate);
 
 	FGameplayTag GetStatusFromAbilityTag(const FGameplayTag& AbilityTag);

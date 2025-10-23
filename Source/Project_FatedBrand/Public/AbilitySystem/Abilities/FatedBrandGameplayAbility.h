@@ -18,6 +18,9 @@ public :
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	FGameplayTag StartupInputTag;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	bool IsMustBeInputTag = false;
+
 	UFUNCTION(BlueprintCallable)
 	FDamageEffectParams MakeDamageEffectParamsFromClassDefaults(AActor* TargetActor = nullptr);
 

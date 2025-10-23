@@ -6,6 +6,7 @@
 #include "HUD/Widgets/FatedBrandUserWidget.h"
 #include "HUD/WidgetController/OverlayWidgetController.h"
 #include "HUD/WidgetController/NebulaMenuWidgetController.h"
+#include "Project_FatedBrand/Project_FatedBrand.h"
 
 UOverlayWidgetController* AFatedBrandHUD::GetOverlayWidgetController(const FWidgetControllerParams& WCParams)
 {
@@ -56,12 +57,21 @@ void AFatedBrandHUD::CreateNebulaMenu(APlayerController* PC, UAbilitySystemCompo
 
 	Widget->AddToViewport();
 	Widget->SetPositionInViewport(FVector2D(400, 100), true);
+
+	OnMoveToLocationDelegate.AddUniqueDynamic(this, &ThisClass::MoveToAxis);
 }
 
 void AFatedBrandHUD::RemoveNebulaMenu()
 {
 	if (NebulaWidget)
 	{
+		OnMoveToLocationDelegate.Clear();
 		NebulaWidget->RemoveFromParent();
 	}
+}
+
+void AFatedBrandHUD::MoveToAxis(const FVector2D InAxis)
+{
+	Debug::Print("Location : Y", InAxis.Y);
+	Debug::Print("Location X", InAxis.X);
 }

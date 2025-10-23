@@ -8,6 +8,7 @@
 #include "GameFramework/PlayerController.h"
 #include "FatedBrandPlayerController.generated.h"
 
+class AFatedBrandHUD;
 class UFatedBrandAbilitySystemComponent;
 class AFatedBrandCharacter;
 struct FInputActionValue;
@@ -35,7 +36,7 @@ private :
 	TObjectPtr<UFatedBrandAbilitySystemComponent> FatedBrandAbilitySystemComponent;
 	
 	UPROPERTY()
-	TSoftObjectPtr<AFatedBrandCharacter> FatedBrandCharacter;
+	TWeakObjectPtr<AFatedBrandCharacter> FatedBrandCharacter;
 
 	void Input_Move(const FInputActionValue &InputActionValue);
 	void Input_JumpStart();
@@ -45,6 +46,10 @@ private :
 
 	void Input_AbilityInputPressed(const FGameplayTag InInputTag);
 	void Input_AbilityInputReleased(const FGameplayTag InInputTag);
+	void Input_AbilityInputHeld(const FGameplayTag InInputTag);
+
+	UPROPERTY()
+	TWeakObjectPtr<AFatedBrandHUD> CachedFatedBrandHUD;
 
 	bool bIsNebulaMenu = false;
 

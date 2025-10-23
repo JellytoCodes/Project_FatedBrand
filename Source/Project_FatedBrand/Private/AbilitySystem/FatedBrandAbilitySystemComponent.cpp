@@ -72,19 +72,24 @@ void UFatedBrandAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag
 {
 	if (!InInputTag.IsValid()) return;
 
-	FScopedAbilityListLock Lock(*this);
+	FScopedAbilityListLock ActiveScopeLock(*this);
 	for (FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
 	{
-		if (!AbilitySpec.DynamicAbilityTags.HasTagExact(InInputTag)) continue;
-
-		AbilitySpecInputPressed(AbilitySpec);
-		if (!AbilitySpec.IsActive())
+		if (AbilitySpec.GetDynamicSpecSourceTags().HasTagExact(InInputTag))
 		{
-			TryActivateAbility(AbilitySpec.Handle);
-		}
-		else
-		{
-			InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputPressed, AbilitySpec.Handle, AbilitySpec.ActivationInfo.GetActivationPredictionKey());
+			AbilitySpecInputPressed(AbilitySpec);
+			if (!AbilitySpec.IsActive())
+			{
+				TryActivateAbility(AbilitySpec.Handle);
+			}
+			else
+			{
+				const UGameplayAbility* Ability = AbilitySpec.GetPrimaryInstance();
+				PRAGMA_DISABLE_DEPRECATION_WARNINGS
+				const FPredictionKey PredictionKey = Ability == nullptr ? AbilitySpec.ActivationInfo.GetActivationPredictionKey() : Ability->GetCurrentActivationInfo().GetActivationPredictionKey();
+				PRAGMA_DISABLE_DEPRECATION_WARNINGS
+				InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputPressed, AbilitySpec.Handle, PredictionKey);
+			}
 		}
 	}
 }
@@ -92,22 +97,37 @@ void UFatedBrandAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag
 void UFatedBrandAbilitySystemComponent::OnAbilityInputReleased(const FGameplayTag& InInputTag)
 {
 	if (!InInputTag.IsValid()) return;
-
-	FScopedAbilityListLock Lock(*this);
+	
+	FScopedAbilityListLock ActiveScopeLock(*this);
 	for (FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
 	{
-		if (!AbilitySpec.DynamicAbilityTags.HasTagExact(InInputTag)) continue;
-
-		if (!AbilitySpec.IsActive())
+		AbilitySpecInputReleased(AbilitySpec);
+		if (AbilitySpec.GetDynamicSpecSourceTags().HasTagExact(InInputTag) && AbilitySpec.IsActive())
 		{
-			AbilitySpecInputReleased(AbilitySpec);
+			const UGameplayAbility* Ability = AbilitySpec.GetPrimaryInstance();
+			PRAGMA_DISABLE_DEPRECATION_WARNINGS
+			const FPredictionKey PredictionKey = Ability == nullptr ? AbilitySpec.ActivationInfo.GetActivationPredictionKey() : Ability->GetCurrentActivationInfo().GetActivationPredictionKey();
+			PRAGMA_DISABLE_DEPRECATION_WARNINGS
+			InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputReleased, AbilitySpec.Handle, PredictionKey);
 		}
-		else
-		{
-			InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputReleased, AbilitySpec.Handle, AbilitySpec.ActivationInfo.GetActivationPredictionKey());
-		}
+	}
+}
 
-		// CancelAbilityHandle(AbilitySpec.Handle);
+void UFatedBrandAbilitySystemComponent::OnAbilityInputHeld(const FGameplayTag& InInputTag)
+{
+	if (!InInputTag.IsValid()) return;
+
+	FScopedAbilityListLock ActiveScopeLock(*this);
+	for (FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
+	{
+		if (AbilitySpec.GetDynamicSpecSourceTags().HasTagExact(InInputTag))
+		{
+			AbilitySpecInputPressed(AbilitySpec);
+			if (!AbilitySpec.IsActive())
+			{
+				TryActivateAbility(AbilitySpec.Handle);
+			}
+		}
 	}
 }
 
