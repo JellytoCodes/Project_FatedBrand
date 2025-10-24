@@ -8,6 +8,7 @@ void UOverlayWidgetController::BroadcastInitialValues()
 {
 	OnCurrentHealthChanged.Broadcast(GetFatedBrandAS()->GetCurrentHealth());
 	OnMaxHealthChanged.Broadcast(GetFatedBrandAS()->GetMaxHealth());
+	OnVitalSurgeChanged.Broadcast(GetFatedBrandAS()->GetVitalSurge());
 }
 
 void UOverlayWidgetController::BindCallbacksToDependencies()
@@ -22,5 +23,11 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 	AddLambda([this](const FOnAttributeChangeData& Data)
 	{
 		OnMaxHealthChanged.Broadcast(Data.NewValue);
+	});
+
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetFatedBrandAS()->GetVitalSurgeAttribute()).
+	AddLambda([this](const FOnAttributeChangeData& Data)
+	{
+		OnVitalSurgeChanged.Broadcast(Data.NewValue);
 	});
 }

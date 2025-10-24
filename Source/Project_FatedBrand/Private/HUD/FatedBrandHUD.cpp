@@ -72,6 +72,6 @@ void AFatedBrandHUD::RemoveNebulaMenu()
 
 void AFatedBrandHUD::MoveToAxis(const FVector2D InAxis)
 {
-	Debug::Print("Location : Y", InAxis.Y);
-	Debug::Print("Location X", InAxis.X);
+	NebulaWidgetController->SetSelectSocketAxis(InAxis.X, InAxis.Y);
+
 }

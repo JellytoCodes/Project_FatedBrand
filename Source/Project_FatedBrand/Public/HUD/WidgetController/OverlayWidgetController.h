@@ -23,5 +23,6 @@ public :
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Attributes")
 	FOnAttribueChangedSignature OnMaxHealthChanged;
 
-
+	UPROPERTY(BlueprintAssignable, Category = "GAS|Attributes")
+	FOnAttribueChangedSignature OnVitalSurgeChanged;
 };

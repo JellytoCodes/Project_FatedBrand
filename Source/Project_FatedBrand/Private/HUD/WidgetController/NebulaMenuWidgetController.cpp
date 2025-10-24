@@ -5,6 +5,7 @@
 #include "DataAssets/DataAsset_AbilityInfo.h"
 #include "AbilitySystem/FatedBrandAbilitySystemComponent.h"
 #include "GameplayAbilitySpec.h"
+#include "Project_FatedBrand/Project_FatedBrand.h"
 
 void UNebulaMenuWidgetController::BroadcastInitialValues()
 {
@@ -106,6 +107,17 @@ void UNebulaMenuWidgetController::OnAbilityEquipped(const FGameplayTag& AbilityT
 	GetFatedBrandASC()->EquipAbility(AbilityTag, Slot);
 }
 
+void UNebulaMenuWidgetController::SetSelectSocketAxis(const int32 SocketX, const int32 SocketY)
+{
+    SelectSocketX = Wrap1(SelectSocketX + SocketX, SOCKET_X_MIN - 1, SOCKET_X_MAX - 1);
+    SelectSocketY = Wrap1(SelectSocketY + SocketY, SOCKET_Y_MIN - 1, SOCKET_Y_MAX - 1);
+
+    const int32 index = (SelectSocketY * SOCKET_X_MAX) + SelectSocketX; // 0..39
+    NebulaSelectSocket = static_cast<ENebulaSelectSocket>(index);
+
+    OnSelectNebulaSocketDelegate.Broadcast();
+}
+
 void UNebulaMenuWidgetController::ShouldEnableButtons(const FGameplayTag& AbilityStatus, bool& bShouldEnableEquipButton)
 {
 	bShouldEnableEquipButton = false;
@@ -125,4 +137,10 @@ void UNebulaMenuWidgetController::ShouldEnableButtons(const FGameplayTag& Abilit
 	{
 		// false ∞Ì¡§
 	}
+}
+
+int32 UNebulaMenuWidgetController::Wrap1(const int32 V, const int32 Min, const int32 Max)
+{
+    const int32 n = (Max - Min + 1);
+    return Min + ( (V - Min) % n + n ) % n;
 }
