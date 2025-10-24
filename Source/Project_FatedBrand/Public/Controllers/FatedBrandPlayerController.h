@@ -42,6 +42,8 @@ private :
 	void Input_JumpStart();
 	void Input_JumpEnd();
 
+	void Input_WidgetSelect();
+
 	void Input_NebulaMenu();
 
 	void Input_AbilityInputPressed(const FGameplayTag InInputTag);

@@ -6,6 +6,7 @@
 #include "GameplayTagContainer.h"
 #include "FatedBrandGameplayTags.h"
 #include "HUD/WidgetController/FatedBrandWidgetController.h"
+#include "FatedBrandEnumTypes.h"
 #include "NebulaMenuWidgetController.generated.h"
 
 #define SOCKET_X_MIN 1
@@ -13,11 +14,8 @@
 #define SOCKET_Y_MIN 1
 #define SOCKET_Y_MAX 4
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FNebulaSelectedSignature, bool, bEquipButtonEnabled, FString, DescriptionString);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FWaitForEquipSelectionSignature, const FGameplayTag&, AbilityType);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FNebulaReassignedSignature, const FGameplayTag&, AbilityTag);
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSelectNebulaSocketSignature);
+#define HOTBAR_X_MIN 1
+#define HOTBAR_X_MAX 6
 
 struct FSelectedAbility
 {
@@ -25,50 +23,15 @@ struct FSelectedAbility
 	FGameplayTag Status = FGameplayTag();
 };
 
-UENUM(BlueprintType)
-enum ENebulaSelectSocket : uint8
-{
-	NebulaSocket1,
-	NebulaSocket2,
-	NebulaSocket3,
-	NebulaSocket4,
-	NebulaSocket5,
-	NebulaSocket6,
-	NebulaSocket7,
-	NebulaSocket8,
-	NebulaSocket9,
-	NebulaSocket10,
-	NebulaSocket11,
-	NebulaSocket12,
-	NebulaSocket13,
-	NebulaSocket14,
-	NebulaSocket15,
-	NebulaSocket16,
-	NebulaSocket17,
-	NebulaSocket18,
-	NebulaSocket19,
-	NebulaSocket20,
-	NebulaSocket21,
-	NebulaSocket22,
-	NebulaSocket23,
-	NebulaSocket24,
-	NebulaSocket25,
-	NebulaSocket26,
-	NebulaSocket27,
-	NebulaSocket28,
-	NebulaSocket29,
-	NebulaSocket30,
-	NebulaSocket31,
-	NebulaSocket32,
-	NebulaSocket33,
-	NebulaSocket34,
-	NebulaSocket35,
-	NebulaSocket36,
-	NebulaSocket37,
-	NebulaSocket38,
-	NebulaSocket39,
-	NebulaSocket40
-};
+class UFatedBrandUserWidget;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FNebulaSelectedSignature, bool, bEquipButtonEnabled, FString, DescriptionString);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FWaitForEquipSelectionSignature, const FGameplayTag&, AbilityType);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FNebulaReassignedSignature, const FGameplayTag&, AbilityTag);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSelectNebulaSocketSignature, int32, PrevIndex, int32, CurrentIndex);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSelectHotBarSignature, int32, PrevIndex, int32, CurrentIndex);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSocketFocusingSignature, int32, CurrentIndex);
 
 UCLASS(BlueprintType, Blueprintable)
 class PROJECT_FATEDBRAND_API UNebulaMenuWidgetController : public UFatedBrandWidgetController
@@ -89,16 +52,16 @@ public:
 	FWaitForEquipSelectionSignature WaitForEquipDelegate;
 
 	UPROPERTY(BlueprintAssignable)
-	FWaitForEquipSelectionSignature StopWaitForEquipDelegate;
+	FOnSelectNebulaSocketSignature OnSelectNebulaSocketDelegate;
 
 	UPROPERTY(BlueprintAssignable)
-	FOnSelectNebulaSocketSignature OnSelectNebulaSocketDelegate;
+	FOnSelectHotBarSignature SelectHotBarDelegate;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnSocketFocusingSignature SocketFocusingDelegate;
 
 	UFUNCTION(BlueprintCallable)
 	void NebulaSelected(const FGameplayTag& AbilityTag);
-
-	UFUNCTION(BlueprintCallable)
-	void NebulaDeselect();
 
 	UFUNCTION(BlueprintCallable)
 	void EquipButtonPressed();
@@ -106,21 +69,26 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void OnAbilityEquipped(const FGameplayTag& AbilityTag, const FGameplayTag& Status, const FGameplayTag& Slot, const FGameplayTag& PreviousSlot);
 
-	ENebulaSelectSocket NebulaSelectSocket;
-
 	void SetSelectSocketAxis(const int32 SocketX, const int32 SocketY);
+	void SelectSocketFocusingController();
 
-	UFUNCTION(BlueprintPure)
-	ENebulaSelectSocket GetNebulaSelectSocket() const { return NebulaSelectSocket; }
+	UFUNCTION(BlueprintCallable)
+	void SetIsSocketFocusing(bool InSocketFocusing) { bIsSocketFocusing = InSocketFocusing; }
 
 private :
 	void ShouldEnableButtons(const FGameplayTag& AbilityStatus, bool&bShouldEnableEquipButton);
 	FSelectedAbility SelectedAbility = {FatedBrandGameplayTags::Abilities_None, FatedBrandGameplayTags::Abilities_Status_Locked};
 	bool bWaitingForEquipSelection = false;
 
+	ENebulaSelectSocket NebulaSelectSocket;
+	ENebulaSelectSocket NebulaHotBar;
+
 	FGameplayTag SelectedSlot;
 	int32 SelectSocketX = 0;
 	int32 SelectSocketY = 0;
+	int32 SelectHotBarX = 0;
+
+	bool bIsSocketFocusing = false;
 
 	int32 Wrap1(const int32 V, const int32 Min, const int32 Max);
 };

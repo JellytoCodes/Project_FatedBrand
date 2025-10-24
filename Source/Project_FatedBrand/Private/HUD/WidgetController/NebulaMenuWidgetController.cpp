@@ -20,28 +20,19 @@ void UNebulaMenuWidgetController::BindCallbacksToDependencies()
 
 void UNebulaMenuWidgetController::NebulaSelected(const FGameplayTag& AbilityTag)
 {
-	if (bWaitingForEquipSelection)
-	{
-		FGameplayTag SelectedAbilityType = AbilityInfo->FindAbilityInfoForTag(SelectedAbility.Ability).AbilityType;
-		StopWaitForEquipDelegate.Broadcast(SelectedAbilityType);
-		bWaitingForEquipSelection = false;
-	}
-
 	FGameplayTag AbilityStatus;
 
 	bool bTagValid = AbilityTag.IsValid();
 	bool bTagNone = AbilityTag.MatchesTag(FatedBrandGameplayTags::Abilities_None);
 	FGameplayAbilitySpec* AbilitySpec = GetFatedBrandASC()->GetSpecFromAbilityTag(AbilityTag);
 
-	const bool bSpecValid = AbilitySpec != nullptr;
-
-	if (!bTagValid || bTagNone || !bSpecValid)
+	if (!bTagValid || bTagNone)
 	{
 		AbilityStatus = FatedBrandGameplayTags::Abilities_Status_Locked;
 	}
 	else
 	{
-		AbilityStatus = GetFatedBrandASC()->GetStatusFromSpec(*AbilitySpec);
+		AbilityStatus = FatedBrandGameplayTags::Abilities_Status_Unlocked;
 	}
 
 	SelectedAbility.Ability = AbilityTag;
@@ -54,21 +45,6 @@ void UNebulaMenuWidgetController::NebulaSelected(const FGameplayTag& AbilityTag)
 	FString Description = "TEST";
 
 	NebulaSelectedDelegate.Broadcast(bEnableEquip, Description);
-}
-
-void UNebulaMenuWidgetController::NebulaDeselect()
-{
-	if (bWaitingForEquipSelection)
-	{
-		FGameplayTag SelectedAbilityType = AbilityInfo->FindAbilityInfoForTag(SelectedAbility.Ability).AbilityType;
-		StopWaitForEquipDelegate.Broadcast(SelectedAbilityType);
-		bWaitingForEquipSelection = false;
-	}
-
-	SelectedAbility.Ability = FatedBrandGameplayTags::Abilities_None;
-	SelectedAbility.Status = FatedBrandGameplayTags::Abilities_Status_Locked;
-
-	NebulaSelectedDelegate.Broadcast(false, FString());
 }
 
 void UNebulaMenuWidgetController::EquipButtonPressed()
@@ -100,22 +76,40 @@ void UNebulaMenuWidgetController::OnAbilityEquipped(const FGameplayTag& AbilityT
 	Info.InputTag = Slot;
 	AbilityInfoDelegate.Broadcast(Info);
 
-	StopWaitForEquipDelegate.Broadcast(AbilityInfo->FindAbilityInfoForTag(AbilityTag).AbilityType);
 	NebulaReassignedDelegate.Broadcast(AbilityTag);
-	NebulaDeselect();
 
 	GetFatedBrandASC()->EquipAbility(AbilityTag, Slot);
 }
 
 void UNebulaMenuWidgetController::SetSelectSocketAxis(const int32 SocketX, const int32 SocketY)
 {
-    SelectSocketX = Wrap1(SelectSocketX + SocketX, SOCKET_X_MIN - 1, SOCKET_X_MAX - 1);
-    SelectSocketY = Wrap1(SelectSocketY + SocketY, SOCKET_Y_MIN - 1, SOCKET_Y_MAX - 1);
 
-    const int32 index = (SelectSocketY * SOCKET_X_MAX) + SelectSocketX; // 0..39
-    NebulaSelectSocket = static_cast<ENebulaSelectSocket>(index);
 
-    OnSelectNebulaSocketDelegate.Broadcast();
+	if (bIsSocketFocusing == false)
+	{
+		ENebulaSelectSocket PrevNebulaSelectSocket = NebulaSelectSocket;
+	    SelectSocketX = Wrap1(SelectSocketX + SocketX, SOCKET_X_MIN - 1, SOCKET_X_MAX - 1);
+	    SelectSocketY = Wrap1(SelectSocketY + SocketY, SOCKET_Y_MIN - 1, SOCKET_Y_MAX - 1);
+
+	    const int32 index = (SelectSocketY * SOCKET_X_MAX) + SelectSocketX;
+	    NebulaSelectSocket = static_cast<ENebulaSelectSocket>(index);
+
+		OnSelectNebulaSocketDelegate.Broadcast(PrevNebulaSelectSocket, NebulaSelectSocket);	
+	}
+    else
+    {
+		ENebulaSelectSocket PrevNebulaSelectHotBar = NebulaHotBar;
+		SelectHotBarX = Wrap1(SelectHotBarX + SocketX, HOTBAR_X_MIN - 1, HOTBAR_X_MAX - 1);
+		NebulaHotBar = static_cast<ENebulaSelectSocket>(SelectHotBarX);
+
+	    SelectHotBarDelegate.Broadcast(PrevNebulaSelectHotBar, NebulaHotBar);
+    }
+}
+
+void UNebulaMenuWidgetController::SelectSocketFocusingController()
+{
+	SocketFocusingDelegate.Broadcast(NebulaSelectSocket);
+	bIsSocketFocusing = true;
 }
 
 void UNebulaMenuWidgetController::ShouldEnableButtons(const FGameplayTag& AbilityStatus, bool& bShouldEnableEquipButton)
