@@ -4,9 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "HUD/Widgets/FatedBrandUserWidget.h"
-#include "FatedBrandEnumTypes.h"
+#include "FatedBrandStructTypes.h"
 #include "FatedBrandNebulaMenuWidget.generated.h"
 
+class UTextBlock;
 class UFatedBrandHotBarWidget;
 class UFatedBrandNebulaSocketWidget;
 
@@ -22,13 +23,22 @@ public :
 	void CallSelectSocket(int32 PrevIndex, int32 CurrentIndex);
 
 	UFUNCTION(BlueprintCallable)
-	void CallSelectSocketFocusing(int32 CurrentIndex);
+	void CallSelectSocketFocusing(const int32 CurrentIndex, const bool IsSelectSocketFocusing);
 
 	UFUNCTION(BlueprintCallable)
-	void CallSelectHotBar(int32 PrevIndex, int32 CurrentIndex);
+	void CallSelectHotBar(const int32 PrevIndex, const int32 CurrentIndex);
+
+	UFUNCTION(BlueprintCallable)
+	void SetNebulaDescription(FString InDescription);
+
+	UFUNCTION(BlueprintCallable)
+	void CallSelectSocketConfirm(FFatedBrandAbilityInfo CurrentInfo, const int32 CurrentIndex);
 
 private :
 	TArray<TObjectPtr<UFatedBrandNebulaSocketWidget>> SlotWidgets;
 
 	TArray<TObjectPtr<UFatedBrandHotBarWidget>> HotBarWidgets;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget, AllowPrivateAccess = "true"))
+	TSoftObjectPtr<UTextBlock> NebulaDescription;
 };

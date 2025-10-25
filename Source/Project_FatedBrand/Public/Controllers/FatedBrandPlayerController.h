@@ -24,6 +24,12 @@ public :
 
 	UFatedBrandAbilitySystemComponent* GetFatedBrandASC();
 
+	UFUNCTION(BlueprintCallable)
+	void EnableDefaultMappingContext();
+
+	UFUNCTION(BlueprintCallable)
+	void DisableDefaultMappingContext();
+
 protected :
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
@@ -43,6 +49,7 @@ private :
 	void Input_JumpEnd();
 
 	void Input_WidgetSelect();
+	void Input_WidgetDeSelect();
 
 	void Input_NebulaMenu();
 
@@ -54,7 +61,7 @@ private :
 	TWeakObjectPtr<AFatedBrandHUD> CachedFatedBrandHUD;
 
 	bool bIsNebulaMenu = false;
-
+	bool bIsWidgetSelect = false;
 	UPROPERTY(EditDefaultsOnly, Category="Input|Jump")
 	float WallJumpTraceDistance = 50.0f;
 

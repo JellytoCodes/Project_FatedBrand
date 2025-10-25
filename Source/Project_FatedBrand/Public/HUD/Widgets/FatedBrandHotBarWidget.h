@@ -4,9 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "HUD/Widgets/FatedBrandUserWidget.h"
+#include "FatedBrandStructTypes.h"
 #include "FatedBrandHotBarWidget.generated.h"
 
 class UImage;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCurrentHotBarSignature);
 
 UCLASS()
 class PROJECT_FATEDBRAND_API UFatedBrandHotBarWidget : public UFatedBrandUserWidget
@@ -16,10 +19,21 @@ class PROJECT_FATEDBRAND_API UFatedBrandHotBarWidget : public UFatedBrandUserWid
 public :
 	UImage* GetSelectImage() const { return Select_Image; }
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
+	FGameplayTag InputTag;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnCurrentHotBarSignature CurrentHotBarDelegate;
+
+	UFUNCTION(BlueprintCallable)
+	void SetWidget(FFatedBrandAbilityInfo AbilityInfo);
+
 private :
 	UPROPERTY(meta = (BindWidget, AllowPrivateAccess = "true"))
 	TObjectPtr<UImage> Select_Image;
 
 	UPROPERTY(meta = (BindWidget, AllowPrivateAccess = "true"))
 	TObjectPtr<UImage> Skill_Image;
+
+	FFatedBrandAbilityInfo SlotAbilityInfo;
 };

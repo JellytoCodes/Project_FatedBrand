@@ -187,28 +187,23 @@ FGameplayAbilitySpec* UFatedBrandAbilitySystemComponent::GetSpecWithNebulaSlot(c
 	return nullptr;
 }
 
-void UFatedBrandAbilitySystemComponent::UpdateAbilityStatuses(const FGameplayTag& AbilityTag)
+void UFatedBrandAbilitySystemComponent::UpdateAbilityStatuses(FFatedBrandAbilityInfo AbilityInfo)
 {
-	UDataAsset_AbilityInfo* AbilityInfo = UFatedBrandFunctionLibrary::GetAbilityInfo(GetAvatarActor());
 
-	for (const FFatedBrandAbilityInfo& Info : AbilityInfo->AbilityInformation)
+	if (!AbilityInfo.AbilityTag.IsValid())
 	{
-		if (AbilityTag != Info.AbilityTag || !Info.AbilityTag.IsValid()) continue;
-
-		if (GetSpecFromAbilityTag(Info.AbilityTag) == nullptr)
-		{
-			FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(Info.Ability, 1);
-			AbilitySpec.GetDynamicSpecSourceTags().AddTag(FatedBrandGameplayTags::Abilities_Status_Eligible);
-			GiveAbility(AbilitySpec);
-			MarkAbilitySpecDirty(AbilitySpec);
-		}
+		Debug::Print("Is Not Valid Data");
+		return;
 	}
-}
+	
+	UFatedBrandGameplayAbility* FatedBrandAbility = AbilityInfo.Ability.GetDefaultObject();
+	FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityInfo.Ability, 1);
 
-void UFatedBrandAbilitySystemComponent::EquipAbility(const FGameplayTag& AbilityTag, const FGameplayTag& Slot)
-{
-	if (FGameplayAbilitySpec* AbilitySpec = GetSpecFromAbilityTag(AbilityTag))
+	FatedBrandAbility->StartupInputTag = AbilityInfo.InputTag;
+
+	if (FatedBrandAbility && FatedBrandAbility->StartupInputTag.IsValid())
 	{
-		TryActivateAbility(AbilitySpec->Handle);
+		AbilitySpec.GetDynamicSpecSourceTags().AddTag(FatedBrandAbility->StartupInputTag);
 	}
+	GiveAbility(AbilitySpec);
 }

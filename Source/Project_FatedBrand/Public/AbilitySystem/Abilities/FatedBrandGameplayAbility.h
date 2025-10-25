@@ -15,11 +15,8 @@ class PROJECT_FATEDBRAND_API UFatedBrandGameplayAbility : public UGameplayAbilit
 {
 	GENERATED_BODY()
 public :
-	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	UPROPERTY(EditAnywhere, Category = "Input")
 	FGameplayTag StartupInputTag;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Input")
-	bool IsMustBeInputTag = false;
 
 	UFUNCTION(BlueprintCallable)
 	FDamageEffectParams MakeDamageEffectParamsFromClassDefaults(AActor* TargetActor = nullptr);

@@ -5,6 +5,7 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystem/FatedBrandAbilitySystemComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "FatedBrandFunctionLibrary.h"
 #include "FatedBrandGameplayTags.h"
 #include "Characters/FatedBrandCharacter.h"
 #include "Components/Input/FatedBrandEnhancedInputComponent.h"
@@ -13,6 +14,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "HUD/FatedBrandHUD.h"
+#include "HUD/WidgetController/NebulaMenuWidgetController.h"
 #include "Project_FatedBrand/Project_FatedBrand.h"
 
 FGenericTeamId AFatedBrandPlayerController::GetGenericTeamId() const
@@ -26,20 +28,16 @@ void AFatedBrandPlayerController::BeginPlay()
 
 	check(InputConfigDataAsset);
 
-	if (GetFatedBrandASC())
-	{
-		FatedBrandCharacter = Cast<AFatedBrandCharacter>(GetFatedBrandASC()->GetAvatarActor());
-	}
+	if (GetFatedBrandASC()) FatedBrandCharacter = Cast<AFatedBrandCharacter>(GetFatedBrandASC()->GetAvatarActor());
 
-	if (auto* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
-	{
-		Subsystem->AddMappingContext(InputConfigDataAsset->DefaultMappingContext, 0);
-	}
+	if (!CachedFatedBrandHUD.IsValid()) CachedFatedBrandHUD = Cast<AFatedBrandHUD>(GetHUD());
 
-	if (!CachedFatedBrandHUD.IsValid())
-	{
-		CachedFatedBrandHUD = Cast<AFatedBrandHUD>(GetHUD());
-	}
+	bShowMouseCursor = false;
+	DefaultMouseCursor = EMouseCursor::Default;
+
+	FInputModeGameOnly InputModeData;
+	InputModeData.SetConsumeCaptureMouseDown(false);
+	SetInputMode(InputModeData);
 }
 
 void AFatedBrandPlayerController::SetupInputComponent()
@@ -53,6 +51,7 @@ void AFatedBrandPlayerController::SetupInputComponent()
 	FatedBrandEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, FatedBrandGameplayTags::Input_Jump, ETriggerEvent::Completed, this, &ThisClass::Input_JumpEnd);
 	FatedBrandEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, FatedBrandGameplayTags::Input_NebulaMenu, ETriggerEvent::Started, this, &ThisClass::Input_NebulaMenu);
 	FatedBrandEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, FatedBrandGameplayTags::Input_WidgetSelect, ETriggerEvent::Started, this, &ThisClass::Input_WidgetSelect);
+	FatedBrandEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, FatedBrandGameplayTags::Input_WidgetDeSelect, ETriggerEvent::Started, this, &ThisClass::Input_WidgetDeSelect);
 
 	FatedBrandEnhancedInputComponent->BindAbilityInputAction(InputConfigDataAsset, this, &ThisClass::Input_AbilityInputPressed, &ThisClass::Input_AbilityInputReleased, &ThisClass::Input_AbilityInputHeld);
 }
@@ -63,7 +62,8 @@ void AFatedBrandPlayerController::Input_Move(const FInputActionValue &InputActio
 
 	if (bIsNebulaMenu)
 	{
-		CachedFatedBrandHUD->OnMoveToLocationDelegate.Broadcast(InputAxisVector);
+		UNebulaMenuWidgetController* NebulaMenuWidgetController = UFatedBrandFunctionLibrary::GetNebulaMenuWidgetController(this);
+		NebulaMenuWidgetController->SetSelectSocketAxis(InputAxisVector.X, InputAxisVector.Y);
 	}
 
 	else
@@ -160,9 +160,28 @@ void AFatedBrandPlayerController::Input_JumpEnd()
 
 void AFatedBrandPlayerController::Input_WidgetSelect()
 {
-	if (CachedFatedBrandHUD.IsValid())
+	UNebulaMenuWidgetController* NebulaMenuWidgetController = UFatedBrandFunctionLibrary::GetNebulaMenuWidgetController(this);
+	if (bIsNebulaMenu)
 	{
-		CachedFatedBrandHUD->OnSelectSocketFocusingDelegate.Broadcast();
+		if (!bIsWidgetSelect)
+		{
+			NebulaMenuWidgetController->SelectSocketFocusingController();
+			bIsWidgetSelect = !bIsWidgetSelect;	
+		}
+		else
+		{
+			NebulaMenuWidgetController->SelectSocketConfirm();
+		}
+	}
+}
+
+void AFatedBrandPlayerController::Input_WidgetDeSelect()
+{
+	if (bIsNebulaMenu && bIsWidgetSelect)
+	{
+		UNebulaMenuWidgetController* NebulaMenuWidgetController = UFatedBrandFunctionLibrary::GetNebulaMenuWidgetController(this);
+		NebulaMenuWidgetController->SelectSocketFocusingController();
+		bIsWidgetSelect = !bIsWidgetSelect;
 	}
 }
 
@@ -184,6 +203,7 @@ void AFatedBrandPlayerController::Input_NebulaMenu()
 		{
 			CachedFatedBrandHUD->RemoveNebulaMenu();
 			bIsNebulaMenu = false;
+			bIsWidgetSelect = false;
 			if (Subsystem) Subsystem->RemoveMappingContext(CachedFatedBrandHUD->GetWidgetMappingContext());
 		}
 	}
@@ -227,4 +247,20 @@ UFatedBrandAbilitySystemComponent* AFatedBrandPlayerController::GetFatedBrandASC
 		FatedBrandAbilitySystemComponent = Cast<UFatedBrandAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetPawn<APawn>()));
 	}
 	return FatedBrandAbilitySystemComponent;
+}
+
+void AFatedBrandPlayerController::EnableDefaultMappingContext()
+{
+	if (auto* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
+	{
+		Subsystem->AddMappingContext(InputConfigDataAsset->DefaultMappingContext, 0);	
+	}
+}
+
+void AFatedBrandPlayerController::DisableDefaultMappingContext()
+{
+if (auto* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
+	{
+		Subsystem->RemoveMappingContext(InputConfigDataAsset->DefaultMappingContext);	
+	}
 }

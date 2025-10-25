@@ -21,6 +21,9 @@ public :
 	UPROPERTY(BlueprintAssignable)
 	FOnSelectSocketSignature OnSelectSocketDelegate;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
+	FGameplayTag AbilityTag;
+
 private :
 	UPROPERTY(meta = (BindWidget, AllowPrivateAccess = "true"))
 	TObjectPtr<UImage> Select_Image;

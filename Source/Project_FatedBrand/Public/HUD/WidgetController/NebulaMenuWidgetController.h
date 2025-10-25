@@ -6,6 +6,7 @@
 #include "GameplayTagContainer.h"
 #include "FatedBrandGameplayTags.h"
 #include "HUD/WidgetController/FatedBrandWidgetController.h"
+#include "FatedBrandStructTypes.h"
 #include "FatedBrandEnumTypes.h"
 #include "NebulaMenuWidgetController.generated.h"
 
@@ -21,17 +22,18 @@ struct FSelectedAbility
 {
 	FGameplayTag Ability = FGameplayTag();
 	FGameplayTag Status = FGameplayTag();
+	FGameplayTag InputTag = FGameplayTag();
 };
 
 class UFatedBrandUserWidget;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FNebulaSelectedSignature, bool, bEquipButtonEnabled, FString, DescriptionString);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FWaitForEquipSelectionSignature, const FGameplayTag&, AbilityType);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FNebulaReassignedSignature, const FGameplayTag&, AbilityTag);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSelectNebulaSocketSignature, int32, PrevIndex, int32, CurrentIndex);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSelectHotBarSignature, int32, PrevIndex, int32, CurrentIndex);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSocketFocusingSignature, int32, CurrentIndex);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSocketFocusingSignature, int32, CurrentIndex, bool, IsSocketFocusing);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSelectSocketConfirmSignature);
 
 UCLASS(BlueprintType, Blueprintable)
 class PROJECT_FATEDBRAND_API UNebulaMenuWidgetController : public UFatedBrandWidgetController
@@ -46,13 +48,7 @@ public:
 	FNebulaSelectedSignature NebulaSelectedDelegate;
 
 	UPROPERTY(BlueprintAssignable)
-	FNebulaReassignedSignature NebulaReassignedDelegate;
-
-	UPROPERTY(BlueprintAssignable)
-	FWaitForEquipSelectionSignature WaitForEquipDelegate;
-
-	UPROPERTY(BlueprintAssignable)
-	FOnSelectNebulaSocketSignature OnSelectNebulaSocketDelegate;
+	FOnSelectNebulaSocketSignature SelectNebulaSocketDelegate;
 
 	UPROPERTY(BlueprintAssignable)
 	FOnSelectHotBarSignature SelectHotBarDelegate;
@@ -64,20 +60,22 @@ public:
 	void NebulaSelected(const FGameplayTag& AbilityTag);
 
 	UFUNCTION(BlueprintCallable)
-	void EquipButtonPressed();
+	void OnAbilityEquip();
 
 	UFUNCTION(BlueprintCallable)
-	void OnAbilityEquipped(const FGameplayTag& AbilityTag, const FGameplayTag& Status, const FGameplayTag& Slot, const FGameplayTag& PreviousSlot);
+	void HotBarSelected(const FGameplayTag& InputTag);
 
 	void SetSelectSocketAxis(const int32 SocketX, const int32 SocketY);
 	void SelectSocketFocusingController();
 
+	void SelectSocketConfirm();
+
 	UFUNCTION(BlueprintCallable)
-	void SetIsSocketFocusing(bool InSocketFocusing) { bIsSocketFocusing = InSocketFocusing; }
+	int32 GetSelectHotBarX() const { return SelectHotBarX; }
 
 private :
 	void ShouldEnableButtons(const FGameplayTag& AbilityStatus, bool&bShouldEnableEquipButton);
-	FSelectedAbility SelectedAbility = {FatedBrandGameplayTags::Abilities_None, FatedBrandGameplayTags::Abilities_Status_Locked};
+	FSelectedAbility SelectedAbility = {FatedBrandGameplayTags::Abilities_None, FatedBrandGameplayTags::Abilities_Status_Locked, FatedBrandGameplayTags::Input_Key_1};
 	bool bWaitingForEquipSelection = false;
 
 	ENebulaSelectSocket NebulaSelectSocket;

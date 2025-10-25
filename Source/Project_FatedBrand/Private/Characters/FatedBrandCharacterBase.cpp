@@ -126,8 +126,9 @@ void AFatedBrandCharacterBase::OnComponentBeginOverlap(UPrimitiveComponent* Over
 {
 	if (OtherActor == this) return;
 	
-	if (APawn* HitPawn = Cast<APawn>(OtherActor))
+	if (OtherActor->Implements<UCombatInterface>())
 	{
+		APawn* HitPawn = Cast<APawn>(OtherActor);
 		if (UFatedBrandFunctionLibrary::IsTargetPawnHostile(this, HitPawn) == false) return;
 
 		OnHitTargetActor(HitPawn);

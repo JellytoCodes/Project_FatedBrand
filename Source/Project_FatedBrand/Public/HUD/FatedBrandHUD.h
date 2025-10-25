@@ -15,9 +15,6 @@ class UOverlayWidgetController;
 
 struct FWidgetControllerParams;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMoveToLocationSignature, FVector2D, AxisVector);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSelectSocketFocusingSignature);
-
 UCLASS()
 class PROJECT_FATEDBRAND_API AFatedBrandHUD : public AHUD
 {
@@ -31,10 +28,6 @@ public :
 	void RemoveNebulaMenu();
 
 	FORCEINLINE UInputMappingContext* GetWidgetMappingContext() { return WidgetMappingContext; }
-
-	FOnMoveToLocationSignature OnMoveToLocationDelegate;
-
-	FOnSelectSocketFocusingSignature OnSelectSocketFocusingDelegate;
 
 private :
 	UPROPERTY()
@@ -63,10 +56,4 @@ private :
 
 	UPROPERTY(EditDefaultsOnly, Category = "WidgetContext")
 	TObjectPtr<UInputMappingContext> WidgetMappingContext;
-
-	UFUNCTION()
-	void MoveToAxis(const FVector2D InAxis);
-
-	UFUNCTION()
-	void SelectSocketFocusing();
 };

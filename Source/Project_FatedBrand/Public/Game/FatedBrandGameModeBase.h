@@ -16,4 +16,7 @@ class PROJECT_FATEDBRAND_API AFatedBrandGameModeBase : public AGameModeBase
 public :
 	UPROPERTY(EditDefaultsOnly, Category = "Ability Info")
 	TObjectPtr<UDataAsset_AbilityInfo> AbilityInfo;
+
+protected :
+	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
 };

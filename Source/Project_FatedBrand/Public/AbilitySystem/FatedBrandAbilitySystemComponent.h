@@ -6,6 +6,7 @@
 #include "AbilitySystemComponent.h"
 #include "FatedBrandAbilitySystemComponent.generated.h"
 
+struct FFatedBrandAbilityInfo;
 class UFatedBrandGameplayAbility;
 
 DECLARE_DELEGATE_OneParam(FForEachAbility, const FGameplayAbilitySpec&);
@@ -36,7 +37,5 @@ public :
 	FGameplayAbilitySpec* GetSpecWithNebulaSlot(const FGameplayTag& NebulaSlot);
 
 	UFUNCTION(BlueprintCallable, Category = "UpdateAbility")
-	void UpdateAbilityStatuses(const FGameplayTag& AbilityTag);
-
-	void EquipAbility(const FGameplayTag& AbilityTag, const FGameplayTag& Slot);
+	void UpdateAbilityStatuses(FFatedBrandAbilityInfo AbilityInfo);
 };

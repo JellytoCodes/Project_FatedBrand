@@ -10,7 +10,15 @@
 void UNebulaMenuWidgetController::BroadcastInitialValues()
 {
 	BroadcastAbilityInfo();
+
+	NebulaSelectSocket = NebulaSocket1;
+	SelectSocketX = 0;
+	SelectSocketY = 0;
 	
+	NebulaHotBar = NebulaSocket1;
+	SelectHotBarX = 0;
+
+	bIsSocketFocusing = false;
 }
 
 void UNebulaMenuWidgetController::BindCallbacksToDependencies()
@@ -41,50 +49,30 @@ void UNebulaMenuWidgetController::NebulaSelected(const FGameplayTag& AbilityTag)
 	bool bEnableEquip = false;
 	ShouldEnableButtons(AbilityStatus, bEnableEquip);
 
-	// TODO : 스킬 정보 받는 기능 추가하기
-	FString Description = "TEST";
+	FString Description = AbilityInfo->FindAbilityInfoForTag(SelectedAbility.Ability).AbilityDescription;
 
 	NebulaSelectedDelegate.Broadcast(bEnableEquip, Description);
 }
 
-void UNebulaMenuWidgetController::EquipButtonPressed()
-{
-	const FGameplayTag AbilityType = AbilityInfo->FindAbilityInfoForTag(SelectedAbility.Ability).AbilityType;
-
-	WaitForEquipDelegate.Broadcast(AbilityType);
-	bWaitingForEquipSelection = true;
-
-	const FGameplayTag SelectedStatus = GetFatedBrandASC()->GetStatusFromAbilityTag(SelectedAbility.Ability);
-	if (SelectedStatus.MatchesTagExact(FatedBrandGameplayTags::Abilities_Status_Equipped))
-	{
-		SelectedSlot = GetFatedBrandASC()->GetSlotFromAbilityTag(SelectedAbility.Ability);
-	}
-}
-
-void UNebulaMenuWidgetController::OnAbilityEquipped(const FGameplayTag& AbilityTag, const FGameplayTag& Status, const FGameplayTag& Slot, const FGameplayTag& PreviousSlot)
+void UNebulaMenuWidgetController::OnAbilityEquip()
 {
 	bWaitingForEquipSelection = false;
 
-	FFatedBrandAbilityInfo LastSlotInfo;
-	LastSlotInfo.StatusTag = FatedBrandGameplayTags::Abilities_Status_Unlocked;
-	LastSlotInfo.InputTag = PreviousSlot;
-	LastSlotInfo.AbilityTag = FatedBrandGameplayTags::Abilities_None;
-	AbilityInfoDelegate.Broadcast(LastSlotInfo);
-
-	FFatedBrandAbilityInfo Info = AbilityInfo->FindAbilityInfoForTag(AbilityTag);
-	Info.StatusTag = Status;
-	Info.InputTag = Slot;
+	FFatedBrandAbilityInfo Info = AbilityInfo->FindAbilityInfoForTag(SelectedAbility.Ability);
+	Info.StatusTag = FatedBrandGameplayTags::Abilities_Status_Equipped;
+	Info.InputTag = SelectedAbility.InputTag;
 	AbilityInfoDelegate.Broadcast(Info);
 
-	NebulaReassignedDelegate.Broadcast(AbilityTag);
+	GetFatedBrandASC()->UpdateAbilityStatuses(Info);
+}
 
-	GetFatedBrandASC()->EquipAbility(AbilityTag, Slot);
+void UNebulaMenuWidgetController::HotBarSelected(const FGameplayTag& InputTag)
+{
+	SelectedAbility.InputTag = InputTag;
 }
 
 void UNebulaMenuWidgetController::SetSelectSocketAxis(const int32 SocketX, const int32 SocketY)
 {
-
-
 	if (bIsSocketFocusing == false)
 	{
 		ENebulaSelectSocket PrevNebulaSelectSocket = NebulaSelectSocket;
@@ -94,7 +82,7 @@ void UNebulaMenuWidgetController::SetSelectSocketAxis(const int32 SocketX, const
 	    const int32 index = (SelectSocketY * SOCKET_X_MAX) + SelectSocketX;
 	    NebulaSelectSocket = static_cast<ENebulaSelectSocket>(index);
 
-		OnSelectNebulaSocketDelegate.Broadcast(PrevNebulaSelectSocket, NebulaSelectSocket);	
+		SelectNebulaSocketDelegate.Broadcast(PrevNebulaSelectSocket, NebulaSelectSocket);
 	}
     else
     {
@@ -108,28 +96,27 @@ void UNebulaMenuWidgetController::SetSelectSocketAxis(const int32 SocketX, const
 
 void UNebulaMenuWidgetController::SelectSocketFocusingController()
 {
-	SocketFocusingDelegate.Broadcast(NebulaSelectSocket);
-	bIsSocketFocusing = true;
+	bIsSocketFocusing =! bIsSocketFocusing;
+	SelectHotBarX = 0;
+	SocketFocusingDelegate.Broadcast(NebulaHotBar, bIsSocketFocusing);
+}
+
+void UNebulaMenuWidgetController::SelectSocketConfirm()
+{
+	bIsSocketFocusing = false;
+	SelectHotBarX = 0;
+	OnAbilityEquip();
 }
 
 void UNebulaMenuWidgetController::ShouldEnableButtons(const FGameplayTag& AbilityStatus, bool& bShouldEnableEquipButton)
 {
-	bShouldEnableEquipButton = false;
-	if (AbilityStatus.MatchesTagExact(FatedBrandGameplayTags::Abilities_Status_Equipped))
-	{
-		bShouldEnableEquipButton = true;
-	}
-	else if (AbilityStatus.MatchesTagExact(FatedBrandGameplayTags::Abilities_Status_Eligible))
-	{
-		// 추후 스킬 강화 기능 생길 시 사용
-	}
-	else if (AbilityStatus.MatchesTagExact(FatedBrandGameplayTags::Abilities_Status_Unlocked))
+	if (AbilityStatus.MatchesTagExact(FatedBrandGameplayTags::Abilities_Status_Equipped) || AbilityStatus.MatchesTagExact(FatedBrandGameplayTags::Abilities_Status_Unlocked))
 	{
 		bShouldEnableEquipButton = true;
 	}
 	else if (AbilityStatus.MatchesTagExact(FatedBrandGameplayTags::Abilities_Status_Locked))
 	{
-		// false 고정
+		bShouldEnableEquipButton = false;
 	}
 }
 

@@ -57,26 +57,12 @@ void AFatedBrandHUD::CreateNebulaMenu(APlayerController* PC, UAbilitySystemCompo
 
 	Widget->AddToViewport();
 	Widget->SetPositionInViewport(FVector2D(400, 100), true);
-
-	OnMoveToLocationDelegate.AddUniqueDynamic(this, &ThisClass::MoveToAxis);
-	OnSelectSocketFocusingDelegate.AddUniqueDynamic(this, &ThisClass::SelectSocketFocusing);
 }
 
 void AFatedBrandHUD::RemoveNebulaMenu()
 {
 	if (NebulaWidget)
 	{
-		OnMoveToLocationDelegate.Clear();
 		NebulaWidget->RemoveFromParent();
 	}
-}
-
-void AFatedBrandHUD::MoveToAxis(const FVector2D InAxis)
-{
-	NebulaWidgetController->SetSelectSocketAxis(InAxis.X, InAxis.Y);
-}
-
-void AFatedBrandHUD::SelectSocketFocusing()
-{
-	NebulaWidgetController->SelectSocketFocusingController();
 }

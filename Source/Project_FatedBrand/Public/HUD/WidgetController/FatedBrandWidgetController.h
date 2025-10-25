@@ -79,4 +79,5 @@ protected :
 	AFatedBrandPlayerController* GetFatedBrandPC();
 	UFatedBrandAbilitySystemComponent* GetFatedBrandASC();
 	UFatedBrandAttributeSet* GetFatedBrandAS();
+
 };

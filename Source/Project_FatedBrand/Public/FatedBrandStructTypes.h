@@ -4,6 +4,7 @@
 #include "FatedBrandStructTypes.generated.h"
 
 class UAbilitySystemComponent;
+class UFatedBrandGameplayAbility;
 class UGameplayEffect;
 
 USTRUCT(BlueprintType)
@@ -67,4 +68,37 @@ struct FEffectProperties
 
 	UPROPERTY()
 	ACharacter* SourceCharacter = nullptr;
+};
+
+USTRUCT(BlueprintType)
+struct FFatedBrandAbilityInfo
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Ability")
+	FGameplayTag AbilityTag = FGameplayTag();
+
+	UPROPERTY(BlueprintReadOnly, Category = "Ability")
+	FGameplayTag InputTag = FGameplayTag();
+
+	UPROPERTY(BlueprintReadOnly, Category = "Ability")
+	FGameplayTag StatusTag = FGameplayTag();
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Ability")
+	FGameplayTag CooldownTag = FGameplayTag();
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Ability")
+	FGameplayTag AbilityType = FGameplayTag();
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Ability")
+	int32 LevelRequirement = 1;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Ability")
+	TSubclassOf<UFatedBrandGameplayAbility> Ability;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
+	FString AbilityDescription = FString();
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
+	TObjectPtr<const UTexture2D> Icon = nullptr;
 };
