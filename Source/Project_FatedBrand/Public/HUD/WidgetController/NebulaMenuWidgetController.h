@@ -76,7 +76,9 @@ public:
 private :
 	void ShouldEnableButtons(const FGameplayTag& AbilityStatus, bool&bShouldEnableEquipButton);
 	FSelectedAbility SelectedAbility = {FatedBrandGameplayTags::Abilities_None, FatedBrandGameplayTags::Abilities_Status_Locked, FatedBrandGameplayTags::Input_Key_1};
-	bool bWaitingForEquipSelection = false;
+
+	UFUNCTION()
+	void UpdateEquipQuickSlot(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag, const FGameplayTag& InputTag, const FGameplayTag& PreviousInputTag);
 
 	ENebulaSelectSocket NebulaSelectSocket;
 	ENebulaSelectSocket NebulaHotBar;

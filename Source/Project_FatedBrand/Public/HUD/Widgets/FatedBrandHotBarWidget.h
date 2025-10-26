@@ -25,15 +25,10 @@ public :
 	UPROPERTY(BlueprintAssignable)
 	FOnCurrentHotBarSignature CurrentHotBarDelegate;
 
-	UFUNCTION(BlueprintCallable)
-	void SetWidget(FFatedBrandAbilityInfo AbilityInfo);
-
 private :
-	UPROPERTY(meta = (BindWidget, AllowPrivateAccess = "true"))
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget, AllowPrivateAccess = "true"))
 	TObjectPtr<UImage> Select_Image;
 
-	UPROPERTY(meta = (BindWidget, AllowPrivateAccess = "true"))
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget, AllowPrivateAccess = "true"))
 	TObjectPtr<UImage> Skill_Image;
-
-	FFatedBrandAbilityInfo SlotAbilityInfo;
 };

@@ -46,23 +46,28 @@ void AFatedBrandHUD::InitOverlay(APlayerController* PC, UAbilitySystemComponent*
 
 void AFatedBrandHUD::CreateNebulaMenu(APlayerController* PC, UAbilitySystemComponent* ASC, UAttributeSet* AS)
 {
-	UUserWidget* Widget = CreateWidget<UUserWidget>(GetWorld(), NebulaWidgetClass);
-	NebulaWidget = Cast<UFatedBrandUserWidget>(Widget);
-
 	const FWidgetControllerParams WidgetControllerParams(PC, ASC, AS);
 	UNebulaMenuWidgetController* WidgetController = GetNebulaMenuWidgetController(WidgetControllerParams);
 
-	NebulaWidget->SetWidgetController(NebulaWidgetController);
-	WidgetController->BroadcastInitialValues();
+	if (NebulaWidget == nullptr)
+	{
+		UUserWidget* Widget = CreateWidget<UUserWidget>(GetWorld(), NebulaWidgetClass);
+		NebulaWidget = Cast<UFatedBrandUserWidget>(Widget);
 
-	Widget->AddToViewport();
-	Widget->SetPositionInViewport(FVector2D(400, 100), true);
+		NebulaWidget->SetWidgetController(NebulaWidgetController);
+		
+		NebulaWidget->AddToViewport();
+		NebulaWidget->SetPositionInViewport(FVector2D(400, 100), true);
+	}
+
+	WidgetController->BroadcastInitialValues();
+	NebulaWidget->SetVisibility(ESlateVisibility::Visible);
 }
 
 void AFatedBrandHUD::RemoveNebulaMenu()
 {
 	if (NebulaWidget)
 	{
-		NebulaWidget->RemoveFromParent();
+		NebulaWidget->SetVisibility(ESlateVisibility::Hidden);
 	}
 }

@@ -38,6 +38,7 @@ namespace FatedBrandGameplayTags
 
 #pragma region Abilities Offensive
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Abilities_Offensive_Type, "Abilities.Offensive.Type")
+	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Abilities_Offensive_MeleeAttack, "Abilities.Offensive.MeleeAttack")
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Abilities_Offensive_BowShock, "Abilities.Offensive.BowShock")
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Abilities_Offensive_BlastingZone, "Abilities.Offensive.BlastingZone")
 #pragma endregion

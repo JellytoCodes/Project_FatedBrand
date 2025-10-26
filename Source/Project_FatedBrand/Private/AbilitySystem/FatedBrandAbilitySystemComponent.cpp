@@ -32,42 +32,6 @@ void UFatedBrandAbilitySystemComponent::AddCharacterPassiveAbilities(const TArra
 	}
 }
 
-FGameplayTag UFatedBrandAbilitySystemComponent::GetInputTagFromSpec(const FGameplayAbilitySpec& AbilitySpec)
-{
-	for (FGameplayTag Tag : AbilitySpec.GetDynamicSpecSourceTags())
-	{
-		if (Tag.MatchesTag(FGameplayTag::RequestGameplayTag(FName("Input"))))
-		{
-			return Tag;
-		}
-	}
-	return FGameplayTag();
-}
-
-FGameplayTag UFatedBrandAbilitySystemComponent::GetAbilityTagFromSpec(const FGameplayAbilitySpec& AbilitySpec)
-{
-	for (FGameplayTag Tag : AbilitySpec.GetDynamicSpecSourceTags())
-	{
-		if (Tag.MatchesTag(FGameplayTag::RequestGameplayTag(FName("Abilities"))))
-		{
-			return Tag;
-		}
-	}
-	return FGameplayTag();
-}
-
-FGameplayTag UFatedBrandAbilitySystemComponent::GetStatusFromSpec(const FGameplayAbilitySpec& AbilitySpec)
-{
-	for (FGameplayTag Tag : AbilitySpec.GetDynamicSpecSourceTags())
-	{
-		if (Tag.MatchesTag(FGameplayTag::RequestGameplayTag(FName("Abilities.Status"))))
-		{
-			return Tag;
-		}
-	}
-	return FGameplayTag();
-}
-
 void UFatedBrandAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag& InInputTag)
 {
 	if (!InInputTag.IsValid()) return;
@@ -142,6 +106,87 @@ void UFatedBrandAbilitySystemComponent::ForEachAbility(const FForEachAbility& De
 	}
 }
 
+FGameplayTag UFatedBrandAbilitySystemComponent::GetInputTagFromSpec(const FGameplayAbilitySpec& AbilitySpec)
+{
+	for (FGameplayTag Tag : AbilitySpec.GetDynamicSpecSourceTags())
+	{
+		if (Tag.MatchesTag(FGameplayTag::RequestGameplayTag(FName("Input"))))
+		{
+			return Tag;
+		}
+	}
+	return FGameplayTag();
+}
+
+FGameplayTag UFatedBrandAbilitySystemComponent::GetAbilityTagFromSpec(const FGameplayAbilitySpec& AbilitySpec)
+{
+	if (AbilitySpec.Ability)
+	{
+		for (FGameplayTag Tag : AbilitySpec.Ability.Get()->AbilityTags)
+		{
+			if (Tag.MatchesTag(FGameplayTag::RequestGameplayTag(FName("Abilities"))))
+			{
+				return Tag;
+			}
+		}
+	}
+	return FGameplayTag();
+}
+
+FGameplayTag UFatedBrandAbilitySystemComponent::GetStatusFromSpec(const FGameplayAbilitySpec& AbilitySpec)
+{
+	for (FGameplayTag Tag : AbilitySpec.GetDynamicSpecSourceTags())
+	{
+		if (Tag.MatchesTag(FGameplayTag::RequestGameplayTag(FName("Abilities.Status"))))
+		{
+			return Tag;
+		}
+	}
+	return FGameplayTag();
+}
+
+void UFatedBrandAbilitySystemComponent::ClearInputTag(FGameplayAbilitySpec* Spec)
+{
+	const FGameplayTag InputTag = GetInputTagFromSpec(*Spec);
+	Spec->GetDynamicSpecSourceTags().RemoveTag(InputTag);
+}
+
+void UFatedBrandAbilitySystemComponent::AssignInputTagToAbility(FGameplayAbilitySpec& Spec, const FGameplayTag& InputTag)
+{
+	ClearInputTag(&Spec);
+	Spec.GetDynamicSpecSourceTags().AddTag(InputTag);
+}
+
+bool UFatedBrandAbilitySystemComponent::InputTagIsEmpty(const FGameplayTag& InputTag)
+{
+	FScopedAbilityListLock ActiveScopeLock(*this);
+	for (FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
+	{
+		if (AbilityHasInputTag(AbilitySpec, InputTag)) return false;
+	}
+	return true;
+}
+
+bool UFatedBrandAbilitySystemComponent::AbilityHasInputTag(const FGameplayAbilitySpec& Spec, const FGameplayTag& InputTag)
+{
+	return Spec.GetDynamicSpecSourceTags().HasTagExact(InputTag);
+}
+
+bool UFatedBrandAbilitySystemComponent::AbilityHasAnyInputTag(const FGameplayAbilitySpec& Spec)
+{
+	return Spec.GetDynamicSpecSourceTags().HasTag(FGameplayTag::RequestGameplayTag(FName("Input")));
+}
+
+bool UFatedBrandAbilitySystemComponent::IsPassiveAbility(const FGameplayAbilitySpec& Spec) const
+{
+	const UDataAsset_AbilityInfo* AbilityInfo = UFatedBrandFunctionLibrary::GetAbilityInfo(GetAvatarActor());
+	const FGameplayTag AbilityTag = GetAbilityTagFromSpec(Spec);
+	const FFatedBrandAbilityInfo& Info = AbilityInfo->FindAbilityInfoForTag(AbilityTag);
+	const FGameplayTag AbilityType = Info.AbilityType;
+
+	return AbilityType.MatchesTagExact(FatedBrandGameplayTags::Abilities_Passive_Type);
+}
+
 FGameplayTag UFatedBrandAbilitySystemComponent::GetStatusFromAbilityTag(const FGameplayTag& AbilityTag)
 {
 	if (const FGameplayAbilitySpec* Spec = GetSpecFromAbilityTag(AbilityTag))
@@ -175,11 +220,11 @@ FGameplayAbilitySpec* UFatedBrandAbilitySystemComponent::GetSpecFromAbilityTag(c
 	return nullptr;
 }
 
-FGameplayAbilitySpec* UFatedBrandAbilitySystemComponent::GetSpecWithNebulaSlot(const FGameplayTag& NebulaSlot)
+FGameplayAbilitySpec* UFatedBrandAbilitySystemComponent::GetSpecWithNebulaSlot(const FGameplayTag& InputTag)
 {
 	for (FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
 	{
-		if (AbilitySpec.GetDynamicSpecSourceTags().HasTagExact(NebulaSlot))
+		if (AbilitySpec.GetDynamicSpecSourceTags().HasTagExact(InputTag))
 		{
 			return &AbilitySpec;
 		}
@@ -187,23 +232,60 @@ FGameplayAbilitySpec* UFatedBrandAbilitySystemComponent::GetSpecWithNebulaSlot(c
 	return nullptr;
 }
 
-void UFatedBrandAbilitySystemComponent::UpdateAbilityStatuses(FFatedBrandAbilityInfo AbilityInfo)
+void UFatedBrandAbilitySystemComponent::UpdateAbilityStatuses(const FGameplayTag& AbilityTag)
 {
+	UDataAsset_AbilityInfo* AbilityInfo = UFatedBrandFunctionLibrary::GetAbilityInfo(GetAvatarActor());
 
-	if (!AbilityInfo.AbilityTag.IsValid())
+	for (FFatedBrandAbilityInfo& Info : AbilityInfo->AbilityInformation)
 	{
-		Debug::Print("Is Not Valid Data");
-		return;
+		if (Info.AbilityTag == AbilityTag && GetSpecFromAbilityTag(Info.AbilityTag) == nullptr)
+		{
+			FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(Info.Ability, 1);
+			AbilitySpec.GetDynamicSpecSourceTags().AddTag(FatedBrandGameplayTags::Abilities_Status_Unlocked);
+			GiveAbility(AbilitySpec);
+			MarkAbilitySpecDirty(AbilitySpec);
+
+			Info.StatusTag = FatedBrandGameplayTags::Abilities_Status_Unlocked;
+		}
 	}
-	
-	UFatedBrandGameplayAbility* FatedBrandAbility = AbilityInfo.Ability.GetDefaultObject();
-	FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityInfo.Ability, 1);
+}
 
-	FatedBrandAbility->StartupInputTag = AbilityInfo.InputTag;
-
-	if (FatedBrandAbility && FatedBrandAbility->StartupInputTag.IsValid())
+void UFatedBrandAbilitySystemComponent::EquipAbility(const FGameplayTag& AbilityTag, const FGameplayTag& InputTag)
+{
+	if (FGameplayAbilitySpec* AbilitySpec = GetSpecFromAbilityTag(AbilityTag))
 	{
-		AbilitySpec.GetDynamicSpecSourceTags().AddTag(FatedBrandAbility->StartupInputTag);
+		const FGameplayTag& PrevInputTag = GetInputTagFromSpec(*AbilitySpec);
+		const FGameplayTag& Status = GetStatusFromSpec(*AbilitySpec);
+
+		const bool bStatusValid = Status == FatedBrandGameplayTags::Abilities_Status_Equipped || Status == FatedBrandGameplayTags::Abilities_Status_Unlocked;
+
+		if (bStatusValid)
+		{
+			if (!InputTagIsEmpty(InputTag))
+			{
+				FGameplayAbilitySpec* SpecWithInputTag = GetSpecWithNebulaSlot(InputTag);
+				if (SpecWithInputTag)
+				{
+					if (AbilityTag.MatchesTagExact(GetAbilityTagFromSpec(*SpecWithInputTag)))
+					{
+						AbilityEquipped.Broadcast(AbilityTag, FatedBrandGameplayTags::Abilities_Status_Equipped, InputTag, PrevInputTag);
+						return;
+					}	
+				}
+				ClearInputTag(SpecWithInputTag);
+			}
+			if (!AbilityHasAnyInputTag(*AbilitySpec))
+			{
+				AbilitySpec->GetDynamicSpecSourceTags().RemoveTag(GetStatusFromSpec(*AbilitySpec));
+				AbilitySpec->GetDynamicSpecSourceTags().AddTag(FatedBrandGameplayTags::Abilities_Status_Equipped);
+			}
+
+			if (!IsPassiveAbility(*AbilitySpec))
+			{
+				AssignInputTagToAbility(*AbilitySpec, InputTag);
+				MarkAbilitySpecDirty(*AbilitySpec);	
+			}
+		}
+		AbilityEquipped.Broadcast(AbilityTag, FatedBrandGameplayTags::Abilities_Status_Equipped, InputTag, PrevInputTag);
 	}
-	GiveAbility(AbilitySpec);
 }

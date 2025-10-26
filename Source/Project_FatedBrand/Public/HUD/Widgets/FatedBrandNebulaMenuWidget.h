@@ -17,27 +17,11 @@ class PROJECT_FATEDBRAND_API UFatedBrandNebulaMenuWidget : public UFatedBrandUse
 	GENERATED_BODY()
 
 public :
-	virtual void NativeConstruct() override;
-
-	UFUNCTION(BlueprintCallable)
-	void CallSelectSocket(int32 PrevIndex, int32 CurrentIndex);
-
-	UFUNCTION(BlueprintCallable)
-	void CallSelectSocketFocusing(const int32 CurrentIndex, const bool IsSelectSocketFocusing);
-
-	UFUNCTION(BlueprintCallable)
-	void CallSelectHotBar(const int32 PrevIndex, const int32 CurrentIndex);
 
 	UFUNCTION(BlueprintCallable)
 	void SetNebulaDescription(FString InDescription);
 
-	UFUNCTION(BlueprintCallable)
-	void CallSelectSocketConfirm(FFatedBrandAbilityInfo CurrentInfo, const int32 CurrentIndex);
-
 private :
-	TArray<TObjectPtr<UFatedBrandNebulaSocketWidget>> SlotWidgets;
-
-	TArray<TObjectPtr<UFatedBrandHotBarWidget>> HotBarWidgets;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget, AllowPrivateAccess = "true"))
 	TSoftObjectPtr<UTextBlock> NebulaDescription;

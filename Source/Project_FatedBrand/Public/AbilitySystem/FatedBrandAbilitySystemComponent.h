@@ -10,6 +10,7 @@ struct FFatedBrandAbilityInfo;
 class UFatedBrandGameplayAbility;
 
 DECLARE_DELEGATE_OneParam(FForEachAbility, const FGameplayAbilitySpec&);
+DECLARE_MULTICAST_DELEGATE_FourParams(FAbilityEquipped, const FGameplayTag& /*Ability Tag*/, const FGameplayTag& /*Status Tag*/, const FGameplayTag& /*Input Tag*/, const FGameplayTag& /*Previous Input Tag*/);
 
 UCLASS()
 class PROJECT_FATEDBRAND_API UFatedBrandAbilitySystemComponent : public UAbilitySystemComponent
@@ -17,6 +18,8 @@ class PROJECT_FATEDBRAND_API UFatedBrandAbilitySystemComponent : public UAbility
 	GENERATED_BODY()
 
 public :
+	FAbilityEquipped AbilityEquipped;
+
 	void AddCharacterActivateAbilities(const TArray<TSubclassOf<UFatedBrandGameplayAbility>>& ActivateAbilities);
 	void AddCharacterPassiveAbilities(const TArray<TSubclassOf<UFatedBrandGameplayAbility>>& PassiveAbilities);
 	bool bStartupAbilitiesGiven = false;
@@ -30,12 +33,23 @@ public :
 	void OnAbilityInputHeld(const FGameplayTag& InInputTag);
 	void ForEachAbility(const FForEachAbility& Delegate);
 
+	void ClearInputTag(FGameplayAbilitySpec* Spec);
+	void AssignInputTagToAbility(FGameplayAbilitySpec& Spec, const FGameplayTag& InputTag);
+	bool InputTagIsEmpty(const FGameplayTag& InputTag);
+	bool AbilityHasInputTag(const FGameplayAbilitySpec& Spec, const FGameplayTag& InputTag);
+	bool AbilityHasAnyInputTag(const FGameplayAbilitySpec& Spec);
+	bool IsPassiveAbility(const FGameplayAbilitySpec& Spec) const;
+
+
 	FGameplayTag GetStatusFromAbilityTag(const FGameplayTag& AbilityTag);
 	FGameplayTag GetSlotFromAbilityTag(const FGameplayTag& AbilityTag);
 
 	FGameplayAbilitySpec* GetSpecFromAbilityTag(const FGameplayTag& AbilityTag);
-	FGameplayAbilitySpec* GetSpecWithNebulaSlot(const FGameplayTag& NebulaSlot);
+	FGameplayAbilitySpec* GetSpecWithNebulaSlot(const FGameplayTag& InputTag);
 
 	UFUNCTION(BlueprintCallable, Category = "UpdateAbility")
-	void UpdateAbilityStatuses(FFatedBrandAbilityInfo AbilityInfo);
+	void UpdateAbilityStatuses(const FGameplayTag& AbilityTag);
+
+	UFUNCTION(BlueprintCallable, Category = "UpdateAbility")
+	void EquipAbility(const FGameplayTag& AbilityTag, const FGameplayTag& InputTag);
 };

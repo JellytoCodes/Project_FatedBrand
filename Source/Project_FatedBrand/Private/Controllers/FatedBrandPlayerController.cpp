@@ -171,6 +171,7 @@ void AFatedBrandPlayerController::Input_WidgetSelect()
 		else
 		{
 			NebulaMenuWidgetController->SelectSocketConfirm();
+			bIsWidgetSelect = !bIsWidgetSelect;
 		}
 	}
 }

@@ -41,6 +41,7 @@ namespace FatedBrandGameplayTags
 
 #pragma region Abilities Offensive
 	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Offensive_Type)
+	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Offensive_MeleeAttack)
 	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Offensive_BowShock)
 	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Offensive_BlastingZone)
 #pragma endregion
