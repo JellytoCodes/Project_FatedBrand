@@ -24,8 +24,8 @@ public :
 	UOverlayWidgetController* GetOverlayWidgetController(const FWidgetControllerParams& WCParams);
 	UNebulaMenuWidgetController* GetNebulaMenuWidgetController(const FWidgetControllerParams& WCParams);
 	void InitOverlay(APlayerController* PC, UAbilitySystemComponent* ASC, UAttributeSet* AS);
-	void CreateNebulaMenu(APlayerController* PC, UAbilitySystemComponent* ASC, UAttributeSet* AS);
-	void RemoveNebulaMenu();
+	void VisibleNebulaMenu(APlayerController* PC, UAbilitySystemComponent* ASC, UAttributeSet* AS);
+	void HideNebulaMenu();
 
 	FORCEINLINE UInputMappingContext* GetWidgetMappingContext() { return WidgetMappingContext; }
 
@@ -56,4 +56,8 @@ private :
 
 	UPROPERTY(EditDefaultsOnly, Category = "WidgetContext")
 	TObjectPtr<UInputMappingContext> WidgetMappingContext;
+
+	UPROPERTY(EditDefaultsOnly, Category = "WidgetClass")
+	FVector2D NebulaWidgetPosition = FVector2D();
+
 };

@@ -73,6 +73,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	int32 GetSelectHotBarX() const { return SelectHotBarX; }
 
+	bool bIsSocketFocusing = false;
+
 private :
 	void ShouldEnableButtons(const FGameplayTag& AbilityStatus, bool&bShouldEnableEquipButton);
 	FSelectedAbility SelectedAbility = {FatedBrandGameplayTags::Abilities_None, FatedBrandGameplayTags::Abilities_Status_Locked, FatedBrandGameplayTags::Input_Key_1};
@@ -87,8 +89,6 @@ private :
 	int32 SelectSocketX = 0;
 	int32 SelectSocketY = 0;
 	int32 SelectHotBarX = 0;
-
-	bool bIsSocketFocusing = false;
 
 	int32 Wrap1(const int32 V, const int32 Min, const int32 Max);
 };

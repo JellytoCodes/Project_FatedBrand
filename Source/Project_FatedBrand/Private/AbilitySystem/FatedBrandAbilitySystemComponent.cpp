@@ -245,7 +245,7 @@ void UFatedBrandAbilitySystemComponent::UpdateAbilityStatuses(const FGameplayTag
 			GiveAbility(AbilitySpec);
 			MarkAbilitySpecDirty(AbilitySpec);
 
-			Info.StatusTag = FatedBrandGameplayTags::Abilities_Status_Unlocked;
+			AbilityStatusChanged.Broadcast(AbilityTag, FatedBrandGameplayTags::Abilities_Status_Unlocked);
 		}
 	}
 }

@@ -196,13 +196,13 @@ void AFatedBrandPlayerController::Input_NebulaMenu()
 		
 		if (!bIsNebulaMenu)
 		{
-			CachedFatedBrandHUD->CreateNebulaMenu(this, FatedBrandCharacter->GetAbilitySystemComponent(), FatedBrandCharacter->GetFatedBrandAttributeSet());
+			CachedFatedBrandHUD->VisibleNebulaMenu(this, FatedBrandCharacter->GetAbilitySystemComponent(), FatedBrandCharacter->GetFatedBrandAttributeSet());
 			bIsNebulaMenu = true;
 			if (Subsystem) Subsystem->AddMappingContext(CachedFatedBrandHUD->GetWidgetMappingContext(), 1);
 		}
 		else
 		{
-			CachedFatedBrandHUD->RemoveNebulaMenu();
+			CachedFatedBrandHUD->HideNebulaMenu();
 			bIsNebulaMenu = false;
 			bIsWidgetSelect = false;
 			if (Subsystem) Subsystem->RemoveMappingContext(CachedFatedBrandHUD->GetWidgetMappingContext());

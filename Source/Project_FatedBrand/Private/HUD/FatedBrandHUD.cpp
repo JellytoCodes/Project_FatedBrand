@@ -42,32 +42,38 @@ void AFatedBrandHUD::InitOverlay(APlayerController* PC, UAbilitySystemComponent*
 	WidgetController->BroadcastInitialValues();
 
 	Widget->AddToViewport();
-}
-
-void AFatedBrandHUD::CreateNebulaMenu(APlayerController* PC, UAbilitySystemComponent* ASC, UAttributeSet* AS)
-{
-	const FWidgetControllerParams WidgetControllerParams(PC, ASC, AS);
-	UNebulaMenuWidgetController* WidgetController = GetNebulaMenuWidgetController(WidgetControllerParams);
 
 	if (NebulaWidget == nullptr)
 	{
-		UUserWidget* Widget = CreateWidget<UUserWidget>(GetWorld(), NebulaWidgetClass);
-		NebulaWidget = Cast<UFatedBrandUserWidget>(Widget);
+		UUserWidget* LocalNebulaWidget = CreateWidget<UUserWidget>(GetWorld(), NebulaWidgetClass);
+		NebulaWidget = Cast<UFatedBrandUserWidget>(LocalNebulaWidget);
 
 		NebulaWidget->SetWidgetController(NebulaWidgetController);
 		
 		NebulaWidget->AddToViewport();
-		NebulaWidget->SetPositionInViewport(FVector2D(400, 100), true);
+		NebulaWidget->SetPositionInViewport(NebulaWidgetPosition, true);
+		WidgetController->BroadcastInitialValues();
+		NebulaWidget->SetVisibility(ESlateVisibility::Hidden);
 	}
+}
 
-	WidgetController->BroadcastInitialValues();
+void AFatedBrandHUD::VisibleNebulaMenu(APlayerController* PC, UAbilitySystemComponent* ASC, UAttributeSet* AS)
+{
+	if (NebulaWidget == nullptr) return;
+
+	const FWidgetControllerParams WidgetControllerParams(PC, ASC, AS);
+	UNebulaMenuWidgetController* WidgetController = GetNebulaMenuWidgetController(WidgetControllerParams);
+
+	//포커싱 상태 강제 해제를 위해 true 설정
+	WidgetController->bIsSocketFocusing = true;
+	WidgetController->SelectSocketFocusingController();	
 	NebulaWidget->SetVisibility(ESlateVisibility::Visible);
 }
 
-void AFatedBrandHUD::RemoveNebulaMenu()
+void AFatedBrandHUD::HideNebulaMenu()
 {
-	if (NebulaWidget)
-	{
-		NebulaWidget->SetVisibility(ESlateVisibility::Hidden);
-	}
+	if (NebulaWidget == nullptr) return;
+	
+	NebulaWidget->SetVisibility(ESlateVisibility::Hidden);
+	
 }

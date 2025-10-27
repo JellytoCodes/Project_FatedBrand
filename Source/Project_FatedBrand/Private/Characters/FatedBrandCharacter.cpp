@@ -57,10 +57,6 @@ void AFatedBrandCharacter::InitAbilityActorInfo()
 			// 캐릭터 기본 소유 액티브/패시브 스킬 ASC에 등록
 			GetFatedBrandAbilitySystemComponent()->AddCharacterActivateAbilities(LoadedData->StartUpOffensiveAbilities);
 			GetFatedBrandAbilitySystemComponent()->AddCharacterPassiveAbilities(LoadedData->StartUpPassiveAbilities);
-
-			// 소유 스킬 업데이트 (최초 1회 테스트용)
-			GetFatedBrandAbilitySystemComponent()->UpdateAbilityStatuses(FatedBrandGameplayTags::Abilities_Offensive_BlastingZone);
-			GetFatedBrandAbilitySystemComponent()->UpdateAbilityStatuses(FatedBrandGameplayTags::Abilities_Passive_DoubleJump);
 		}
 	}
 
@@ -69,6 +65,9 @@ void AFatedBrandCharacter::InitAbilityActorInfo()
 		if (AFatedBrandHUD* FatedBrandHUD = Cast<AFatedBrandHUD>(FatedBrandPlayerController->GetHUD()))
 		{
 			FatedBrandHUD->InitOverlay(FatedBrandPlayerController, GetAbilitySystemComponent(), FatedBrandAttributeSet);
+
+			GetFatedBrandAbilitySystemComponent()->UpdateAbilityStatuses(FatedBrandGameplayTags::Abilities_Offensive_BlastingZone);
+			GetFatedBrandAbilitySystemComponent()->UpdateAbilityStatuses(FatedBrandGameplayTags::Abilities_Passive_DoubleJump);
 		}
 	}
 }

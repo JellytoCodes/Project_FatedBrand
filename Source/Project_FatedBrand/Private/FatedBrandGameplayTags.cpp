@@ -43,6 +43,10 @@ namespace FatedBrandGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Abilities_Offensive_BlastingZone, "Abilities.Offensive.BlastingZone")
 #pragma endregion
 
+#pragma region Abilities Offecsive Cooldown
+	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Cooldown_BlastingZone, "Cooldown.BlastingZone")
+#pragma endregion
+
 #pragma region Abilities Passive
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Abilities_Passive_Type, "Abilities.Passive.Type")
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Abilities_Passive_DoubleJump, "Abilities.Passive.DoubleJump")

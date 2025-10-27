@@ -21,13 +21,10 @@ public :
 	UPROPERTY(BlueprintAssignable)
 	FOnSelectSocketSignature OnSelectSocketDelegate;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
-	FGameplayTag AbilityTag;
-
 private :
-	UPROPERTY(meta = (BindWidget, AllowPrivateAccess = "true"))
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget, AllowPrivateAccess = "true"))
 	TObjectPtr<UImage> Select_Image;
 
-	UPROPERTY(meta = (BindWidget, AllowPrivateAccess = "true"))
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget, AllowPrivateAccess = "true"))
 	TObjectPtr<UImage> Skill_Image;
 };

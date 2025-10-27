@@ -5,19 +5,28 @@
 #include "DataAssets/DataAsset_AbilityInfo.h"
 #include "AbilitySystem/FatedBrandAbilitySystemComponent.h"
 #include "GameplayAbilitySpec.h"
+#include "Project_FatedBrand/Project_FatedBrand.h"
 
 void UNebulaMenuWidgetController::BroadcastInitialValues()
 {
 	BroadcastAbilityInfo();
 
-	bIsSocketFocusing = false;
-
-	SocketFocusingDelegate.Broadcast(NebulaSelectSocket, bIsSocketFocusing);
 }
 
 void UNebulaMenuWidgetController::BindCallbacksToDependencies()
 {
 	GetFatedBrandASC()->AbilityEquipped.AddUObject(this, &ThisClass::UpdateEquipQuickSlot);
+
+	GetFatedBrandASC()->AbilityStatusChanged.AddLambda([this](const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag)
+	{
+		if (AbilityInfo)
+		{
+			FFatedBrandAbilityInfo Info = AbilityInfo->FindAbilityInfoForTag(AbilityTag);
+			Info.StatusTag = StatusTag;
+			AbilityInfoDelegate.Broadcast(Info);
+		}	
+	});
+	
 }
 
 void UNebulaMenuWidgetController::NebulaSelected(const FGameplayTag& AbilityTag)

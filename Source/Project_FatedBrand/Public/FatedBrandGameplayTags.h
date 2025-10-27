@@ -46,6 +46,10 @@ namespace FatedBrandGameplayTags
 	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Offensive_BlastingZone)
 #pragma endregion
 
+#pragma region Abilities Offecsive Cooldown
+	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Cooldown_BlastingZone)
+#pragma endregion
+
 #pragma region Abilities Passive
 	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Passive_Type)
 	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Passive_DoubleJump)
