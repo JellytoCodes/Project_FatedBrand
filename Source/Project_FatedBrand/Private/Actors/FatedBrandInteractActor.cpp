@@ -2,14 +2,23 @@
 
 #include "Actors/FatedBrandInteractActor.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystemComponent.h"
+#include "FatedBrandGameplayTags.h"
+#include "Interfaces/CombatInterface.h"
+
 AFatedBrandInteractActor::AFatedBrandInteractActor()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
 }
 
-void AFatedBrandInteractActor::BeginPlay()
+void AFatedBrandInteractActor::GiveAbilityToTarget(AActor* TargetActor)
 {
-	Super::BeginPlay();
-	
+	if (TargetActor->ActorHasTag(FName("Enemy"))) return;
+
+	if (ICombatInterface* CombatInterface = Cast<ICombatInterface>(TargetActor))
+	{
+		CombatInterface->UpdateAbilities(AbilityTag);
+	}
 }

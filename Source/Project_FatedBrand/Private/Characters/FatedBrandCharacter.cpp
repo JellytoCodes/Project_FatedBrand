@@ -10,6 +10,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "HUD/FatedBrandHUD.h"
+#include "Project_FatedBrand/Project_FatedBrand.h"
 
 AFatedBrandCharacter::AFatedBrandCharacter()
 {
@@ -39,6 +40,12 @@ AFatedBrandCharacter::AFatedBrandCharacter()
 	GetCharacterMovement()->bConstrainToPlane = true;
 }
 
+void AFatedBrandCharacter::UpdateAbilities(const FGameplayTag& AbilityTag)
+{
+	GetFatedBrandAbilitySystemComponent()->UpdateAbilityStatuses(AbilityTag);
+	Debug::Print(AbilityTag.ToString());
+}
+
 void AFatedBrandCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
@@ -66,8 +73,9 @@ void AFatedBrandCharacter::InitAbilityActorInfo()
 		{
 			FatedBrandHUD->InitOverlay(FatedBrandPlayerController, GetAbilitySystemComponent(), FatedBrandAttributeSet);
 
-			GetFatedBrandAbilitySystemComponent()->UpdateAbilityStatuses(FatedBrandGameplayTags::Abilities_Offensive_BlastingZone);
-			GetFatedBrandAbilitySystemComponent()->UpdateAbilityStatuses(FatedBrandGameplayTags::Abilities_Passive_DoubleJump);
+			//GetFatedBrandAbilitySystemComponent()->UpdateAbilityStatuses(FatedBrandGameplayTags::Abilities_Offensive_BlastingZone);
+			GetFatedBrandAbilitySystemComponent()->UpdateAbilityStatuses(FatedBrandGameplayTags::Abilities_Offensive_NobleBlood);
+			//GetFatedBrandAbilitySystemComponent()->UpdateAbilityStatuses(FatedBrandGameplayTags::Abilities_Passive_LivingDead);
 		}
 	}
 }

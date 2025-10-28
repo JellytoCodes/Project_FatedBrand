@@ -22,6 +22,8 @@ public :
 	UFUNCTION(BlueprintImplementableEvent)
 	void WallJumping();
 
+	virtual void UpdateAbilities(const FGameplayTag& AbilityTag) override;
+
 protected :
 	virtual void PossessedBy(AController* NewController) override;
 

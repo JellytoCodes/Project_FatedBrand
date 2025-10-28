@@ -17,4 +17,5 @@ class PROJECT_FATEDBRAND_API IActorInteractInterface
 	GENERATED_BODY()
 
 public:
+	virtual void GiveAbilityToTarget(AActor* TargetActor) = 0;
 };

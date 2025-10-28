@@ -95,17 +95,6 @@ void UFatedBrandAbilitySystemComponent::OnAbilityInputHeld(const FGameplayTag& I
 	}
 }
 
-void UFatedBrandAbilitySystemComponent::ForEachAbility(const FForEachAbility& Delegate)
-{
-	for (const FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
-	{
-		if (!Delegate.ExecuteIfBound(AbilitySpec))
-		{
-			
-		}
-	}
-}
-
 FGameplayTag UFatedBrandAbilitySystemComponent::GetInputTagFromSpec(const FGameplayAbilitySpec& AbilitySpec)
 {
 	for (FGameplayTag Tag : AbilitySpec.GetDynamicSpecSourceTags())

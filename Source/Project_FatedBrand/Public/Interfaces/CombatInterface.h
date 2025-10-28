@@ -20,4 +20,6 @@ class PROJECT_FATEDBRAND_API ICombatInterface
 
 public:
 	virtual void Die() = 0;
+
+	virtual void UpdateAbilities(const struct FGameplayTag& AbilityTag) { }
 };

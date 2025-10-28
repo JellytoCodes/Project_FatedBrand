@@ -8,6 +8,7 @@
 #include "AbilitySystem/FatedBrandAbilitySystemComponent.h"
 #include "AbilitySystem/FatedBrandAttributeSet.h"
 #include "Components/BoxComponent.h"
+#include "Interfaces/ActorInteractInterface.h"
 #include "Project_FatedBrand/Project_FatedBrand.h"
 
 AFatedBrandCharacterBase::AFatedBrandCharacterBase()
@@ -134,6 +135,16 @@ void AFatedBrandCharacterBase::OnComponentBeginOverlap(UPrimitiveComponent* Over
 		OnHitTargetActor(HitPawn);
 		SetToggleCollisionEnabled(CurrentDamageType, ECollisionEnabled::NoCollision);
 	}
+
+	if (OtherActor->Implements<UActorInteractInterface>())
+	{
+		if (IActorInteractInterface* InteractInterface = Cast<IActorInteractInterface>(OtherActor))
+		{
+			InteractInterface->GiveAbilityToTarget(this);
+			Debug::Print("Get Activate");
+		}
+	}
+
 }
 
 void AFatedBrandCharacterBase::Die()
