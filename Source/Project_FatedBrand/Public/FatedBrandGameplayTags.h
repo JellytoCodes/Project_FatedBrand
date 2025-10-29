@@ -39,14 +39,20 @@ namespace FatedBrandGameplayTags
 	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Status_Locked)
 #pragma endregion
 
+#pragma region Ability Activate
+	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Activate_BlastingZone)
+	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Activate_Blocking)
+#pragma endregion
+
 #pragma region Abilities Offensive
 	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Offensive_Type)
 	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Offensive_MeleeAttack)
 	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Offensive_NobleBlood)
 	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Offensive_BlastingZone)
+	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Offensive_Blocking)
 #pragma endregion
 
-#pragma region Abilities Offecsive Cooldown
+#pragma region Abilities Offensive Cooldown
 	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Cooldown_BlastingZone)
 	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Cooldown_NobleBlood)
 #pragma endregion
@@ -58,9 +64,7 @@ namespace FatedBrandGameplayTags
 #pragma endregion
 
 #pragma region Damage
-	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Damage_Status_Attack)
-	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Damage_Status_Blocking)
-	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Damage_MeleeAttack)
+	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Damage_Type_Physical)
 
 #pragma endregion
 

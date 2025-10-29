@@ -6,7 +6,7 @@
 #include "FatedBrandGameplayTags.h"
 #include "AbilitySystem/Abilities/FatedBrandGameplayAbility.h"
 #include "DataAssets/DataAsset_AbilityInfo.h"
-#include "Project_FatedBrand/Project_FatedBrand.h"
+#include "Game/FatedBrandSaveGame.h"
 
 void UFatedBrandAbilitySystemComponent::AddCharacterActivateAbilities(const TArray<TSubclassOf<UFatedBrandGameplayAbility>>& ActivateAbilities)
 {
@@ -21,6 +21,8 @@ void UFatedBrandAbilitySystemComponent::AddCharacterActivateAbilities(const TArr
 		}
 		GiveAbility(AbilitySpec);
 	}
+	bStartupAbilitiesGiven = true;
+	AbilitiesGivenDelegate.Broadcast();
 }
 
 void UFatedBrandAbilitySystemComponent::AddCharacterPassiveAbilities(const TArray<TSubclassOf<UFatedBrandGameplayAbility>>& PassiveAbilities)
@@ -30,6 +32,33 @@ void UFatedBrandAbilitySystemComponent::AddCharacterPassiveAbilities(const TArra
 		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
 		GiveAbilityAndActivateOnce(AbilitySpec);
 	}
+	bStartupAbilitiesGiven = true;
+	AbilitiesGivenDelegate.Broadcast();
+}
+
+void UFatedBrandAbilitySystemComponent::AddCharacterAbilitiesFromSaveData(UFatedBrandSaveGame* SaveData)
+{
+	for (const FSavedAbility& Data : SaveData->SavedAbilities)
+	{
+		const TSubclassOf<UGameplayAbility> LoadedAbilityClass = Data.Ability;
+
+		FGameplayAbilitySpec LoadedAbilitySpec = FGameplayAbilitySpec(LoadedAbilityClass, Data.LevelRequirement);
+		LoadedAbilitySpec.GetDynamicSpecSourceTags().AddTag(Data.InputTag);
+		LoadedAbilitySpec.GetDynamicSpecSourceTags().AddTag(Data.StatusTag);
+
+		if (Data.AbilityType == FatedBrandGameplayTags::Abilities_Offensive_Type)
+		{
+			GiveAbility(LoadedAbilitySpec);
+		}
+		else if (Data.AbilityType == FatedBrandGameplayTags::Abilities_Passive_Type)
+		{
+			GiveAbility(LoadedAbilitySpec);
+
+			// 추후 즉시 발동이 필요한 패시브가 존재할 경우 기능 추가
+		}
+	}
+	bStartupAbilitiesGiven = true;
+	AbilitiesGivenDelegate.Broadcast();
 }
 
 void UFatedBrandAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag& InInputTag)
@@ -91,6 +120,19 @@ void UFatedBrandAbilitySystemComponent::OnAbilityInputHeld(const FGameplayTag& I
 			{
 				TryActivateAbility(AbilitySpec.Handle);
 			}
+		}
+	}
+}
+
+void UFatedBrandAbilitySystemComponent::ForEachAbility(const FForEachAbility& Delegate)
+{
+	FScopedAbilityListLock ActiveScopeLock(*this);
+
+	for (const FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
+	{
+		if (!Delegate.ExecuteIfBound(AbilitySpec))
+		{
+			UE_LOG(LogTemp, Error, TEXT("Failed to execute delegate in %hs"), __FUNCTION__);
 		}
 	}
 }

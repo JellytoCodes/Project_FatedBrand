@@ -21,5 +21,11 @@ class PROJECT_FATEDBRAND_API ICombatInterface
 public:
 	virtual void Die() = 0;
 
-	virtual void UpdateAbilities(const struct FGameplayTag& AbilityTag) { }
+	virtual void UpdateAbilities(const struct FGameplayTag& AbilityTag) {}
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	AActor* GetAvatar();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	bool IsDead() const;
 };

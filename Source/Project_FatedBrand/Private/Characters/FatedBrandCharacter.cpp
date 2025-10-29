@@ -2,14 +2,19 @@
 
 #include "Characters/FatedBrandCharacter.h"
 
+#include "FatedBrandFunctionLibrary.h"
 #include "FatedBrandGameplayTags.h"
 #include "AbilitySystem/FatedBrandAbilitySystemComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Controllers/FatedBrandPlayerController.h"
+#include "DataAssets/DataAsset_AbilityInfo.h"
 #include "DataAssets/DataAsset_StartUpDataBase.h"
+#include "Game/FatedBrandGameModeBase.h"
+#include "Game/FatedBrandSaveGame.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "HUD/FatedBrandHUD.h"
+#include "Kismet/GameplayStatics.h"
 #include "Project_FatedBrand/Project_FatedBrand.h"
 
 AFatedBrandCharacter::AFatedBrandCharacter()
@@ -46,10 +51,74 @@ void AFatedBrandCharacter::UpdateAbilities(const FGameplayTag& AbilityTag)
 	Debug::Print(AbilityTag.ToString());
 }
 
+void AFatedBrandCharacter::SaveProgress(const FName& CheckPointTag)
+{
+	if (AFatedBrandGameModeBase* FatedBrandGameMode = Cast<AFatedBrandGameModeBase>(UGameplayStatics::GetGameMode(this)))
+	{
+		UFatedBrandSaveGame* SaveData = FatedBrandGameMode->RetrieveInGameSaveData();
+		if (SaveData == nullptr) return;
+
+		SaveData->PlayerStartTag = CheckPointTag;
+
+		SaveData->bFirstTimeLoadIn = false;
+
+		UFatedBrandAbilitySystemComponent* FatedBrandASC = Cast<UFatedBrandAbilitySystemComponent>(GetAbilitySystemComponent());
+		FForEachAbility SaveAbilityDelegate;
+		SaveData->SavedAbilities.Empty();
+		SaveAbilityDelegate.BindLambda([this, FatedBrandASC, SaveData](const FGameplayAbilitySpec& AbilitySpec)
+		{
+			const FGameplayTag AbilityTag = FatedBrandASC->GetAbilityTagFromSpec(AbilitySpec);
+			UDataAsset_AbilityInfo* AbilityInfo = UFatedBrandFunctionLibrary::GetAbilityInfo(this);
+			FFatedBrandAbilityInfo Info = AbilityInfo->FindAbilityInfoForTag(AbilityTag);
+
+			FSavedAbility SavedAbility;
+			SavedAbility.Ability = Info.Ability;
+			SavedAbility.LevelRequirement = AbilitySpec.Level;
+			SavedAbility.InputTag = FatedBrandASC->GetSlotFromAbilityTag(AbilityTag);
+			SavedAbility.StatusTag = FatedBrandASC->GetStatusFromAbilityTag(AbilityTag);
+			SavedAbility.AbilityTag = AbilityTag;
+			SavedAbility.AbilityType = Info.AbilityType;
+
+			SaveData->SavedAbilities.AddUnique(SavedAbility);
+
+			Debug::Print(AbilityTag.ToString());
+		});
+		FatedBrandASC->ForEachAbility(SaveAbilityDelegate);
+
+		FatedBrandGameMode->SaveInGameProgressData(SaveData);
+	}
+}
+
+void AFatedBrandCharacter::LoadProgress()
+{
+	if (AFatedBrandGameModeBase* FatedBrandGameMode = Cast<AFatedBrandGameModeBase>(UGameplayStatics::GetGameMode(this)))
+	{
+		UFatedBrandSaveGame* SaveData = FatedBrandGameMode->RetrieveInGameSaveData();
+		if (SaveData == nullptr) return;
+
+		Debug::Print("bFirstTimeLoadIn");
+
+		if (SaveData->bFirstTimeLoadIn)
+		{
+			// TODO : Load Default Initialize
+			Debug::Print("bFirstTimeLoadIn");
+		}
+		else
+		{
+			// 여기로 안넘어오는 원인 찾기
+			if (UFatedBrandAbilitySystemComponent* FatedBrandASC = Cast<UFatedBrandAbilitySystemComponent>(GetAbilitySystemComponent()))
+			{
+				FatedBrandASC->AddCharacterAbilitiesFromSaveData(SaveData);
+			}
+		}
+	}
+}
+
 void AFatedBrandCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 
+	LoadProgress();
 	InitAbilityActorInfo();
 }
 
@@ -73,9 +142,7 @@ void AFatedBrandCharacter::InitAbilityActorInfo()
 		{
 			FatedBrandHUD->InitOverlay(FatedBrandPlayerController, GetAbilitySystemComponent(), FatedBrandAttributeSet);
 
-			//GetFatedBrandAbilitySystemComponent()->UpdateAbilityStatuses(FatedBrandGameplayTags::Abilities_Offensive_BlastingZone);
 			GetFatedBrandAbilitySystemComponent()->UpdateAbilityStatuses(FatedBrandGameplayTags::Abilities_Offensive_NobleBlood);
-			//GetFatedBrandAbilitySystemComponent()->UpdateAbilityStatuses(FatedBrandGameplayTags::Abilities_Passive_LivingDead);
 		}
 	}
 }

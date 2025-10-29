@@ -36,11 +36,17 @@ namespace FatedBrandGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Abilities_Status_Locked, "Abilities.Status.Locked")
 #pragma endregion
 
+#pragma region Ability Activate
+	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Ability_Activate_BlastingZone, "Abilities.Activate.BlastingZone")
+	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Ability_Activate_Blocking, "Abilities.Activate.Blocking")
+#pragma endregion
+
 #pragma region Abilities Offensive
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Abilities_Offensive_Type, "Abilities.Offensive.Type")
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Abilities_Offensive_MeleeAttack, "Abilities.Offensive.MeleeAttack")
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Abilities_Offensive_NobleBlood, "Abilities.Offensive.NobleBlood")
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Abilities_Offensive_BlastingZone, "Abilities.Offensive.BlastingZone")
+	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Abilities_Offensive_Blocking, "Abilities.Offensive.Blocking")
 #pragma endregion
 
 #pragma region Abilities Offecsive Cooldown
@@ -55,9 +61,7 @@ namespace FatedBrandGameplayTags
 #pragma endregion
 
 #pragma region Damage
-	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Damage_Status_Attack, "Damage.Status.Attack")
-	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Damage_Status_Blocking, "Damage.Status.Blocking")
-	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Damage_MeleeAttack, "Damage.MeleeAttack")
+	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Damage_Type_Physical, "Damage.Type.Physical")
 
 #pragma endregion
 

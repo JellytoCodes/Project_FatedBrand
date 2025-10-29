@@ -54,14 +54,13 @@ public:
 	FDamageEffectParams CombatDamageEffectParams;
 	
 #pragma region CombatInterface
-	// ~Begin Function
 	virtual void Die() override;
-	// ~End Function
 
-	// ~Begin Delegate
+	virtual AActor* GetAvatar_Implementation() override;
+	virtual bool IsDead_Implementation() const override;
+
 	UPROPERTY(BlueprintAssignable, Category = "CombatInterface|Delegate")
 	FOnDeathSignature OnDeathDelegate;
-	// ~End Delegate
 #pragma endregion
 
 protected:

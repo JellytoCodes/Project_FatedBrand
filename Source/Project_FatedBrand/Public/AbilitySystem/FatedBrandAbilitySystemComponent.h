@@ -6,9 +6,12 @@
 #include "AbilitySystemComponent.h"
 #include "FatedBrandAbilitySystemComponent.generated.h"
 
+class UFatedBrandSaveGame;
 struct FFatedBrandAbilityInfo;
 class UFatedBrandGameplayAbility;
 
+DECLARE_MULTICAST_DELEGATE(FAbilitiesGiven);
+DECLARE_DELEGATE_OneParam(FForEachAbility, const FGameplayAbilitySpec&);
 DECLARE_MULTICAST_DELEGATE_FourParams(FAbilityEquipped, const FGameplayTag& /*Ability Tag*/, const FGameplayTag& /*Status Tag*/, const FGameplayTag& /*Input Tag*/, const FGameplayTag& /*Previous Input Tag*/);
 DECLARE_MULTICAST_DELEGATE_TwoParams(FAbilityStatusChanged, const FGameplayTag& /*Ability Tag*/, const FGameplayTag& /*Status Tag*/);
 
@@ -19,9 +22,12 @@ class PROJECT_FATEDBRAND_API UFatedBrandAbilitySystemComponent : public UAbility
 
 public :
 	FAbilityEquipped AbilityEquipped;
+	FAbilitiesGiven AbilitiesGivenDelegate;
 	FAbilityStatusChanged AbilityStatusChanged;
+
 	void AddCharacterActivateAbilities(const TArray<TSubclassOf<UFatedBrandGameplayAbility>>& ActivateAbilities);
 	void AddCharacterPassiveAbilities(const TArray<TSubclassOf<UFatedBrandGameplayAbility>>& PassiveAbilities);
+	void AddCharacterAbilitiesFromSaveData(UFatedBrandSaveGame* SaveData);
 	bool bStartupAbilitiesGiven = false;
 
 	static FGameplayTag GetAbilityTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
@@ -31,6 +37,7 @@ public :
 	void OnAbilityInputPressed(const FGameplayTag& InInputTag);
 	void OnAbilityInputReleased(const FGameplayTag& InInputTag);
 	void OnAbilityInputHeld(const FGameplayTag& InInputTag);
+	void ForEachAbility(const FForEachAbility& Delegate);
 
 	void ClearInputTag(FGameplayAbilitySpec* Spec);
 	void AssignInputTagToAbility(FGameplayAbilitySpec& Spec, const FGameplayTag& InputTag);

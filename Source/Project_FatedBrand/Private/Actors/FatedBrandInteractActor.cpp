@@ -2,9 +2,6 @@
 
 #include "Actors/FatedBrandInteractActor.h"
 
-#include "AbilitySystemBlueprintLibrary.h"
-#include "AbilitySystemComponent.h"
-#include "FatedBrandGameplayTags.h"
 #include "Interfaces/CombatInterface.h"
 
 AFatedBrandInteractActor::AFatedBrandInteractActor()

@@ -24,6 +24,10 @@ public :
 
 	virtual void UpdateAbilities(const FGameplayTag& AbilityTag) override;
 
+	UFUNCTION(BlueprintCallable)
+	void SaveProgress(const FName& CheckPointTag);
+
+	void LoadProgress();
 protected :
 	virtual void PossessedBy(AController* NewController) override;
 

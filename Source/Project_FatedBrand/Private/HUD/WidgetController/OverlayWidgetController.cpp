@@ -2,7 +2,9 @@
 
 #include "HUD/WidgetController/OverlayWidgetController.h"
 
+#include "FatedBrandGameplayTags.h"
 #include "AbilitySystem/FatedBrandAttributeSet.h"
+#include "DataAssets/DataAsset_AbilityInfo.h"
 
 void UOverlayWidgetController::BroadcastInitialValues()
 {
@@ -30,4 +32,32 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 	{
 		OnVitalSurgeChanged.Broadcast(Data.NewValue);
 	});
+
+	if (GetFatedBrandASC())
+	{
+		GetFatedBrandASC()->AbilityEquipped.AddUObject(this, &ThisClass::OnAbilityEquipped);
+		if (GetFatedBrandASC()->bStartupAbilitiesGiven)
+		{
+			BroadcastAbilityInfo();
+		}
+		else
+		{
+			GetFatedBrandASC()->AbilitiesGivenDelegate.AddUObject(this, &ThisClass::BroadcastAbilityInfo);
+		}
+	}
+}
+
+void UOverlayWidgetController::OnAbilityEquipped(const FGameplayTag& AbilityTag, const FGameplayTag& Status, const FGameplayTag& Slot, const FGameplayTag& PreviousSlot) const
+{
+	FFatedBrandAbilityInfo LastSlotInfo;
+	LastSlotInfo.StatusTag = FatedBrandGameplayTags::Abilities_Status_Unlocked;
+	LastSlotInfo.InputTag = PreviousSlot;
+	LastSlotInfo.AbilityTag = FatedBrandGameplayTags::Abilities_None;
+	//Broadcast empty info if PreviousSlot is a valid slot, Only if equipping an already-equipped spell
+	AbilityInfoDelegate.Broadcast(LastSlotInfo);
+
+	FFatedBrandAbilityInfo Info = AbilityInfo->FindAbilityInfoForTag(AbilityTag);
+	Info.StatusTag = Status;
+	Info.InputTag = Slot;
+	AbilityInfoDelegate.Broadcast(Info);
 }

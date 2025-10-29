@@ -19,12 +19,12 @@ public :
 	FGameplayTag StartupInputTag;
 
 	UFUNCTION(BlueprintCallable)
+	void CauseDamage(AActor* TargetActor);
+
+	UFUNCTION(BlueprintCallable)
 	FDamageEffectParams MakeDamageEffectParamsFromClassDefaults(AActor* TargetActor = nullptr);
 
 protected :
-	virtual void OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) override;
-	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
-
 	UFUNCTION(BlueprintPure, Category = "FatedBrand|Ability")
 	UFatedBrandAbilitySystemComponent* GetFatedBrandAbilitySystemComponentFromActorInfo() const;
 
@@ -34,19 +34,23 @@ protected :
 	UFUNCTION(BlueprintPure, Category = "FatedBrand|Ability")
 	AFatedBrandEnemy* GetFatedBrandEnemyFromActorInfo();
 
-	FActiveGameplayEffectHandle NativeApplyEffectSpecHandleToTarget(AActor* TargetActor, const FGameplayEffectSpecHandle& InSpecHandle);
-
-	UFUNCTION(BlueprintCallable, Category = "FatedBrand|Ability", meta = (DisplayName = "ApplyGameplayEffectSpecHandleToTargetActor"))
-	FActiveGameplayEffectHandle BP_ApplyEffectSpecHandleToTarget(AActor* TargetActor, const FGameplayEffectSpecHandle& InSpecHandle);
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage")
 	TSubclassOf<UGameplayEffect> DamageEffectClass;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage")
+	FGameplayTag DamageType;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage")
 	float Damage;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	FGameplayTag DamageType;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage")
+	bool bIsRadialDamage = false;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage")
+	float RadialDamageInnerRadius = 0.f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage")
+	float RadialDamageOuterRadius = 0.f;
 
 private :
 	TWeakObjectPtr<AFatedBrandCharacter> CachedFatedBrandCharacter;

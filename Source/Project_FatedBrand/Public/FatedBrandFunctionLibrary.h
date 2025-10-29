@@ -34,13 +34,19 @@ public :
 #pragma endregion
 
 #pragma region Ability System
-	UFUNCTION(BlueprintCallable, Category = "AbilitySystem")
+	UFUNCTION(BlueprintCallable, Category = "FatedBrandFunctionBibrary")
 	static UDataAsset_AbilityInfo* GetAbilityInfo(const UObject* WorldContextObject);
 
-	UFUNCTION(BlueprintCallable, Category = "AbilitySystem|Damage")
+	UFUNCTION(BlueprintCallable, Category = "FatedBrandFunctionBibrary|Damage")
 	static FGameplayEffectContextHandle ApplyDamageEffect(FDamageEffectParams DamageEffectParams);
 
-	UFUNCTION(BlueprintCallable, Category = "AbilitySystem|Hostile")
+	UFUNCTION(BlueprintCallable, Category = "FatedBrandFunctionBibrary|Hostile")
 	static bool IsTargetPawnHostile(const APawn* QueryPawn, const APawn* TargetPawn);
+
+	UFUNCTION(BlueprintCallable, Category = "FatedBrandFunctionBibrary|GameplayEffects")
+	static void GetLivePlayersWithinCircle(const UObject* WorldContextObject, TArray<AActor*>& OutOverlappingActors, const TArray<AActor*>& ActorsToIgnore, float Radius, const FVector& SphereOrigin);
+
+	UFUNCTION(BlueprintCallable, Category = "FatedBrandFunctionBibrary|GameplayEffects")
+	static void GetLivePlayersWithinLine(const UObject* WorldContextObject, TArray<AActor*>& OutOverlappingActors, const TArray<AActor*>& ActorsToIgnore, const FVector& Start, const FVector& End);
 #pragma endregion
 };

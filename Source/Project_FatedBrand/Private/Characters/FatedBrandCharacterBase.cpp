@@ -105,7 +105,7 @@ void AFatedBrandCharacterBase::OnHitTargetActor(AActor* HitActor)
 {
 	UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(HitActor);
 
-	const bool bIsBlocking = TargetASC->HasMatchingGameplayTag(FatedBrandGameplayTags::Damage_Status_Blocking);
+	const bool bIsBlocking = TargetASC->HasMatchingGameplayTag(FatedBrandGameplayTags::Ability_Activate_Blocking);
 
 	FGameplayEventData EventData;
 	EventData.Instigator = CombatDamageEffectParams.SourceAbilitySystemComponent->GetAvatarActor();
@@ -133,18 +133,20 @@ void AFatedBrandCharacterBase::OnComponentBeginOverlap(UPrimitiveComponent* Over
 		if (UFatedBrandFunctionLibrary::IsTargetPawnHostile(this, HitPawn) == false) return;
 
 		OnHitTargetActor(HitPawn);
-		SetToggleCollisionEnabled(CurrentDamageType, ECollisionEnabled::NoCollision);
 	}
 
 	if (OtherActor->Implements<UActorInteractInterface>())
 	{
 		if (IActorInteractInterface* InteractInterface = Cast<IActorInteractInterface>(OtherActor))
 		{
-			InteractInterface->GiveAbilityToTarget(this);
-			Debug::Print("Get Activate");
+			if (GetFatedBrandAbilitySystemComponent()->HasMatchingGameplayTag(FatedBrandGameplayTags::Ability_Activate_BlastingZone))
+			{
+				InteractInterface->GiveAbilityToTarget(this);
+				Debug::Print("Get Activate");
+			}
 		}
 	}
-
+	SetToggleCollisionEnabled(CurrentDamageType, ECollisionEnabled::NoCollision);
 }
 
 void AFatedBrandCharacterBase::Die()
@@ -152,4 +154,14 @@ void AFatedBrandCharacterBase::Die()
 	if (bIsDeath) return;
 	OnDeathDelegate.Broadcast(this);
 	bIsDeath = true;
+}
+
+AActor* AFatedBrandCharacterBase::GetAvatar_Implementation()
+{
+	return this;
+}
+
+bool AFatedBrandCharacterBase::IsDead_Implementation() const
+{
+	return bIsDeath;
 }

@@ -18,14 +18,14 @@ void UFatedBrandWidgetController::BroadcastAbilityInfo()
 {
 	if (!GetFatedBrandASC()->bStartupAbilitiesGiven) return;
 
-	/*FForEachAbility BroadcastDelegate;
+	FForEachAbility BroadcastDelegate;
 	BroadcastDelegate.BindLambda([this](const FGameplayAbilitySpec& AbilitySpec)
 	{
 		FFatedBrandAbilityInfo Info = AbilityInfo->FindAbilityInfoForTag(GetFatedBrandASC()->GetAbilityTagFromSpec(AbilitySpec));
 		Info.InputTag = GetFatedBrandASC()->GetInputTagFromSpec(AbilitySpec);
 		Info.StatusTag = GetFatedBrandASC()->GetStatusFromSpec(AbilitySpec);
 		AbilityInfoDelegate.Broadcast(Info);
-	});*/
+	});
 }
 
 AFatedBrandPlayerController* UFatedBrandWidgetController::GetFatedBrandPC()
