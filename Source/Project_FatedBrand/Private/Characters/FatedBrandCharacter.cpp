@@ -48,7 +48,6 @@ AFatedBrandCharacter::AFatedBrandCharacter()
 void AFatedBrandCharacter::UpdateAbilities(const FGameplayTag& AbilityTag)
 {
 	GetFatedBrandAbilitySystemComponent()->UpdateAbilityStatuses(AbilityTag);
-	Debug::Print(AbilityTag.ToString());
 }
 
 void AFatedBrandCharacter::SaveProgress(const FName& CheckPointTag)
@@ -96,16 +95,12 @@ void AFatedBrandCharacter::LoadProgress()
 		UFatedBrandSaveGame* SaveData = FatedBrandGameMode->RetrieveInGameSaveData();
 		if (SaveData == nullptr) return;
 
-		Debug::Print("bFirstTimeLoadIn");
-
 		if (SaveData->bFirstTimeLoadIn)
 		{
-			// TODO : Load Default Initialize
-			Debug::Print("bFirstTimeLoadIn");
+			AddCharacterAbilities();
 		}
 		else
 		{
-			// 여기로 안넘어오는 원인 찾기
 			if (UFatedBrandAbilitySystemComponent* FatedBrandASC = Cast<UFatedBrandAbilitySystemComponent>(GetAbilitySystemComponent()))
 			{
 				FatedBrandASC->AddCharacterAbilitiesFromSaveData(SaveData);
@@ -118,31 +113,17 @@ void AFatedBrandCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 
-	LoadProgress();
 	InitAbilityActorInfo();
+	LoadProgress();
 }
 
 void AFatedBrandCharacter::InitAbilityActorInfo()
 {
-	if (!StartUpData.IsNull())
-	{
-		if (UDataAsset_StartUpDataBase* LoadedData = StartUpData.LoadSynchronous())
-		{
-			LoadedData->InitializeGameplayEffect(FatedBrandAbilitySystemComponent, StartUpCharacterName, 1);
-
-			// 캐릭터 기본 소유 액티브/패시브 스킬 ASC에 등록
-			GetFatedBrandAbilitySystemComponent()->AddCharacterActivateAbilities(LoadedData->StartUpOffensiveAbilities);
-			GetFatedBrandAbilitySystemComponent()->AddCharacterPassiveAbilities(LoadedData->StartUpPassiveAbilities);
-		}
-	}
-
 	if (AFatedBrandPlayerController* FatedBrandPlayerController = Cast<AFatedBrandPlayerController>(GetController()))
 	{
 		if (AFatedBrandHUD* FatedBrandHUD = Cast<AFatedBrandHUD>(FatedBrandPlayerController->GetHUD()))
 		{
 			FatedBrandHUD->InitOverlay(FatedBrandPlayerController, GetAbilitySystemComponent(), FatedBrandAttributeSet);
-
-			GetFatedBrandAbilitySystemComponent()->UpdateAbilityStatuses(FatedBrandGameplayTags::Abilities_Offensive_NobleBlood);
 		}
 	}
 }

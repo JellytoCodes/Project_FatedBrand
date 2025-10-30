@@ -24,9 +24,8 @@ void UNebulaMenuWidgetController::BindCallbacksToDependencies()
 			FFatedBrandAbilityInfo Info = AbilityInfo->FindAbilityInfoForTag(AbilityTag);
 			Info.StatusTag = StatusTag;
 			AbilityInfoDelegate.Broadcast(Info);
-		}	
+		}
 	});
-	
 }
 
 void UNebulaMenuWidgetController::NebulaSelected(const FGameplayTag& AbilityTag)

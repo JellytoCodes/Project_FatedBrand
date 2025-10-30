@@ -109,5 +109,7 @@ protected:
 
 	virtual void InitAbilityActorInfo() { }
 
+	void AddCharacterAbilities() const;
+
 	bool bIsDeath = false;
 };

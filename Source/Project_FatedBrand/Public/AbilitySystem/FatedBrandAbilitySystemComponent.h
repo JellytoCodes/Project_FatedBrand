@@ -58,4 +58,7 @@ public :
 
 	UFUNCTION(BlueprintCallable, Category = "UpdateAbility")
 	void EquipAbility(const FGameplayTag& AbilityTag, const FGameplayTag& InputTag);
+
+protected :
+	virtual void OnRep_ActivateAbilities() override;
 };

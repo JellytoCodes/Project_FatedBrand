@@ -30,7 +30,7 @@ void UFatedBrandAbilitySystemComponent::AddCharacterPassiveAbilities(const TArra
 	for (const TSubclassOf<UFatedBrandGameplayAbility> AbilityClass : PassiveAbilities)
 	{
 		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
-		GiveAbilityAndActivateOnce(AbilitySpec);
+		GiveAbility(AbilitySpec);
 	}
 	bStartupAbilitiesGiven = true;
 	AbilitiesGivenDelegate.Broadcast();
@@ -56,6 +56,7 @@ void UFatedBrandAbilitySystemComponent::AddCharacterAbilitiesFromSaveData(UFated
 
 			// 추후 즉시 발동이 필요한 패시브가 존재할 경우 기능 추가
 		}
+		EquipAbility(Data.AbilityTag, Data.InputTag);
 	}
 	bStartupAbilitiesGiven = true;
 	AbilitiesGivenDelegate.Broadcast();
@@ -318,5 +319,16 @@ void UFatedBrandAbilitySystemComponent::EquipAbility(const FGameplayTag& Ability
 			}
 		}
 		AbilityEquipped.Broadcast(AbilityTag, FatedBrandGameplayTags::Abilities_Status_Equipped, InputTag, PrevInputTag);
+	}
+}
+
+void UFatedBrandAbilitySystemComponent::OnRep_ActivateAbilities()
+{
+	Super::OnRep_ActivateAbilities();
+
+	if (!bStartupAbilitiesGiven)
+	{
+		bStartupAbilitiesGiven = true;
+		AbilitiesGivenDelegate.Broadcast();
 	}
 }

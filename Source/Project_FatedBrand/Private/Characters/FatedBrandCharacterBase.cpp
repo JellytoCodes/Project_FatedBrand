@@ -149,6 +149,21 @@ void AFatedBrandCharacterBase::OnComponentBeginOverlap(UPrimitiveComponent* Over
 	SetToggleCollisionEnabled(CurrentDamageType, ECollisionEnabled::NoCollision);
 }
 
+void AFatedBrandCharacterBase::AddCharacterAbilities() const
+{
+	if (!StartUpData.IsNull())
+	{
+		if (UDataAsset_StartUpDataBase* LoadedData = StartUpData.LoadSynchronous())
+		{
+			LoadedData->InitializeGameplayEffect(FatedBrandAbilitySystemComponent, StartUpCharacterName, 1);
+
+			// 캐릭터 기본 소유 액티브/패시브 스킬 ASC에 등록
+			GetFatedBrandAbilitySystemComponent()->AddCharacterActivateAbilities(LoadedData->StartUpOffensiveAbilities);
+			GetFatedBrandAbilitySystemComponent()->AddCharacterPassiveAbilities(LoadedData->StartUpPassiveAbilities);
+		}
+	}	
+}
+
 void AFatedBrandCharacterBase::Die()
 {
 	if (bIsDeath) return;

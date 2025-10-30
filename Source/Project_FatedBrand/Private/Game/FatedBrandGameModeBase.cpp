@@ -28,7 +28,8 @@ void AFatedBrandGameModeBase::SaveInGameProgressData(UFatedBrandSaveGame* SaveOb
 	const int32 InGameLoadSlotIndex = FatedBrandInstance->LoadSlotIndex;
 	FatedBrandInstance->PlayerStartTag = SaveObject->PlayerStartTag;
 
-	UGameplayStatics::SaveGameToSlot(SaveObject, InGameLoadSlotName, InGameLoadSlotIndex);
+	// 테스트용으로 슬롯 네임 강제화
+	UGameplayStatics::SaveGameToSlot(SaveObject, FString("SaveSlot"), InGameLoadSlotIndex);
 }
 
 void AFatedBrandGameModeBase::SaveWorldState(UWorld* World, const FString& DestinationMapAssetName) const
@@ -131,7 +132,8 @@ UFatedBrandSaveGame* AFatedBrandGameModeBase::RetrieveInGameSaveData() const
 	const FString InGameLoadSlotName = FatedBrandInstance->LoadSlotName;
 	const int32 InGameLoadSlotIndex = FatedBrandInstance->LoadSlotIndex;
 
-	return GetSaveSlotData(InGameLoadSlotName, InGameLoadSlotIndex);
+	// 테스트용으로 슬롯 네임 강제화
+	return GetSaveSlotData(FString("SaveSlot"), InGameLoadSlotIndex);
 }
 
 AActor* AFatedBrandGameModeBase::ChoosePlayerStart_Implementation(AController* Player)

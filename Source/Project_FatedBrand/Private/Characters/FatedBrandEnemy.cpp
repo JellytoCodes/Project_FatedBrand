@@ -34,18 +34,8 @@ void AFatedBrandEnemy::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 
-	if (!StartUpData.IsNull())
-	{
-		UAssetManager::GetStreamableManager().RequestAsyncLoad(StartUpData.ToSoftObjectPath(), 
-		FStreamableDelegate::CreateLambda([this]()
-		{
-			if (UDataAsset_StartUpDataBase* LoadedData = StartUpData.LoadSynchronous())
-			{
-				LoadedData->InitializeGameplayEffect(FatedBrandAbilitySystemComponent, StartUpCharacterName, 1);
-				GetFatedBrandAbilitySystemComponent()->AddCharacterActivateAbilities(LoadedData->StartUpOffensiveAbilities);
-			}	
-		}));
-	}
+	AddCharacterAbilities();
+
 	if (BehaviorTree)
 	{
 		FatedBrandAIController = Cast<AFatedBrandAIController>(NewController);

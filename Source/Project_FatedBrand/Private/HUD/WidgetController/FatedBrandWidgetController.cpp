@@ -6,6 +6,7 @@
 #include "AbilitySystem/FatedBrandAttributeSet.h"
 #include "Controllers/FatedBrandPlayerController.h"
 #include "DataAssets/DataAsset_AbilityInfo.h"
+#include "Project_FatedBrand/Project_FatedBrand.h"
 
 void UFatedBrandWidgetController::SetWidgetControllerParams(const FWidgetControllerParams& WCParams)
 {
@@ -26,6 +27,7 @@ void UFatedBrandWidgetController::BroadcastAbilityInfo()
 		Info.StatusTag = GetFatedBrandASC()->GetStatusFromSpec(AbilitySpec);
 		AbilityInfoDelegate.Broadcast(Info);
 	});
+	GetFatedBrandASC()->ForEachAbility(BroadcastDelegate);
 }
 
 AFatedBrandPlayerController* UFatedBrandWidgetController::GetFatedBrandPC()
