@@ -10,12 +10,21 @@ class UFatedBrandHotBarWidget;
 class UFatedBrandNebulaSocketWidget;
 class UObject;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSelectSocket);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSelectQuickSlot);
+
 UCLASS()
 class PROJECT_FATEDBRAND_API UFatedBrandUserWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
 public :
+	UPROPERTY(BlueprintAssignable)
+	FOnSelectSocket OnSelectSocketDelegate;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnSelectQuickSlot SelectQuickSlotDelegate;
+
 	UFUNCTION(BlueprintCallable)
 	void SetWidgetController(UObject* InWidgetController);
 
@@ -35,7 +44,7 @@ public :
 	void CallSelectQuickSlot(int32 PrevIndex, int32 CurrentIndex);
 
 	UFUNCTION(BlueprintCallable, Category = "QuickSlot")
-	void CallDeselectQuickSlot(const bool IsSelectSocketFocusing);
+	void CallDeselectQuickSlot();
 
 	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<UObject> WidgetController;
@@ -45,7 +54,7 @@ protected :
 	void WidgetControllerSet();
 
 private :
-	TArray<TObjectPtr<UFatedBrandNebulaSocketWidget>> SlotWidgets;
+	TArray<TObjectPtr<UFatedBrandUserWidget>> SlotWidgets;
 
-	TArray<TObjectPtr<UFatedBrandHotBarWidget>> QuickSlots;
+	TArray<TObjectPtr<UFatedBrandUserWidget>> QuickSlots;
 };

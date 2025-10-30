@@ -2,9 +2,6 @@
 
 #include "HUD/Widgets/FatedBrandUserWidget.h"
 
-#include "FatedBrandGameplayTags.h"
-#include "HUD/Widgets/FatedBrandNebulaSocketWidget.h"
-#include "HUD/Widgets/FatedBrandHotBarWidget.h"
 #include "Components/Image.h"
 
 void UFatedBrandUserWidget::SetWidgetController(UObject* InWidgetController)
@@ -22,45 +19,51 @@ void UFatedBrandUserWidget::InitializeNebulaSocket(UObject* InWidgetController)
         for (int32 x = 1; x <= 10; ++x)
         {
             const FString Name = FString::Printf(TEXT("Nebula_%dX%d"), y, x);
-            if (UFatedBrandNebulaSocketWidget* Found = Cast<UFatedBrandNebulaSocketWidget>(GetWidgetFromName(*Name)))
+            if (UFatedBrandUserWidget* Found = Cast<UFatedBrandUserWidget>(GetWidgetFromName(*Name)))
             {
                 SlotWidgets.Add(Found);
-                Found->GetSelectImage()->SetVisibility(ESlateVisibility::Hidden);
                 Found->SetWidgetController(InWidgetController);
             }
         }
     }
 
     if (SlotWidgets.IsValidIndex(0))
-    SlotWidgets[0]->GetSelectImage()->SetVisibility(ESlateVisibility::Visible);
+    {
+        UImage* FirstSelectImage = Cast<UImage>(SlotWidgets[0]->GetWidgetFromName(TEXT("Select_Image")));
+		FirstSelectImage->SetVisibility(ESlateVisibility::Visible);    
+    }
 }
 
 void UFatedBrandUserWidget::CallSelectNebulaSocket(int32 PrevIndex, int32 CurrentIndex)
 {
     if (SlotWidgets.IsValidIndex(PrevIndex))
-        SlotWidgets[PrevIndex]->GetSelectImage()->SetVisibility(ESlateVisibility::Hidden);
+    {
+	    UImage* PrevSelectImage = Cast<UImage>(SlotWidgets[PrevIndex]->GetWidgetFromName(TEXT("Select_Image")));
+        PrevSelectImage->SetVisibility(ESlateVisibility::Hidden);
+    }
 
     if (SlotWidgets.IsValidIndex(CurrentIndex))
     {
-	    SlotWidgets[CurrentIndex]->GetSelectImage()->SetVisibility(ESlateVisibility::Visible);
-        SlotWidgets[CurrentIndex]->OnSelectSocketDelegate.Broadcast();
+	    UImage* CurrentSelectImage = Cast<UImage>(SlotWidgets[CurrentIndex]->GetWidgetFromName(TEXT("Select_Image")));
+        CurrentSelectImage->SetVisibility(ESlateVisibility::Visible);
     }
+
 }
 
 void UFatedBrandUserWidget::CallSelectSocketFocusing(const int32 CurrentIndex, const bool IsSelectSocketFocusing)
 {
     if (IsSelectSocketFocusing)
     {
-		for (UFatedBrandNebulaSocketWidget* SlotWidget : SlotWidgets)
+		for (UFatedBrandUserWidget* SlotWidget : SlotWidgets)
 	    {
             if (SlotWidgets[CurrentIndex] == SlotWidget) continue;
     		SlotWidget->SetRenderOpacity(0.5f);
 	    }
-        if (QuickSlots.IsValidIndex(0)) QuickSlots[0]->GetSelectImage()->SetVisibility(ESlateVisibility::Visible);
+        SlotWidgets[CurrentIndex]->OnSelectSocketDelegate.Broadcast();
     }
     else
     {
-    	for (UFatedBrandNebulaSocketWidget* SlotWidget : SlotWidgets)
+    	for (UFatedBrandUserWidget* SlotWidget : SlotWidgets)
 	    {
     		SlotWidget->SetRenderOpacity(1.f);
 	    }
@@ -74,10 +77,9 @@ void UFatedBrandUserWidget::InitializeQuickSlot(UObject* InWidgetController)
     for (int32 x = 1; x <= 6; ++x)
     {
         const FString Name = FString::Printf(TEXT("Nebula_HotBar_1X%d"), x);
-        if (UFatedBrandHotBarWidget* Found = Cast<UFatedBrandHotBarWidget>(GetWidgetFromName(*Name)))
+        if (UFatedBrandUserWidget* Found = Cast<UFatedBrandUserWidget>(GetWidgetFromName(*Name)))
         {
             QuickSlots.Add(Found);
-            Found->GetSelectImage()->SetVisibility(ESlateVisibility::Hidden);
             Found->SetWidgetController(InWidgetController);
         }
     }
@@ -85,19 +87,25 @@ void UFatedBrandUserWidget::InitializeQuickSlot(UObject* InWidgetController)
 
 void UFatedBrandUserWidget::CallSelectQuickSlot(int32 PrevIndex, int32 CurrentIndex)
 {
-    if (QuickSlots.IsValidIndex(PrevIndex)) QuickSlots[PrevIndex]->GetSelectImage()->SetVisibility(ESlateVisibility::Hidden);
+    if (QuickSlots.IsValidIndex(PrevIndex))
+    {
+    	UImage* PrevSelectImage = Cast<UImage>(QuickSlots[PrevIndex]->GetWidgetFromName(TEXT("Select_Image")));
+        PrevSelectImage->SetVisibility(ESlateVisibility::Hidden);
+    }
 
     if (QuickSlots.IsValidIndex(CurrentIndex))
     {
-	    QuickSlots[CurrentIndex]->GetSelectImage()->SetVisibility(ESlateVisibility::Visible);
-        QuickSlots[CurrentIndex]->CurrentHotBarDelegate.Broadcast();
+    	UImage* CurrentSelectImage = Cast<UImage>(QuickSlots[CurrentIndex]->GetWidgetFromName(TEXT("Select_Image")));
+        CurrentSelectImage->SetVisibility(ESlateVisibility::Visible);
+        QuickSlots[CurrentIndex]->SelectQuickSlotDelegate.Broadcast();
     }
 }
 
-void UFatedBrandUserWidget::CallDeselectQuickSlot(const bool IsSelectSocketFocusing)
+void UFatedBrandUserWidget::CallDeselectQuickSlot()
 {
-	for (const UFatedBrandHotBarWidget* SlotWidget : QuickSlots)
+	for (const UFatedBrandUserWidget* SlotWidget : QuickSlots)
 	{
-		SlotWidget->GetSelectImage()->SetVisibility(ESlateVisibility::Hidden);
+		UImage* SelectImage = Cast<UImage>(SlotWidget->GetWidgetFromName(TEXT("Select_Image")));
+		SelectImage->SetVisibility(ESlateVisibility::Hidden);
 	}
 }

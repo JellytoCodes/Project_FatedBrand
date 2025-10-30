@@ -137,12 +137,14 @@ void AFatedBrandCharacterBase::OnComponentBeginOverlap(UPrimitiveComponent* Over
 
 	if (OtherActor->Implements<UActorInteractInterface>())
 	{
+		Debug::Print("Get1");
 		if (IActorInteractInterface* InteractInterface = Cast<IActorInteractInterface>(OtherActor))
 		{
+			Debug::Print("Get2");
 			if (GetFatedBrandAbilitySystemComponent()->HasMatchingGameplayTag(FatedBrandGameplayTags::Ability_Activate_BlastingZone))
 			{
 				InteractInterface->GiveAbilityToTarget(this);
-				Debug::Print("Get Activate");
+				Debug::Print("Get3");
 			}
 		}
 	}

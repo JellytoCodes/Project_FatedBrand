@@ -166,13 +166,12 @@ void AFatedBrandPlayerController::Input_WidgetSelect()
 		if (!bIsWidgetSelect)
 		{
 			NebulaMenuWidgetController->SelectSocketFocusingController();
-			bIsWidgetSelect = !bIsWidgetSelect;	
 		}
 		else
 		{
 			NebulaMenuWidgetController->SelectSocketConfirm();
-			bIsWidgetSelect = !bIsWidgetSelect;
 		}
+		bIsWidgetSelect = !bIsWidgetSelect;	
 	}
 }
 

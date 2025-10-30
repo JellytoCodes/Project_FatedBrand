@@ -14,7 +14,8 @@
 				"EnhancedInput",
 				"AIModule",
 				"CoreUObject",
-				"UMG"
+				"UMG",
+				"ModelViewViewModel"
 			]
 		}
 	],
@@ -28,6 +29,10 @@
 		},
 		{
 			"Name": "GameplayAbilities",
+			"Enabled": true
+		},
+		{
+			"Name": "ModelViewViewModelPreview",
 			"Enabled": true
 		}
 	]

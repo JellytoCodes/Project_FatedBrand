@@ -62,7 +62,7 @@ void UNebulaMenuWidgetController::OnAbilityEquip()
 	GetFatedBrandASC()->EquipAbility(SelectedAbility.Ability, SelectedAbility.InputTag);
 }
 
-void UNebulaMenuWidgetController::HotBarSelected(const FGameplayTag& InputTag)
+void UNebulaMenuWidgetController::QuickSlotSelected(const FGameplayTag& InputTag)
 {
 	SelectedAbility.InputTag = InputTag;
 }
@@ -72,10 +72,10 @@ void UNebulaMenuWidgetController::SetSelectSocketAxis(const int32 SocketX, const
 	if (bIsSocketFocusing == false)
 	{
 		ENebulaSelectSocket PrevNebulaSelectSocket = NebulaSelectSocket;
-	    SelectSocketX = Wrap1(SelectSocketX + SocketX, SOCKET_X_MIN - 1, SOCKET_X_MAX - 1);
-	    SelectSocketY = Wrap1(SelectSocketY + SocketY, SOCKET_Y_MIN - 1, SOCKET_Y_MAX - 1);
+	    SelectSocketX = Wrap1(SelectSocketX + SocketX, 0, 9);
+	    SelectSocketY = Wrap1(SelectSocketY + SocketY, 0, 3);
 
-	    const int32 index = (SelectSocketY * SOCKET_X_MAX) + SelectSocketX;
+	    const int32 index = (SelectSocketY * 10) + SelectSocketX;
 	    NebulaSelectSocket = static_cast<ENebulaSelectSocket>(index);
 
 		SelectNebulaSocketDelegate.Broadcast(PrevNebulaSelectSocket, NebulaSelectSocket);
@@ -83,10 +83,10 @@ void UNebulaMenuWidgetController::SetSelectSocketAxis(const int32 SocketX, const
     else
     {
 		ENebulaSelectSocket PrevNebulaSelectHotBar = NebulaHotBar;
-		SelectHotBarX = Wrap1(SelectHotBarX + SocketX, HOTBAR_X_MIN - 1, HOTBAR_X_MAX - 1);
-		NebulaHotBar = static_cast<ENebulaSelectSocket>(SelectHotBarX);
+		SelectQuickSlotX = Wrap1(SelectQuickSlotX + SocketX, 0, 5);
+		NebulaHotBar = static_cast<ENebulaSelectSocket>(SelectQuickSlotX);
 
-	    SelectHotBarDelegate.Broadcast(PrevNebulaSelectHotBar, NebulaHotBar);
+	    SelectQuickSlotDelegate.Broadcast(PrevNebulaSelectHotBar, NebulaHotBar);
     }
 }
 

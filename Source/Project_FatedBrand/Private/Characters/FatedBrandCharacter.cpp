@@ -79,8 +79,6 @@ void AFatedBrandCharacter::SaveProgress(const FName& CheckPointTag)
 			SavedAbility.AbilityType = Info.AbilityType;
 
 			SaveData->SavedAbilities.AddUnique(SavedAbility);
-
-			Debug::Print(AbilityTag.ToString());
 		});
 		FatedBrandASC->ForEachAbility(SaveAbilityDelegate);
 

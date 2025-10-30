@@ -10,14 +10,6 @@
 #include "FatedBrandEnumTypes.h"
 #include "NebulaMenuWidgetController.generated.h"
 
-#define SOCKET_X_MIN 1
-#define SOCKET_X_MAX 10
-#define SOCKET_Y_MIN 1
-#define SOCKET_Y_MAX 4
-
-#define HOTBAR_X_MIN 1
-#define HOTBAR_X_MAX 6
-
 struct FSelectedAbility
 {
 	FGameplayTag Ability = FGameplayTag();
@@ -30,7 +22,7 @@ class UFatedBrandUserWidget;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FNebulaSelectedSignature, bool, bEquipButtonEnabled, FString, DescriptionString);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSelectNebulaSocketSignature, int32, PrevIndex, int32, CurrentIndex);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSelectHotBarSignature, int32, PrevIndex, int32, CurrentIndex);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSelectQuickSlotSignature, int32, PrevIndex, int32, CurrentIndex);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSocketFocusingSignature, int32, CurrentIndex, bool, IsSocketFocusing);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSelectSocketConfirmSignature);
@@ -51,7 +43,7 @@ public:
 	FOnSelectNebulaSocketSignature SelectNebulaSocketDelegate;
 
 	UPROPERTY(BlueprintAssignable)
-	FOnSelectHotBarSignature SelectHotBarDelegate;
+	FOnSelectQuickSlotSignature SelectQuickSlotDelegate;
 
 	UPROPERTY(BlueprintAssignable)
 	FOnSocketFocusingSignature SocketFocusingDelegate;
@@ -63,7 +55,7 @@ public:
 	void OnAbilityEquip();
 
 	UFUNCTION(BlueprintCallable)
-	void HotBarSelected(const FGameplayTag& InputTag);
+	void QuickSlotSelected(const FGameplayTag& InputTag);
 
 	void SetSelectSocketAxis(const int32 SocketX, const int32 SocketY);
 	void SelectSocketFocusingController();
@@ -71,7 +63,7 @@ public:
 	void SelectSocketConfirm();
 
 	UFUNCTION(BlueprintCallable)
-	int32 GetSelectHotBarX() const { return SelectHotBarX; }
+	int32 GetSelectHotBarX() const { return SelectQuickSlotX; }
 
 	bool bIsSocketFocusing = false;
 
@@ -88,7 +80,7 @@ private :
 	FGameplayTag SelectedSlot;
 	int32 SelectSocketX = 0;
 	int32 SelectSocketY = 0;
-	int32 SelectHotBarX = 0;
+	int32 SelectQuickSlotX = 0;
 
 	int32 Wrap1(const int32 V, const int32 Min, const int32 Max);
 };
