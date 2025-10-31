@@ -6,6 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "FatedBrandGameModeBase.generated.h"
 
+class UMVVM_LoadSlot;
 class USaveGame;
 class UFatedBrandSaveGame;
 class UDataAsset_AbilityInfo;
@@ -22,10 +23,16 @@ public :
 	void SaveWorldState(UWorld* World, const FString& DestinationMapAssetName = FString("")) const;
 	void LoadWorldSate(UWorld* World) const;
 
+	FString GetMapNameFromMapAssetName(const FString& MapAssetName) const;
+
+	void SaveSlotData(UMVVM_LoadSlot* LoadSlot, const int32 SlotIndex);
+
 	UFatedBrandSaveGame* RetrieveInGameSaveData() const;
 	UFatedBrandSaveGame* GetSaveSlotData(const FString& SlotName, int SlotIndex) const;
 
 	void SaveInGameProgressData(UFatedBrandSaveGame* SaveObject) const;
+
+	void TravelToMap(const UMVVM_LoadSlot* Slot);
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<USaveGame> SaveGameClass;
@@ -41,8 +48,6 @@ public :
 
 	UPROPERTY(EditDefaultsOnly)
 	TMap<FString, TSoftObjectPtr<UWorld>> Maps;
-
-	FString GetMapNameFromMapAssetName(const FString& MapAssetName) const;
 
 	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
 

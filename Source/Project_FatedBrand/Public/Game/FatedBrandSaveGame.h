@@ -9,6 +9,13 @@
 
 class UFatedBrandGameplayAbility;
 
+UENUM()
+enum ESaveSlotStatus
+{
+	NotValid,
+	Valid
+};
+
 USTRUCT(BlueprintType)
 struct FSavedActor
 {
@@ -87,6 +94,9 @@ public :
 
 	UPROPERTY()
 	FName PlayerStartTag;
+
+	UPROPERTY()
+	TEnumAsByte<ESaveSlotStatus> SaveSlotStatus = NotValid;
 
 	UPROPERTY()
 	bool bFirstTimeLoadIn = true;

@@ -6,31 +6,12 @@
 #include "EngineUtils.h"
 #include "Game/FatedBrandInstance.h"
 #include "Game/FatedBrandSaveGame.h"
+#include "GameFramework/PlayerStart.h"
+#include "HUD/ViewModel/MVVM_LoadSlot.h"
 #include "Interfaces/SaveInterface.h"
 #include "Kismet/GameplayStatics.h"
 #include "Project_FatedBrand/Project_FatedBrand.h"
 #include "Serialization/ObjectAndNameAsStringProxyArchive.h"
-
-UFatedBrandSaveGame* AFatedBrandGameModeBase::GetSaveSlotData(const FString& SlotName, int SlotIndex) const
-{
-	USaveGame* SaveGameObject = UGameplayStatics::DoesSaveGameExist(SlotName, SlotIndex) ?
-		UGameplayStatics::LoadGameFromSlot(SlotName, SlotIndex) : UGameplayStatics::CreateSaveGameObject(SaveGameClass);
-
-	UFatedBrandSaveGame* LoadSaveGame = Cast<UFatedBrandSaveGame>(SaveGameObject);
-	return LoadSaveGame;
-}
-
-void AFatedBrandGameModeBase::SaveInGameProgressData(UFatedBrandSaveGame* SaveObject) const
-{
-	UFatedBrandInstance* FatedBrandInstance = Cast<UFatedBrandInstance>(GetGameInstance());
-
-	const FString InGameLoadSlotName = FatedBrandInstance->LoadSlotName;
-	const int32 InGameLoadSlotIndex = FatedBrandInstance->LoadSlotIndex;
-	FatedBrandInstance->PlayerStartTag = SaveObject->PlayerStartTag;
-
-	// 테스트용으로 슬롯 네임 강제화
-	UGameplayStatics::SaveGameToSlot(SaveObject, FString("SaveSlot"), InGameLoadSlotIndex);
-}
 
 void AFatedBrandGameModeBase::SaveWorldState(UWorld* World, const FString& DestinationMapAssetName) const
 {
@@ -125,23 +106,6 @@ void AFatedBrandGameModeBase::LoadWorldSate(UWorld* World) const
 	}
 }
 
-UFatedBrandSaveGame* AFatedBrandGameModeBase::RetrieveInGameSaveData() const
-{
-	const UFatedBrandInstance* FatedBrandInstance = Cast<UFatedBrandInstance>(GetGameInstance());
-
-	const FString InGameLoadSlotName = FatedBrandInstance->LoadSlotName;
-	const int32 InGameLoadSlotIndex = FatedBrandInstance->LoadSlotIndex;
-
-	// 테스트용으로 슬롯 네임 강제화
-	return GetSaveSlotData(FString("SaveSlot"), InGameLoadSlotIndex);
-}
-
-AActor* AFatedBrandGameModeBase::ChoosePlayerStart_Implementation(AController* Player)
-{
-	return Super::ChoosePlayerStart_Implementation(Player);
-
-}
-
 FString AFatedBrandGameModeBase::GetMapNameFromMapAssetName(const FString& MapAssetName) const
 {
 	for (auto& Map : Maps)
@@ -154,7 +118,88 @@ FString AFatedBrandGameModeBase::GetMapNameFromMapAssetName(const FString& MapAs
 	return FString();
 }
 
+void AFatedBrandGameModeBase::SaveSlotData(UMVVM_LoadSlot* LoadSlot, const int32 SlotIndex)
+{
+	if (UGameplayStatics::DoesSaveGameExist(LoadSlot->GetLoadSlotName(), SlotIndex))
+	{
+		UGameplayStatics::DeleteGameInSlot(LoadSlot->GetLoadSlotName(), SlotIndex);
+	}
+
+	USaveGame* SaveGameObject = UGameplayStatics::CreateSaveGameObject(SaveGameClass);
+	UFatedBrandSaveGame* LoadSaveGame = Cast<UFatedBrandSaveGame>(SaveGameObject);
+	LoadSaveGame->SaveSlotStatus = Valid;
+	LoadSaveGame->MapName = LoadSlot->GetMapName();
+	LoadSaveGame->MapAssetName = LoadSlot->MapAssetName;
+	LoadSaveGame->PlayerStartTag = LoadSlot->PlayerStartTag;
+
+	UGameplayStatics::SaveGameToSlot(LoadSaveGame, LoadSlot->GetLoadSlotName(), SlotIndex);
+}
+
+UFatedBrandSaveGame* AFatedBrandGameModeBase::GetSaveSlotData(const FString& SlotName, int SlotIndex) const
+{
+	USaveGame* SaveGameObject = UGameplayStatics::DoesSaveGameExist(SlotName, SlotIndex) ?
+		UGameplayStatics::LoadGameFromSlot(SlotName, SlotIndex) : UGameplayStatics::CreateSaveGameObject(SaveGameClass);
+
+	UFatedBrandSaveGame* LoadSaveGame = Cast<UFatedBrandSaveGame>(SaveGameObject);
+	return LoadSaveGame;
+}
+
+UFatedBrandSaveGame* AFatedBrandGameModeBase::RetrieveInGameSaveData() const
+{
+	const UFatedBrandInstance* FatedBrandInstance = Cast<UFatedBrandInstance>(GetGameInstance());
+
+	const FString InGameLoadSlotName = FatedBrandInstance->LoadSlotName;
+	const int32 InGameLoadSlotIndex = FatedBrandInstance->LoadSlotIndex;
+
+	// 테스트용으로 슬롯 네임 강제화
+	return GetSaveSlotData(FString("SaveSlot"), InGameLoadSlotIndex);
+}
+
+void AFatedBrandGameModeBase::SaveInGameProgressData(UFatedBrandSaveGame* SaveObject) const
+{
+	UFatedBrandInstance* FatedBrandInstance = Cast<UFatedBrandInstance>(GetGameInstance());
+
+	const FString InGameLoadSlotName = FatedBrandInstance->LoadSlotName;
+	const int32 InGameLoadSlotIndex = FatedBrandInstance->LoadSlotIndex;
+	FatedBrandInstance->PlayerStartTag = SaveObject->PlayerStartTag;
+
+	// 테스트용으로 슬롯 네임 강제화
+	UGameplayStatics::SaveGameToSlot(SaveObject, FString("SaveSlot"), InGameLoadSlotIndex);
+}
+
+void AFatedBrandGameModeBase::TravelToMap(const UMVVM_LoadSlot* Slot)
+{
+	const FString SlotName = Slot->GetLoadSlotName();
+	const int32 SlotIndex = Slot->SlotIndex;
+
+	UGameplayStatics::OpenLevelBySoftObjectPtr(Slot, Maps.FindChecked(Slot->GetMapName()));
+}
+
+AActor* AFatedBrandGameModeBase::ChoosePlayerStart_Implementation(AController* Player)
+{
+	TArray<AActor*> Actors;
+	UFatedBrandInstance* FatedBrandInstance = Cast<UFatedBrandInstance>(GetGameInstance());
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerStart::StaticClass(), Actors);
+	if (Actors.Num() <= 0) return nullptr;
+
+	AActor* SelectedActor = Actors[0];
+	for (AActor* Actor : Actors)
+	{
+		if (APlayerStart* PlayerStart = Cast<APlayerStart>(Actor))
+		{
+			if (PlayerStart->PlayerStartTag == FatedBrandInstance->PlayerStartTag)
+			{
+				SelectedActor = PlayerStart;
+				break;
+			}
+		}
+	}
+	return SelectedActor;
+}
+
 void AFatedBrandGameModeBase::BeginPlay()
 {
 	Super::BeginPlay();
+
+	Maps.Add(DefaultMapName, DefaultMap);
 }
