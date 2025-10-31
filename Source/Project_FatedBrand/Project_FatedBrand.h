@@ -4,6 +4,11 @@
 
 #include "CoreMinimal.h"
 
+#define ECC_Enemy ECollisionChannel::ECC_GameTraceChannel1
+#define ECC_InteractActor ECollisionChannel::ECC_GameTraceChannel2
+#define ECC_Weapon ECollisionChannel::ECC_GameTraceChannel3
+
+
 namespace Debug
 {
 	static void Print(const FString& Msg, const FColor& Color = FColor::MakeRandomColor(), int32 InKey = -1)

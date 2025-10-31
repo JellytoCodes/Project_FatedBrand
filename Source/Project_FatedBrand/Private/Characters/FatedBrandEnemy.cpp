@@ -4,13 +4,14 @@
 
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Controllers/FatedBrandAIController.h"
-#include "DataAssets/DataAsset_StartUpDataBase.h"
-#include "Engine/AssetManager.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "AbilitySystem/FatedBrandAbilitySystemComponent.h"
+#include "Project_FatedBrand/Project_FatedBrand.h"
 
 AFatedBrandEnemy::AFatedBrandEnemy()
 {
+	GetMesh()->SetCollisionObjectType(ECC_Enemy);
+
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;

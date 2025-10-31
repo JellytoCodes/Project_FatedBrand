@@ -3,12 +3,10 @@
 #include "Characters/FatedBrandCharacter.h"
 
 #include "FatedBrandFunctionLibrary.h"
-#include "FatedBrandGameplayTags.h"
 #include "AbilitySystem/FatedBrandAbilitySystemComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Controllers/FatedBrandPlayerController.h"
 #include "DataAssets/DataAsset_AbilityInfo.h"
-#include "DataAssets/DataAsset_StartUpDataBase.h"
 #include "Game/FatedBrandGameModeBase.h"
 #include "Game/FatedBrandSaveGame.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -88,14 +86,15 @@ void AFatedBrandCharacter::SaveProgress(const FName& CheckPointTag)
 
 void AFatedBrandCharacter::LoadProgress()
 {
-	if (AFatedBrandGameModeBase* FatedBrandGameMode = Cast<AFatedBrandGameModeBase>(UGameplayStatics::GetGameMode(this)))
+	AddCharacterAbilities();
+	if (const AFatedBrandGameModeBase* FatedBrandGameMode = Cast<AFatedBrandGameModeBase>(UGameplayStatics::GetGameMode(this)))
 	{
 		UFatedBrandSaveGame* SaveData = FatedBrandGameMode->RetrieveInGameSaveData();
 		if (SaveData == nullptr) return;
 
 		if (SaveData->bFirstTimeLoadIn)
 		{
-			AddCharacterAbilities();
+
 		}
 		else
 		{
