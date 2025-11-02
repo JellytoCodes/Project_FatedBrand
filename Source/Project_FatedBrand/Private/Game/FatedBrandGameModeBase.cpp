@@ -13,59 +13,6 @@
 #include "Project_FatedBrand/Project_FatedBrand.h"
 #include "Serialization/ObjectAndNameAsStringProxyArchive.h"
 
-void AFatedBrandGameModeBase::SaveWorldState(UWorld* World, const FString& DestinationMapAssetName) const
-{
-	FString WorldName = World->GetMapName();
-	WorldName.RemoveFromStart(World->StreamingLevelsPrefix);
-
-	const UFatedBrandInstance* FatedBrandInstance = Cast<UFatedBrandInstance>(GetGameInstance());
-
-	if (UFatedBrandSaveGame* SaveGame = GetSaveSlotData(FatedBrandInstance->LoadSlotName, FatedBrandInstance->LoadSlotIndex))
-	{
-		if (DestinationMapAssetName != FString(""))
-		{
-			SaveGame->MapAssetName = DestinationMapAssetName;
-			SaveGame->MapName = GetMapNameFromMapAssetName(DestinationMapAssetName);
-		}
-		if (!SaveGame->HasMap(WorldName))
-		{
-			FSavedMap NewSavedMap;
-			NewSavedMap.MapAssetName = WorldName;
-			SaveGame->SavedMaps.Add(NewSavedMap);
-		}
-
-		FSavedMap SavedMap = SaveGame->GetSavedMapWithMapName(WorldName);
-		SavedMap.SavedActors.Empty();
-
-		for (FActorIterator It(World) ; It ; ++It)
-		{
-			AActor* Actor = *It;
-			if (!IsValid(Actor) || !Actor->Implements<USaveInterface>()) continue;
-
-			FSavedActor SavedActor;
-			SavedActor.ActorName = Actor->GetFName();
-			SavedActor.Transform = Actor->GetTransform();
-
-			FMemoryWriter MemoryWrite(SavedActor.Bytes);
-
-			FObjectAndNameAsStringProxyArchive Archive(MemoryWrite, true);
-
-			Actor->Serialize(Archive);
-			SavedMap.SavedActors.AddUnique(SavedActor);
-		}
-
-		for (FSavedMap& MapToReplace : SaveGame->SavedMaps)
-		{
-			if (MapToReplace.MapAssetName == WorldName)
-			{
-				MapToReplace = SavedMap;
-				break;
-			}
-		}
-		UGameplayStatics::SaveGameToSlot(SaveGame, FatedBrandInstance->LoadSlotName, FatedBrandInstance->LoadSlotIndex);
-	}
-}
-
 void AFatedBrandGameModeBase::LoadWorldSate(UWorld* World) const
 {
 	FString WorldName = World->GetMapName();
@@ -151,20 +98,16 @@ UFatedBrandSaveGame* AFatedBrandGameModeBase::RetrieveInGameSaveData() const
 	const FString InGameLoadSlotName = FatedBrandInstance->LoadSlotName;
 	const int32 InGameLoadSlotIndex = FatedBrandInstance->LoadSlotIndex;
 
-	// 테스트용으로 슬롯 네임 강제화
-	return GetSaveSlotData(FString("SaveSlot"), InGameLoadSlotIndex);
+	return GetSaveSlotData(InGameLoadSlotName, InGameLoadSlotIndex);
 }
 
 void AFatedBrandGameModeBase::SaveInGameProgressData(UFatedBrandSaveGame* SaveObject) const
 {
 	UFatedBrandInstance* FatedBrandInstance = Cast<UFatedBrandInstance>(GetGameInstance());
 
-	const FString InGameLoadSlotName = FatedBrandInstance->LoadSlotName;
-	const int32 InGameLoadSlotIndex = FatedBrandInstance->LoadSlotIndex;
 	FatedBrandInstance->PlayerStartTag = SaveObject->PlayerStartTag;
 
-	// 테스트용으로 슬롯 네임 강제화
-	UGameplayStatics::SaveGameToSlot(SaveObject, FString("SaveSlot"), InGameLoadSlotIndex);
+	UGameplayStatics::SaveGameToSlot(SaveObject, ProgressSlotName, ProgressSlotIndex);
 }
 
 void AFatedBrandGameModeBase::TravelToMap(const UMVVM_LoadSlot* Slot)
@@ -195,6 +138,78 @@ AActor* AFatedBrandGameModeBase::ChoosePlayerStart_Implementation(AController* P
 		}
 	}
 	return SelectedActor;
+}
+
+void AFatedBrandGameModeBase::SaveProgressWorldState(UWorld* World, const FString& DestinationMapAssetName) const
+{
+	FString WorldName = World->GetMapName();
+	WorldName.RemoveFromStart(World->StreamingLevelsPrefix);
+
+	const UFatedBrandInstance* FatedBrandInstance = Cast<UFatedBrandInstance>(GetGameInstance());
+
+	if (UFatedBrandSaveGame* SaveGame = GetProgressSaveData())
+	{
+		if (DestinationMapAssetName != FString(""))
+		{
+			SaveGame->MapAssetName = DestinationMapAssetName;
+			SaveGame->MapName = GetMapNameFromMapAssetName(DestinationMapAssetName);
+		}
+		if (!SaveGame->HasMap(WorldName))
+		{
+			FSavedMap NewSavedMap;
+			NewSavedMap.MapAssetName = WorldName;
+			SaveGame->SavedMaps.Add(NewSavedMap);
+		}
+
+		FSavedMap SavedMap = SaveGame->GetSavedMapWithMapName(WorldName);
+		SavedMap.SavedActors.Empty();
+
+		for (FActorIterator It(World) ; It ; ++It)
+		{
+			AActor* Actor = *It;
+			if (!IsValid(Actor) || !Actor->Implements<USaveInterface>()) continue;
+
+			FSavedActor SavedActor;
+			SavedActor.ActorName = Actor->GetFName();
+			SavedActor.Transform = Actor->GetTransform();
+
+			FMemoryWriter MemoryWrite(SavedActor.Bytes);
+
+			FObjectAndNameAsStringProxyArchive Archive(MemoryWrite, true);
+			Archive.ArIsSaveGame = true;
+
+			Actor->Serialize(Archive);
+			SavedMap.SavedActors.AddUnique(SavedActor);
+		}
+
+		for (FSavedMap& MapToReplace : SaveGame->SavedMaps)
+		{
+			if (MapToReplace.MapAssetName == WorldName)
+			{
+				MapToReplace = SavedMap;
+			}
+		}
+		UGameplayStatics::SaveGameToSlot(SaveGame, ProgressSlotName, ProgressSlotIndex);
+	}
+}
+
+UFatedBrandSaveGame* AFatedBrandGameModeBase::GetProgressSaveData() const
+{
+	USaveGame* SaveGameObject = UGameplayStatics::DoesSaveGameExist(ProgressSlotName, ProgressSlotIndex) ?
+		UGameplayStatics::LoadGameFromSlot(ProgressSlotName, ProgressSlotIndex) : UGameplayStatics::CreateSaveGameObject(SaveGameClass);
+
+	UFatedBrandSaveGame* LoadSaveGame = Cast<UFatedBrandSaveGame>(SaveGameObject);
+
+	return LoadSaveGame;
+}
+
+void AFatedBrandGameModeBase::ProgressSaveDataToSlot(const FString& SlotName, const int SlotIndex)
+{
+	if (UFatedBrandSaveGame* ProgressSaveData = GetProgressSaveData())
+	{
+		ProgressSaveData->SaveSlotStatus = Valid;
+		UGameplayStatics::SaveGameToSlot(ProgressSaveData, SlotName, SlotIndex);
+	}
 }
 
 void AFatedBrandGameModeBase::BeginPlay()

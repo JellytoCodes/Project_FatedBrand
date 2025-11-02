@@ -4,9 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
-#include "ViewModel/MVVM_LoadScreen.h"
 #include "LoadScreenHUD.generated.h"
 
+class UMVVM_LoadScreen;
 class ULoadScreenWidget;
 
 UCLASS()
@@ -29,4 +29,6 @@ public :
 
 protected:
 	virtual void BeginPlay() override;
+
+	
 };

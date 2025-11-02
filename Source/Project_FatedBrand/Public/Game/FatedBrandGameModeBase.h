@@ -20,7 +20,6 @@ public :
 	UPROPERTY(EditDefaultsOnly, Category = "Ability Info")
 	TObjectPtr<UDataAsset_AbilityInfo> AbilityInfo;
 
-	void SaveWorldState(UWorld* World, const FString& DestinationMapAssetName = FString("")) const;
 	void LoadWorldSate(UWorld* World) const;
 
 	FString GetMapNameFromMapAssetName(const FString& MapAssetName) const;
@@ -29,8 +28,6 @@ public :
 
 	UFatedBrandSaveGame* RetrieveInGameSaveData() const;
 	UFatedBrandSaveGame* GetSaveSlotData(const FString& SlotName, int SlotIndex) const;
-
-	void SaveInGameProgressData(UFatedBrandSaveGame* SaveObject) const;
 
 	void TravelToMap(const UMVVM_LoadSlot* Slot);
 
@@ -50,6 +47,20 @@ public :
 	TMap<FString, TSoftObjectPtr<UWorld>> Maps;
 
 	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
+
+	/** 리팩토링 진행 중 데이터 */
+
+	void SaveProgressWorldState(UWorld* World, const FString& DestinationMapAssetName = FString("")) const;
+	void SaveInGameProgressData(UFatedBrandSaveGame* SaveObject) const;
+	UFatedBrandSaveGame* GetProgressSaveData() const;
+
+	UFUNCTION(BlueprintCallable)
+	void ProgressSaveDataToSlot(const FString& SlotName, const int SlotIndex);
+
+	FString ProgressSlotName = "ProgressSaveSlot";
+	int32 ProgressSlotIndex = 99;
+
+	/** */
 
 protected :
 	virtual void BeginPlay() override;

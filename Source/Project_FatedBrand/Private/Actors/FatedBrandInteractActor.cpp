@@ -2,7 +2,7 @@
 
 #include "Actors/FatedBrandInteractActor.h"
 
-#include "Interfaces/CombatInterface.h"
+#include "Interfaces/PlayerInterface.h"
 
 AFatedBrandInteractActor::AFatedBrandInteractActor()
 {
@@ -12,10 +12,8 @@ AFatedBrandInteractActor::AFatedBrandInteractActor()
 
 void AFatedBrandInteractActor::GiveAbilityToTarget(AActor* TargetActor)
 {
-	if (TargetActor->ActorHasTag(FName("Enemy"))) return;
-
-	if (ICombatInterface* CombatInterface = Cast<ICombatInterface>(TargetActor))
+	if (IPlayerInterface* PlayerInterface = Cast<IPlayerInterface>(TargetActor))
 	{
-		CombatInterface->UpdateAbilities(AbilityTag);
+		PlayerInterface->UpdateAbilities(AbilityTag);
 	}
 }

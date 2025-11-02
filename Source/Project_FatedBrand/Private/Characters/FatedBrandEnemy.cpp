@@ -31,6 +31,12 @@ void AFatedBrandEnemy::Die()
 	Super::Die();
 }
 
+AActor* AFatedBrandEnemy::GetCombatTarget_Implementation()
+{
+	if (FatedBrandAIController->GetBlackboardComponent()->GetValueAsObject("TargetActor") == nullptr) return nullptr;
+	return Cast<AActor>(FatedBrandAIController->GetBlackboardComponent()->GetValueAsObject("TargetActor"));
+}
+
 void AFatedBrandEnemy::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);

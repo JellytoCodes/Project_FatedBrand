@@ -7,8 +7,6 @@
 #include "MVVM_LoadScreen.generated.h"
 
 class UMVVM_LoadSlot;
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FSlotSelected);
-
 UCLASS()
 class PROJECT_FATEDBRAND_API UMVVM_LoadScreen : public UMVVMViewModelBase
 {
@@ -17,23 +15,23 @@ class PROJECT_FATEDBRAND_API UMVVM_LoadScreen : public UMVVMViewModelBase
 public :
 	void InitializeLoadSlots();
 
-	UPROPERTY(BlueprintAssignable)
-	FSlotSelected SlotSelectedDelegate;
-
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UMVVM_LoadSlot> LoadSlotViewModelClass;
 
 	UFUNCTION(BlueprintPure)
-	UMVVM_LoadSlot* GetLoadSlotViewModelByIndex(int32 Index);
+	UMVVM_LoadSlot* GetLoadSlotViewModelByIndex(const int32 Index);
 
 	UFUNCTION(BlueprintCallable)
-	void SlotPressedForLoading(int32 Slot);
+	void SlotPressedForLoading(const int32 Slot);
 
 	UFUNCTION(BlueprintCallable)
-	void SlotPressedForSaving(int32 Slot);
+	void SlotPressedForSaving(const int32 Slot);
 
 	UFUNCTION(BlueprintCallable)
 	void SelectSlotPressedForPlay();
+
+	UFUNCTION(BlueprintCallable)
+	void SlotSelectedForWait(const int32 Slot);
 
 	void LoadData();
 

@@ -6,9 +6,8 @@
 #include "Engine/GameInstance.h"
 #include "FatedBrandInstance.generated.h"
 
-/**
- * 
- */
+class UFatedBrandSaveGame;
+
 UCLASS()
 class PROJECT_FATEDBRAND_API UFatedBrandInstance : public UGameInstance
 {

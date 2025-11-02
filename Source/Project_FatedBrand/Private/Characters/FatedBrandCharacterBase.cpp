@@ -133,22 +133,21 @@ void AFatedBrandCharacterBase::OnComponentBeginOverlap(UPrimitiveComponent* Over
 		if (UFatedBrandFunctionLibrary::IsTargetPawnHostile(this, HitPawn) == false) return;
 
 		OnHitTargetActor(HitPawn);
+
+		SetToggleCollisionEnabled(CurrentDamageType, ECollisionEnabled::NoCollision);
 	}
 
 	if (OtherActor->Implements<UActorInteractInterface>())
 	{
-		Debug::Print("Get1");
 		if (IActorInteractInterface* InteractInterface = Cast<IActorInteractInterface>(OtherActor))
 		{
-			Debug::Print("Get2");
 			if (GetFatedBrandAbilitySystemComponent()->HasMatchingGameplayTag(FatedBrandGameplayTags::Ability_Activate_BlastingZone))
 			{
 				InteractInterface->GiveAbilityToTarget(this);
-				Debug::Print("Get3");
 			}
 		}
+		SetToggleCollisionEnabled(CurrentDamageType, ECollisionEnabled::NoCollision);
 	}
-	SetToggleCollisionEnabled(CurrentDamageType, ECollisionEnabled::NoCollision);
 }
 
 void AFatedBrandCharacterBase::AddCharacterAbilities() const

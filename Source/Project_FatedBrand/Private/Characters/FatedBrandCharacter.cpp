@@ -43,16 +43,16 @@ AFatedBrandCharacter::AFatedBrandCharacter()
 	GetCharacterMovement()->bConstrainToPlane = true;
 }
 
-void AFatedBrandCharacter::UpdateAbilities(const FGameplayTag& AbilityTag)
+void AFatedBrandCharacter::UpdateAbilities_Implementation(const FGameplayTag& AbilityTag)
 {
 	GetFatedBrandAbilitySystemComponent()->UpdateAbilityStatuses(AbilityTag);
 }
 
-void AFatedBrandCharacter::SaveProgress(const FName& CheckPointTag)
+void AFatedBrandCharacter::SaveProgress_Implementation(const FName& CheckPointTag)
 {
 	if (AFatedBrandGameModeBase* FatedBrandGameMode = Cast<AFatedBrandGameModeBase>(UGameplayStatics::GetGameMode(this)))
 	{
-		UFatedBrandSaveGame* SaveData = FatedBrandGameMode->RetrieveInGameSaveData();
+		UFatedBrandSaveGame* SaveData = FatedBrandGameMode->GetProgressSaveData();
 		if (SaveData == nullptr) return;
 
 		SaveData->PlayerStartTag = CheckPointTag;

@@ -6,6 +6,8 @@
 #include "GameFramework/HUD.h"
 #include "FatedBrandHUD.generated.h"
 
+class UMVVM_LoadScreen;
+class ULoadScreenWidget;
 class UInputMappingContext;
 class UNebulaMenuWidgetController;
 class UFatedBrandUserWidget;
@@ -28,6 +30,21 @@ public :
 	void HideNebulaMenu();
 
 	FORCEINLINE UInputMappingContext* GetWidgetMappingContext() { return WidgetMappingContext; }
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<ULoadScreenWidget> SaveScreenWidgetClass;
+
+	UPROPERTY(BlueprintReadOnly)
+	TObjectPtr<ULoadScreenWidget> SaveScreenWidget;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UMVVM_LoadScreen> SaveScreenViewModelClass;
+
+	UPROPERTY(BlueprintReadOnly)
+	TObjectPtr<UMVVM_LoadScreen> SaveScreenViewModel;
+
+	UFUNCTION(BlueprintCallable)
+	void CreateSaveScreenWidget();
 
 private :
 	UPROPERTY()

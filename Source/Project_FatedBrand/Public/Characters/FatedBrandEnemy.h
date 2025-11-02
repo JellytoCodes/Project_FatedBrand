@@ -18,9 +18,8 @@ public :
 	AFatedBrandEnemy();
 
 #pragma region CombatInterface
-	// ~Begin Function
 	virtual void Die() override;
-	// ~End Function
+	virtual AActor* GetCombatTarget_Implementation() override;
 #pragma endregion
 
 protected :

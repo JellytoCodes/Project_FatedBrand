@@ -6,6 +6,8 @@
 #include "HUD/Widgets/FatedBrandUserWidget.h"
 #include "HUD/WidgetController/OverlayWidgetController.h"
 #include "HUD/WidgetController/NebulaMenuWidgetController.h"
+#include "HUD/Widgets/LoadScreenWidget.h"
+#include "HUD/ViewModel/MVVM_LoadScreen.h"
 #include "Project_FatedBrand/Project_FatedBrand.h"
 
 UOverlayWidgetController* AFatedBrandHUD::GetOverlayWidgetController(const FWidgetControllerParams& WCParams)
@@ -75,5 +77,16 @@ void AFatedBrandHUD::HideNebulaMenu()
 	if (NebulaWidget == nullptr) return;
 	
 	NebulaWidget->SetVisibility(ESlateVisibility::Hidden);
-	
+}
+
+void AFatedBrandHUD::CreateSaveScreenWidget()
+{
+	SaveScreenViewModel = NewObject<UMVVM_LoadScreen>(this, SaveScreenViewModelClass);
+	SaveScreenViewModel->InitializeLoadSlots();
+
+	SaveScreenWidget = CreateWidget<ULoadScreenWidget>(GetWorld(), SaveScreenWidgetClass);
+	SaveScreenWidget->AddToViewport();
+	SaveScreenWidget->BlueprintInitializeWidget();
+
+	SaveScreenViewModel->LoadData();
 }

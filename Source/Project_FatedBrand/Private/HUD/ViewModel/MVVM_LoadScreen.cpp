@@ -7,6 +7,7 @@
 #include "Game/FatedBrandInstance.h"
 #include "HUD/ViewModel/MVVM_LoadSlot.h"
 #include "Kismet/GameplayStatics.h"
+#include "Project_FatedBrand/Project_FatedBrand.h"
 
 void UMVVM_LoadScreen::InitializeLoadSlots()
 {
@@ -26,12 +27,12 @@ void UMVVM_LoadScreen::InitializeLoadSlots()
 	LoadSlots.Add(2, LoadSlot_2);
 }
 
-UMVVM_LoadSlot* UMVVM_LoadScreen::GetLoadSlotViewModelByIndex(int32 Index)
+UMVVM_LoadSlot* UMVVM_LoadScreen::GetLoadSlotViewModelByIndex(const int32 Index)
 {
 	return LoadSlots.FindChecked(Index);
 }
 
-void UMVVM_LoadScreen::SlotPressedForLoading(int32 Slot)
+void UMVVM_LoadScreen::SlotPressedForLoading(const int32 Slot)
 {
 	AFatedBrandGameModeBase* FatedBrandGameMode = Cast<AFatedBrandGameModeBase>(UGameplayStatics::GetGameMode(this));
 	if (!IsValid(FatedBrandGameMode)) return;
@@ -49,17 +50,10 @@ void UMVVM_LoadScreen::SlotPressedForLoading(int32 Slot)
 		FatedBrandInstance->LoadSlotIndex = LoadSlots[Slot]->SlotIndex;
 		FatedBrandInstance->PlayerStartTag = LoadSlots[Slot]->PlayerStartTag;
 	}
-
-	SlotSelectedDelegate.Broadcast();
-	for (const TTuple<int32, UMVVM_LoadSlot*> LoadSlot : LoadSlots)
-	{
-		if (LoadSlot.Key == Slot)	LoadSlot.Value->EnableSelectSlotDelegate.Broadcast(false);
-		else						LoadSlot.Value->EnableSelectSlotDelegate.Broadcast(true);
-	}
 	SelectedSlot = LoadSlots[Slot];
 }
 
-void UMVVM_LoadScreen::SlotPressedForSaving(int32 Slot)
+void UMVVM_LoadScreen::SlotPressedForSaving(const int32 Slot)
 {
 	// TODO : 세이브 포인트에서 사용으로 구현필요
 }
@@ -79,21 +73,29 @@ void UMVVM_LoadScreen::SelectSlotPressedForPlay()
 	FatedBrandGameMode->TravelToMap(SelectedSlot);
 }
 
+void UMVVM_LoadScreen::SlotSelectedForWait(const int32 Slot)
+{
+	for (const TTuple<int32, UMVVM_LoadSlot*> LoadSlot : LoadSlots)
+	{
+		if (LoadSlot.Key == Slot)	LoadSlot.Value->EnableSelectSlotDelegate.Broadcast(false);
+		else						LoadSlot.Value->EnableSelectSlotDelegate.Broadcast(true);
+	}
+}
+
 void UMVVM_LoadScreen::LoadData()
 {
-	AFatedBrandGameModeBase* FatedBrandGameMode = Cast<AFatedBrandGameModeBase>(UGameplayStatics::GetGameMode(this));
+	const AFatedBrandGameModeBase* FatedBrandGameMode = Cast<AFatedBrandGameModeBase>(UGameplayStatics::GetGameMode(this));
 	if (!IsValid(FatedBrandGameMode)) return;
 
 	for (const TTuple<int32, UMVVM_LoadSlot*> LoadSlot : LoadSlots)
 	{
-		UFatedBrandSaveGame* SaveObject = FatedBrandGameMode->GetSaveSlotData(LoadSlot.Value->GetLoadSlotName(), LoadSlot.Key);
+		const UFatedBrandSaveGame* SaveObject = FatedBrandGameMode->GetSaveSlotData(LoadSlot.Value->GetLoadSlotName(), LoadSlot.Key);
 
-		TEnumAsByte<ESaveSlotStatus> SaveSlotStatus = SaveObject->SaveSlotStatus;
+		const TEnumAsByte<ESaveSlotStatus> SaveSlotStatus = SaveObject->SaveSlotStatus;
 
 		LoadSlot.Value->SlotStatus = SaveSlotStatus;
 
 		LoadSlot.Value->SetMapName(SaveObject->MapName);
 		LoadSlot.Value->PlayerStartTag = SaveObject->PlayerStartTag;
 	}
-	
 }
