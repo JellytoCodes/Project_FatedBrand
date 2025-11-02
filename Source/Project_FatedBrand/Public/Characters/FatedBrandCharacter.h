@@ -26,6 +26,7 @@ public :
 #pragma region Player Interface
 	virtual void UpdateAbilities_Implementation(const FGameplayTag& AbilityTag) override;
 	virtual void SaveProgress_Implementation(const FName& CheckPointTag) override;
+	virtual float GetVitalSurgeGage_Implementation() override;
 #pragma endregion
 
 	void LoadProgress();

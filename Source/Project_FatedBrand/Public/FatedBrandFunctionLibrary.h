@@ -7,6 +7,7 @@
 #include "FatedBrandStructTypes.h"
 #include "FatedBrandFunctionLibrary.generated.h"
 
+class UFatedBrandSaveGame;
 struct FGameplayEffectContextHandle;
 class AFatedBrandCharacterBase;
 class AFatedBrandCharacter;
@@ -36,6 +37,9 @@ public :
 #pragma region Ability System
 	UFUNCTION(BlueprintCallable, Category = "FatedBrandFunctionBibrary")
 	static UDataAsset_AbilityInfo* GetAbilityInfo(const UObject* WorldContextObject);
+
+	UFUNCTION(BlueprintCallable, Category = "FatedBrandFunctionBibrary")
+	static void InitializeDefaultAttributesFromSaveData(const UObject* WorldContextObject, UAbilitySystemComponent* ASC, UFatedBrandSaveGame* SaveGame);
 
 	UFUNCTION(BlueprintCallable, Category = "FatedBrandFunctionBibrary|Damage")
 	static FGameplayEffectContextHandle ApplyDamageEffect(FDamageEffectParams DamageEffectParams);

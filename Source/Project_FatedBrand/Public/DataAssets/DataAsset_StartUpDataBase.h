@@ -13,8 +13,9 @@ class UFatedBrandAbilitySystemComponent;
 UENUM()
 enum class EStartUpCharacterName : uint8
 {
-	PlayerCharacter,
-	TutorialEnemy
+	Player,
+	Melee,
+	Ranged
 };
 
 USTRUCT(BlueprintType)

@@ -2,6 +2,7 @@
 
 #include "DataAssets/DataAsset_StartUpDataBase.h"
 #include "AbilitySystem/FatedBrandAbilitySystemComponent.h"
+#include "Project_FatedBrand/Project_FatedBrand.h"
 
 void UDataAsset_StartUpDataBase::InitializeGameplayEffect(UFatedBrandAbilitySystemComponent* InASCToGive, EStartUpCharacterName StartUpCharacterName, int32 ApplyLevel)
 {

@@ -4,6 +4,7 @@
 
 #include "FatedBrandFunctionLibrary.h"
 #include "AbilitySystem/FatedBrandAbilitySystemComponent.h"
+#include "AbilitySystem/FatedBrandAttributeSet.h"
 #include "Camera/CameraComponent.h"
 #include "Controllers/FatedBrandPlayerController.h"
 #include "DataAssets/DataAsset_AbilityInfo.h"
@@ -57,6 +58,14 @@ void AFatedBrandCharacter::SaveProgress_Implementation(const FName& CheckPointTa
 
 		SaveData->PlayerStartTag = CheckPointTag;
 
+		SaveData->MaxHealth = UFatedBrandAttributeSet::GetMaxHealthAttribute().GetNumericValue(GetFatedBrandAttributeSet());
+		SaveData->CurrentHealth = UFatedBrandAttributeSet::GetCurrentHealthAttribute().GetNumericValue(GetFatedBrandAttributeSet());
+		SaveData->AttackPower = UFatedBrandAttributeSet::GetAttackPowerAttribute().GetNumericValue(GetFatedBrandAttributeSet());
+		SaveData->VitalSurge = UFatedBrandAttributeSet::GetVitalSurgeAttribute().GetNumericValue(GetFatedBrandAttributeSet());
+
+		Debug::Print("Max Health : ", SaveData->MaxHealth);
+		Debug::Print("Current Health : ", SaveData->CurrentHealth);
+
 		SaveData->bFirstTimeLoadIn = false;
 
 		UFatedBrandAbilitySystemComponent* FatedBrandASC = Cast<UFatedBrandAbilitySystemComponent>(GetAbilitySystemComponent());
@@ -84,23 +93,34 @@ void AFatedBrandCharacter::SaveProgress_Implementation(const FName& CheckPointTa
 	}
 }
 
+float AFatedBrandCharacter::GetVitalSurgeGage_Implementation()
+{
+	float CurrentValue = UFatedBrandAttributeSet::GetVitalSurgeAttribute().GetNumericValue(GetFatedBrandAttributeSet());
+	if (CurrentValue > 0.f)
+	{
+		return CurrentValue;
+	}
+	return 0.f;
+}
+
 void AFatedBrandCharacter::LoadProgress()
 {
 	AddCharacterAbilities();
 	if (const AFatedBrandGameModeBase* FatedBrandGameMode = Cast<AFatedBrandGameModeBase>(UGameplayStatics::GetGameMode(this)))
 	{
-		UFatedBrandSaveGame* SaveData = FatedBrandGameMode->RetrieveInGameSaveData();
+		UFatedBrandSaveGame* SaveData = FatedBrandGameMode->GetProgressSaveData();
 		if (SaveData == nullptr) return;
 
 		if (SaveData->bFirstTimeLoadIn)
 		{
-
+			//
 		}
 		else
 		{
 			if (UFatedBrandAbilitySystemComponent* FatedBrandASC = Cast<UFatedBrandAbilitySystemComponent>(GetAbilitySystemComponent()))
 			{
 				FatedBrandASC->AddCharacterAbilitiesFromSaveData(SaveData);
+				UFatedBrandFunctionLibrary::InitializeDefaultAttributesFromSaveData(this, FatedBrandASC, SaveData);
 			}
 		}
 	}
@@ -112,6 +132,11 @@ void AFatedBrandCharacter::PossessedBy(AController* NewController)
 
 	InitAbilityActorInfo();
 	LoadProgress();
+
+	if (const AFatedBrandGameModeBase* FatedBrandGameMode = Cast<AFatedBrandGameModeBase>(UGameplayStatics::GetGameMode(this)))
+	{
+		FatedBrandGameMode->LoadWorldSate(GetWorld());
+	}
 }
 
 void AFatedBrandCharacter::InitAbilityActorInfo()

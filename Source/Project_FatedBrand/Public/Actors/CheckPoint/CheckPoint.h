@@ -20,11 +20,6 @@ class PROJECT_FATEDBRAND_API ACheckPoint : public APlayerStart, public ISaveInte
 public :
 	ACheckPoint(const FObjectInitializer& ObjectInitializer);
 
-#pragma region Save Interface
-	virtual bool ShouldLoadTransform_Implementation() override;
-	virtual void LoadActor_Implementation() override;
-#pragma endregion
-
 	UPROPERTY(EditAnywhere)
 	bool bBindOverlapCallback = true;
 

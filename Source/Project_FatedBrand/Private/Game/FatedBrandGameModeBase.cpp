@@ -21,33 +21,36 @@ void AFatedBrandGameModeBase::LoadWorldSate(UWorld* World) const
 	const UFatedBrandInstance* FatedBrandInstance = Cast<UFatedBrandInstance>(GetGameInstance());
 	check(FatedBrandInstance);
 
+	UFatedBrandSaveGame* SaveGame = nullptr;
+
 	if (UGameplayStatics::DoesSaveGameExist(FatedBrandInstance->LoadSlotName, FatedBrandInstance->LoadSlotIndex))
 	{
-		UFatedBrandSaveGame* SaveGame = Cast<UFatedBrandSaveGame>(UGameplayStatics::LoadGameFromSlot(FatedBrandInstance->LoadSlotName, FatedBrandInstance->LoadSlotIndex));
-		if (SaveGame == nullptr) return;
+		SaveGame = Cast<UFatedBrandSaveGame>(UGameplayStatics::LoadGameFromSlot(FatedBrandInstance->LoadSlotName, FatedBrandInstance->LoadSlotIndex));
+		Debug::Print("Exist Load Slot Data");
+	}
+	else
+	{
+		SaveGame = Cast<UFatedBrandSaveGame>(UGameplayStatics::LoadGameFromSlot(ProgressSlotName, ProgressSlotIndex));
+		Debug::Print("Exist Progress Slot Data");
+	}
 
-		for (FActorIterator It(World) ; It ; ++It)
+	if (SaveGame == nullptr) return;
+
+	for (FActorIterator It(World) ; It ; ++It)
+	{
+		AActor* Actor = *It;
+
+		if (!Actor->Implements<USaveInterface>()) continue;
+
+		for (FSavedActor SavedActor : SaveGame->GetSavedMapWithMapName(WorldName).SavedActors)
 		{
-			AActor* Actor = *It;
-
-			if (!Actor->Implements<USaveInterface>()) continue;
-
-			for (FSavedActor SavedActor : SaveGame->GetSavedMapWithMapName(WorldName).SavedActors)
+			if (SavedActor.ActorName == Actor->GetName())
 			{
-				if (SavedActor.ActorName == Actor->GetName())
-				{
-					if (ISaveInterface::Execute_ShouldLoadTransform(Actor))
-					{
-						Actor->SetActorTransform(SavedActor.Transform);
-					}
-					FMemoryReader MemoryReader(SavedActor.Bytes);
+				FMemoryReader MemoryReader(SavedActor.Bytes);
 
-					FObjectAndNameAsStringProxyArchive Archive(MemoryReader, true);
-					Archive.ArIsSaveGame = true;
-					Actor->Serialize(Archive);
-
-					ISaveInterface::Execute_LoadActor(Actor);
-				}
+				FObjectAndNameAsStringProxyArchive Archive(MemoryReader, true);
+				Archive.ArIsSaveGame = true;
+				Actor->Serialize(Archive);
 			}
 		}
 	}
@@ -217,4 +220,7 @@ void AFatedBrandGameModeBase::BeginPlay()
 	Super::BeginPlay();
 
 	Maps.Add(DefaultMapName, DefaultMap);
+
+	const UFatedBrandInstance* FatedBrandInstance = Cast<UFatedBrandInstance>(GetGameInstance());
+	check(FatedBrandInstance);
 }

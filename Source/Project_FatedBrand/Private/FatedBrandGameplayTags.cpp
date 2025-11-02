@@ -39,6 +39,7 @@ namespace FatedBrandGameplayTags
 #pragma region Ability Activate
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Ability_Activate_BlastingZone, "Abilities.Activate.BlastingZone")
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Ability_Activate_Blocking, "Abilities.Activate.Blocking")
+	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Ability_Activate_VitalSurge, "Abilities.Activate.VitalSurge")
 #pragma endregion
 
 #pragma region Abilities Offensive
@@ -67,6 +68,7 @@ namespace FatedBrandGameplayTags
 
 #pragma region Event
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Event_SuccessfulBlock, "Event.SuccessfulBlock")
+	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Event_HitReact, "Event.HitReact")
 	
 #pragma endregion
 }

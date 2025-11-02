@@ -42,6 +42,7 @@ namespace FatedBrandGameplayTags
 #pragma region Ability Activate
 	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Activate_BlastingZone)
 	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Activate_Blocking)
+	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Activate_VitalSurge)
 #pragma endregion
 
 #pragma region Abilities Offensive
@@ -70,6 +71,6 @@ namespace FatedBrandGameplayTags
 
 #pragma region Event
 	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_SuccessfulBlock)
-	
+	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_HitReact)
 #pragma endregion
 }

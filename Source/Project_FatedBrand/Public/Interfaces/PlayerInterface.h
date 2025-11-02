@@ -22,4 +22,13 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void UpdateAbilities(const struct FGameplayTag& AbilityTag);
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void MapBeginPlayMontage();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void MapEndPlayMontage(const TSoftObjectPtr<UWorld>& Level);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	float GetVitalSurgeGage();
 };

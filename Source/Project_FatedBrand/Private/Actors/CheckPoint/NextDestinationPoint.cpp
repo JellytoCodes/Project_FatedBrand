@@ -17,7 +17,6 @@ void ANextDestinationPoint::OnBoxOverlap(UPrimitiveComponent* OverlappedComponen
 			FatedBrandGameMode->SaveProgressWorldState(GetWorld(), DestinationMap.ToSoftObjectPath().GetAssetName());
 		}
 		IPlayerInterface::Execute_SaveProgress(OtherActor, DestinationPlayerStartTag);
-
-		UGameplayStatics::OpenLevelBySoftObjectPtr(this, DestinationMap);
+		IPlayerInterface::Execute_MapEndPlayMontage(OtherActor, DestinationMap);
 	}
 }

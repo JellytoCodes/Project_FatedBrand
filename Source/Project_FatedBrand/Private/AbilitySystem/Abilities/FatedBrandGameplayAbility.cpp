@@ -4,6 +4,7 @@
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "FatedBrandFunctionLibrary.h"
+#include "FatedBrandGameplayTags.h"
 #include "AbilitySystem/FatedBrandAbilitySystemComponent.h"
 #include "Characters/FatedBrandCharacter.h"
 #include "Characters/FatedBrandEnemy.h"
@@ -11,11 +12,16 @@
 void UFatedBrandGameplayAbility::CauseDamage(AActor* TargetActor)
 {
 	FGameplayEffectSpecHandle DamageSpecHandle = MakeOutgoingGameplayEffectSpec(DamageEffectClass, 1);
+	UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
+
 
 	float ScaledDamage = Damage;
 	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(DamageSpecHandle, DamageType, ScaledDamage);
 
-	GetAbilitySystemComponentFromActorInfo()->ApplyGameplayEffectSpecToTarget(*DamageSpecHandle.Data.Get(), UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor));
+	GetAbilitySystemComponentFromActorInfo()->ApplyGameplayEffectSpecToTarget(*DamageSpecHandle.Data.Get(), TargetASC);
+
+	const FGameplayTag HitReactTag = FatedBrandGameplayTags::Event_HitReact;
+	TargetASC->TryActivateAbilitiesByTag(HitReactTag.GetSingleTagContainer());
 }
 
 FDamageEffectParams UFatedBrandGameplayAbility::MakeDamageEffectParamsFromClassDefaults(AActor* TargetActor)

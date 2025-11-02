@@ -60,6 +60,8 @@ void AFatedBrandPlayerController::Input_Move(const FInputActionValue &InputActio
 {
 	const FVector2D InputAxisVector = InputActionValue.Get<FVector2D>();
 
+	if (FatedBrandCharacter->GetFatedBrandAbilitySystemComponent()->HasMatchingGameplayTag(FatedBrandGameplayTags::Ability_Activate_VitalSurge)) return;
+
 	if (bIsNebulaMenu)
 	{
 		UNebulaMenuWidgetController* NebulaMenuWidgetController = UFatedBrandFunctionLibrary::GetNebulaMenuWidgetController(this);
@@ -84,6 +86,7 @@ void AFatedBrandPlayerController::Input_Move(const FInputActionValue &InputActio
 
 void AFatedBrandPlayerController::Input_JumpStart()
 {
+	if (FatedBrandCharacter->GetFatedBrandAbilitySystemComponent()->HasMatchingGameplayTag(FatedBrandGameplayTags::Ability_Activate_VitalSurge)) return;
 	if (bIsNebulaMenu) return;
 
 	if (FatedBrandCharacter.IsValid())

@@ -5,13 +5,17 @@
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
+#include "FatedBrandGameplayTags.h"
 #include "GenericTeamAgentInterface.h"
+#include "AbilitySystem/FatedBrandAttributeSet.h"
 #include "Characters/FatedBrandCharacter.h"
 #include "Engine/OverlapResult.h"
 #include "Game/FatedBrandGameModeBase.h"
+#include "Game/FatedBrandSaveGame.h"
 #include "HUD/FatedBrandHUD.h"
 #include "HUD/WidgetController/FatedBrandWidgetController.h"
 #include "Kismet/GameplayStatics.h"
+#include "Project_FatedBrand/Project_FatedBrand.h"
 
 bool UFatedBrandFunctionLibrary::MakeWidgetControllerParams(const UObject* WorldContextObject, FWidgetControllerParams& OutWCParams, AFatedBrandHUD*& OutFatedBrandHUD)
 {
@@ -64,6 +68,20 @@ UDataAsset_AbilityInfo* UFatedBrandFunctionLibrary::GetAbilityInfo(const UObject
 	return FatedBrandGameMode->AbilityInfo;
 }
 
+void UFatedBrandFunctionLibrary::InitializeDefaultAttributesFromSaveData(const UObject* WorldContextObject, UAbilitySystemComponent* ASC, UFatedBrandSaveGame* SaveGame)
+{
+	const UFatedBrandAttributeSet* AttrSet = ASC->GetSet<UFatedBrandAttributeSet>();
+    if (!AttrSet) return;
+
+	ASC->SetNumericAttributeBase(UFatedBrandAttributeSet::GetMaxHealthAttribute(), SaveGame->MaxHealth);
+	ASC->SetNumericAttributeBase(UFatedBrandAttributeSet::GetCurrentHealthAttribute(), SaveGame->CurrentHealth);
+	ASC->SetNumericAttributeBase(UFatedBrandAttributeSet::GetAttackPowerAttribute(), SaveGame->AttackPower);
+	ASC->SetNumericAttributeBase(UFatedBrandAttributeSet::GetVitalSurgeAttribute(), SaveGame->VitalSurge);
+
+	Debug::Print("Max Health : ",SaveGame->MaxHealth);
+	Debug::Print("Current Health : ",SaveGame->CurrentHealth);
+}
+
 FGameplayEffectContextHandle UFatedBrandFunctionLibrary::ApplyDamageEffect(FDamageEffectParams DamageEffectParams)
 {
 	const AActor* SourceAvatarActor = DamageEffectParams.SourceAbilitySystemComponent->GetAvatarActor();
@@ -73,6 +91,9 @@ FGameplayEffectContextHandle UFatedBrandFunctionLibrary::ApplyDamageEffect(FDama
 
 	const FGameplayEffectSpecHandle SpecHandle = DamageEffectParams.SourceAbilitySystemComponent->MakeOutgoingSpec(DamageEffectParams.DamageGameplayEffectClass, DamageEffectParams.AbilityLevel, EffectContextHandle);
 	SpecHandle.Data->SetSetByCallerMagnitude(DamageEffectParams.DamageType, DamageEffectParams.BaseDamage);
+
+	const FGameplayTag HitReactTag = FatedBrandGameplayTags::Event_HitReact;
+	DamageEffectParams.TargetAbilitySystemComponent->TryActivateAbilitiesByTag(HitReactTag.GetSingleTagContainer());
 
 	DamageEffectParams.TargetAbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data);
 	return EffectContextHandle;

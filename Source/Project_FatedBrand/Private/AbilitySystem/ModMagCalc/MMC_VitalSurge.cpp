@@ -4,7 +4,6 @@
 #include "AbilitySystem/ModMagCalc/MMC_VitalSurge.h"
 
 #include "AbilitySystem/FatedBrandAttributeSet.h"
-#include "Project_FatedBrand/Project_FatedBrand.h"
 
 UMMC_VitalSurge::UMMC_VitalSurge()
 {

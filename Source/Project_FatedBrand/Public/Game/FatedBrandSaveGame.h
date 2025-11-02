@@ -103,7 +103,17 @@ public :
 
 	/** Player Status */
 
-	// TODO : Add Player Status & Coin
+	UPROPERTY()
+	float MaxHealth;
+
+	UPROPERTY()
+	float CurrentHealth;
+
+	UPROPERTY()
+	float AttackPower;
+
+	UPROPERTY()
+	float VitalSurge;
 
 	/** */
 

@@ -47,13 +47,3 @@ void ACheckPoint::OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 		IPlayerInterface::Execute_SaveProgress(OtherActor, PlayerStartTag);
 	}
 }
-
-bool ACheckPoint::ShouldLoadTransform_Implementation()
-{
-	return ISaveInterface::ShouldLoadTransform_Implementation();
-}
-
-void ACheckPoint::LoadActor_Implementation()
-{
-	ISaveInterface::LoadActor_Implementation();
-}

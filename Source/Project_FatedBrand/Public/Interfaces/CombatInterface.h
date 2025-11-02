@@ -30,6 +30,11 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void UpdateFacingTarget(const FVector& Target);
 
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void HitReactAction();
+
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	AActor* GetCombatTarget();
+
+	
 };

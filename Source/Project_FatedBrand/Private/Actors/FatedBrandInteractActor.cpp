@@ -15,5 +15,7 @@ void AFatedBrandInteractActor::GiveAbilityToTarget(AActor* TargetActor)
 	if (IPlayerInterface* PlayerInterface = Cast<IPlayerInterface>(TargetActor))
 	{
 		PlayerInterface->UpdateAbilities(AbilityTag);
+
+		Destroy();
 	}
 }
