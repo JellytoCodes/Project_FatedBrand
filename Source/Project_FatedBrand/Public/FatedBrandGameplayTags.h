@@ -40,6 +40,7 @@ namespace FatedBrandGameplayTags
 #pragma endregion
 
 #pragma region Ability Activate
+	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Activate_MeleeAttack)
 	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Activate_BlastingZone)
 	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Activate_Blocking)
 	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Activate_VitalSurge)

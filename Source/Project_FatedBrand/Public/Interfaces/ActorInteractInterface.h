@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
+#include "GameplayTagContainer.h"
 #include "ActorInteractInterface.generated.h"
 
 UINTERFACE(MinimalAPI)
@@ -17,5 +18,12 @@ class PROJECT_FATEDBRAND_API IActorInteractInterface
 	GENERATED_BODY()
 
 public:
-	virtual void GiveAbilityToTarget(AActor* TargetActor) = 0;
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void GiveAbilityToTarget(AActor* TargetActor);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	FGameplayTag GetConditionTag();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	bool GetMatchesTagByTarget(AActor* TargetActor);
 };

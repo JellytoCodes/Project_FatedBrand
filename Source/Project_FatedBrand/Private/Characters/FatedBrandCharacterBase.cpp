@@ -136,18 +136,6 @@ void AFatedBrandCharacterBase::OnComponentBeginOverlap(UPrimitiveComponent* Over
 
 		SetToggleCollisionEnabled(CurrentDamageType, ECollisionEnabled::NoCollision);
 	}
-
-	if (OtherActor->Implements<UActorInteractInterface>())
-	{
-		if (IActorInteractInterface* InteractInterface = Cast<IActorInteractInterface>(OtherActor))
-		{
-			if (GetFatedBrandAbilitySystemComponent()->HasMatchingGameplayTag(FatedBrandGameplayTags::Ability_Activate_BlastingZone))
-			{
-				InteractInterface->GiveAbilityToTarget(this);
-			}
-		}
-		SetToggleCollisionEnabled(CurrentDamageType, ECollisionEnabled::NoCollision);
-	}
 }
 
 void AFatedBrandCharacterBase::AddCharacterAbilities() const

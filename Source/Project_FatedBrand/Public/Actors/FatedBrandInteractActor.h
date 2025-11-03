@@ -8,6 +8,10 @@
 #include "Interfaces/ActorInteractInterface.h"
 #include "FatedBrandInteractActor.generated.h"
 
+class UFatedBrandAbilitySystemComponent;
+class USphereComponent;
+class UNiagaraSystem;
+
 UCLASS()
 class PROJECT_FATEDBRAND_API AFatedBrandInteractActor : public AActor, public IActorInteractInterface
 {
@@ -16,10 +20,30 @@ class PROJECT_FATEDBRAND_API AFatedBrandInteractActor : public AActor, public IA
 public:	
 	AFatedBrandInteractActor();
 
-	UFUNCTION(BlueprintCallable)
-	virtual void GiveAbilityToTarget(AActor* TargetActor) override;
+	virtual void GiveAbilityToTarget_Implementation(AActor* TargetActor) override;
+	virtual FGameplayTag GetConditionTag_Implementation() override;
+	virtual bool GetMatchesTagByTarget_Implementation(AActor* TargetActor) override;
+
+protected :
+	virtual void BeginPlay() override;
+	virtual void Destroyed() override;
 
 private :
-	UPROPERTY(EditAnywhere, Category = "Ability")
+	UPROPERTY(EditDefaultsOnly, Category = "Ability")
+	FGameplayTag ConditionTag;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Ability")
 	FGameplayTag AbilityTag;
+
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<UNiagaraSystem> ImpactEffect;
+
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<UNiagaraSystem> Effect;
+
+	UPROPERTY(VisibleDefaultsOnly)
+	TObjectPtr<UStaticMeshComponent> Mesh;
+
+	UPROPERTY(VisibleDefaultsOnly)
+	TObjectPtr<USphereComponent> Sphere;
 };

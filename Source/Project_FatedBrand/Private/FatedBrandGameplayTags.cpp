@@ -37,6 +37,7 @@ namespace FatedBrandGameplayTags
 #pragma endregion
 
 #pragma region Ability Activate
+	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Ability_Activate_MeleeAttack, "Abilities.Activate.MeleeAttack")
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Ability_Activate_BlastingZone, "Abilities.Activate.BlastingZone")
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Ability_Activate_Blocking, "Abilities.Activate.Blocking")
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Ability_Activate_VitalSurge, "Abilities.Activate.VitalSurge")

@@ -18,7 +18,8 @@ public class Project_FatedBrand : ModuleRules
 			"GameplayAbilities",
 			"GameplayTasks",
 			"GameplayTags",
-			"AIModule"
+			"AIModule",
+			"Niagara"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
