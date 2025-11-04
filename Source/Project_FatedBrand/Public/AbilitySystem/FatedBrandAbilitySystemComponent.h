@@ -39,13 +39,15 @@ public :
 	void OnAbilityInputHeld(const FGameplayTag& InInputTag);
 	void ForEachAbility(const FForEachAbility& Delegate);
 
+	UFUNCTION(BlueprintCallable)
+	bool OnActivatePassiveAbility(const FGameplayTag& AbilityTag);
+
 	void ClearInputTag(FGameplayAbilitySpec* Spec);
 	void AssignInputTagToAbility(FGameplayAbilitySpec& Spec, const FGameplayTag& InputTag);
 	bool InputTagIsEmpty(const FGameplayTag& InputTag);
 	bool AbilityHasInputTag(const FGameplayAbilitySpec& Spec, const FGameplayTag& InputTag);
 	bool AbilityHasAnyInputTag(const FGameplayAbilitySpec& Spec);
 	bool IsPassiveAbility(const FGameplayAbilitySpec& Spec) const;
-
 
 	FGameplayTag GetStatusFromAbilityTag(const FGameplayTag& AbilityTag);
 	FGameplayTag GetSlotFromAbilityTag(const FGameplayTag& AbilityTag);

@@ -34,9 +34,13 @@ class PROJECT_FATEDBRAND_API AFatedBrandCharacterBase : public ACharacter, publi
 public:
 	AFatedBrandCharacterBase();
 
+	UFUNCTION(BlueprintPure)
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
+	UFUNCTION(BlueprintPure)
 	FORCEINLINE UFatedBrandAbilitySystemComponent* GetFatedBrandAbilitySystemComponent() const { return FatedBrandAbilitySystemComponent; }
+
+	UFUNCTION(BlueprintPure)
 	FORCEINLINE UAttributeSet* GetFatedBrandAttributeSet() const { return FatedBrandAttributeSet; }
 
 	// -----------------------------

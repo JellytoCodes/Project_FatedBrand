@@ -54,6 +54,7 @@ namespace FatedBrandGameplayTags
 #pragma region Abilities Offecsive Cooldown
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Cooldown_BlastingZone, "Cooldown.BlastingZone")
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Cooldown_NobleBlood, "Cooldown.NobleBlood")
+	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Cooldown_LivingDead, "Cooldown.LivingDead")
 #pragma endregion
 
 #pragma region Abilities Passive

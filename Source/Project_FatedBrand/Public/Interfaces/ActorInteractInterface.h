@@ -26,4 +26,7 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	bool GetMatchesTagByTarget(AActor* TargetActor);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void OnHit();
 };

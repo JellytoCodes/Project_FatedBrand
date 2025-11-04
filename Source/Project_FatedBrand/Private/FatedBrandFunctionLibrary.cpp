@@ -165,3 +165,8 @@ void UFatedBrandFunctionLibrary::GetLivePlayersWithinLine(const UObject* WorldCo
 		}
 	}
 }
+
+void UFatedBrandFunctionLibrary::SetCurrentHealth(const UObject* WorldContextObject, UAbilitySystemComponent* ASC, const float InHealth)
+{
+	ASC->SetNumericAttributeBase(UFatedBrandAttributeSet::GetCurrentHealthAttribute(), InHealth);
+}

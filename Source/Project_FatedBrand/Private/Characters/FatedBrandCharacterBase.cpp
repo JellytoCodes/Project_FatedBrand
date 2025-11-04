@@ -157,7 +157,6 @@ void AFatedBrandCharacterBase::Die()
 {
 	if (bIsDeath) return;
 	OnDeathDelegate.Broadcast(this);
-	bIsDeath = true;
 }
 
 AActor* AFatedBrandCharacterBase::GetAvatar_Implementation()

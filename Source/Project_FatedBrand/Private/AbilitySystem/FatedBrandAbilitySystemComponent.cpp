@@ -125,6 +125,21 @@ void UFatedBrandAbilitySystemComponent::OnAbilityInputHeld(const FGameplayTag& I
 	}
 }
 
+bool UFatedBrandAbilitySystemComponent::OnActivatePassiveAbility(const FGameplayTag& AbilityTag)
+{
+	if (const FGameplayAbilitySpec* AbilitySpec = GetSpecFromAbilityTag(AbilityTag))
+	{
+		const bool IsEquippedStatus = GetStatusFromSpec(*AbilitySpec) == FatedBrandGameplayTags::Abilities_Status_Equipped;
+
+		if (IsPassiveAbility(*AbilitySpec) && IsEquippedStatus)
+		{
+			TryActivateAbility(AbilitySpec->Handle);
+			return true;
+		}
+	}
+	return false;
+}
+
 void UFatedBrandAbilitySystemComponent::ForEachAbility(const FForEachAbility& Delegate)
 {
 	FScopedAbilityListLock ActiveScopeLock(*this);

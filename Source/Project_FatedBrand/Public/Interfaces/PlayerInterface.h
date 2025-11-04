@@ -29,6 +29,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void MapEndPlayMontage(const TSoftObjectPtr<UWorld>& Level);
 
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void PlayerDie();
+
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	float GetVitalSurgeGage();
 };

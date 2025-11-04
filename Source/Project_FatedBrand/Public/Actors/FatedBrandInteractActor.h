@@ -8,6 +8,7 @@
 #include "Interfaces/ActorInteractInterface.h"
 #include "FatedBrandInteractActor.generated.h"
 
+class UNiagaraComponent;
 class UFatedBrandAbilitySystemComponent;
 class USphereComponent;
 class UNiagaraSystem;
@@ -23,6 +24,7 @@ public:
 	virtual void GiveAbilityToTarget_Implementation(AActor* TargetActor) override;
 	virtual FGameplayTag GetConditionTag_Implementation() override;
 	virtual bool GetMatchesTagByTarget_Implementation(AActor* TargetActor) override;
+	virtual void OnHit_Implementation() override;
 
 protected :
 	virtual void BeginPlay() override;
@@ -42,8 +44,22 @@ private :
 	TObjectPtr<UNiagaraSystem> Effect;
 
 	UPROPERTY(VisibleDefaultsOnly)
+	TObjectPtr<UNiagaraComponent> EffectComponent;
+
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<UParticleSystem> ImpactParticle;
+
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<UParticleSystem> Particle;
+
+	UPROPERTY(VisibleDefaultsOnly)
+	TObjectPtr<UParticleSystemComponent> ParticleComponent;
+
+	UPROPERTY(VisibleDefaultsOnly)
 	TObjectPtr<UStaticMeshComponent> Mesh;
 
 	UPROPERTY(VisibleDefaultsOnly)
 	TObjectPtr<USphereComponent> Sphere;
+
+
 };

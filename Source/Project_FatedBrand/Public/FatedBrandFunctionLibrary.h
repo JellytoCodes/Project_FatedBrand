@@ -52,5 +52,8 @@ public :
 
 	UFUNCTION(BlueprintCallable, Category = "FatedBrandFunctionBibrary|GameplayEffects")
 	static void GetLivePlayersWithinLine(const UObject* WorldContextObject, TArray<AActor*>& OutOverlappingActors, const TArray<AActor*>& ActorsToIgnore, const FVector& Start, const FVector& End);
+
+	UFUNCTION(BlueprintCallable, Category = "FatedBrandFunctionBibrary|Attributes")
+	static void SetCurrentHealth(const UObject* WorldContextObject, UAbilitySystemComponent* ASC, const float InHealth);
 #pragma endregion
 };
