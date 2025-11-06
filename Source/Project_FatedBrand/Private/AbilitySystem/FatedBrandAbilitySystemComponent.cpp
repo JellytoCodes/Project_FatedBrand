@@ -133,8 +133,7 @@ bool UFatedBrandAbilitySystemComponent::OnActivatePassiveAbility(const FGameplay
 
 		if (IsPassiveAbility(*AbilitySpec) && IsEquippedStatus)
 		{
-			TryActivateAbility(AbilitySpec->Handle);
-			return true;
+			return TryActivateAbility(AbilitySpec->Handle);
 		}
 	}
 	return false;

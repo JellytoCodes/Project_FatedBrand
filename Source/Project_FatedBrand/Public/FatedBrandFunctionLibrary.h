@@ -55,5 +55,6 @@ public :
 
 	UFUNCTION(BlueprintCallable, Category = "FatedBrandFunctionBibrary|Attributes")
 	static void SetCurrentHealth(const UObject* WorldContextObject, UAbilitySystemComponent* ASC, const float InHealth);
+	
 #pragma endregion
 };

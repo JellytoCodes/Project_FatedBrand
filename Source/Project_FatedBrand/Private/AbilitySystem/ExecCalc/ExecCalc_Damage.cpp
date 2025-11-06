@@ -43,12 +43,16 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	EvaluationParameters.SourceTags = Spec.CapturedSourceTags.GetAggregatedTags();
 	EvaluationParameters.TargetTags = Spec.CapturedTargetTags.GetAggregatedTags();
 
+	bool HasJugularRip = SourceASC->HasMatchingGameplayTag(FatedBrandGameplayTags::Ability_Activate_JugularRip);
+
+	float CriticalHit = HasJugularRip && FMath::RandRange(1,100) < 50 ? 2.f : 1.f;
+
 	float Damage = 1.f;
 	for (const TPair<FGameplayTag, float>& TagMagnitude : Spec.SetByCallerTagMagnitudes)
 	{
 		if (TagMagnitude.Value <= 0.f) continue;
 
-		Damage = TagMagnitude.Value;
+		Damage = TagMagnitude.Value * CriticalHit;
 	}
 
 	const FGameplayModifierEvaluatedData EvaluatedData(UFatedBrandAttributeSet::GetIncomingDamageAttribute(), EGameplayModOp::Additive, Damage);

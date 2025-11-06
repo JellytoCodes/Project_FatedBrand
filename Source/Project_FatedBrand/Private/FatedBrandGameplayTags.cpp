@@ -61,6 +61,7 @@ namespace FatedBrandGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Abilities_Passive_Type, "Abilities.Passive.Type")
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Abilities_Passive_DoubleJump, "Abilities.Passive.DoubleJump")
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Abilities_Passive_LivingDead, "Abilities.Passive.LivingDead")
+	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Abilities_Passive_JugularRip, "Abilities.Passive.JugularRip")
 #pragma endregion
 
 #pragma region Damage
