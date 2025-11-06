@@ -4,14 +4,15 @@
 
 #include "FatedBrandGameplayTags.h"
 #include "AbilitySystem/FatedBrandAttributeSet.h"
+#include "Project_FatedBrand/Project_FatedBrand.h"
 
 struct FFatedBrandDamageStatics
 {
-	//DECLARE_ATTRIBUTE_CAPTUREDEF(Defense)
+	DECLARE_ATTRIBUTE_CAPTUREDEF(AttackPower)
 
 	FFatedBrandDamageStatics()
 	{
-		//DEFINE_ATTRIBUTE_CAPTUREDEF(UFatedBrandAttributeSet, Defense, Target, false)
+		DEFINE_ATTRIBUTE_CAPTUREDEF(UFatedBrandAttributeSet, AttackPower, Source, false)
 	}
 };
 
@@ -23,7 +24,7 @@ static const FFatedBrandDamageStatics& DamageStatics()
 
 UExecCalc_Damage::UExecCalc_Damage()
 {
-	//RelevantAttributesToCapture.Add(DamageStatics().DefenseDef);
+	RelevantAttributesToCapture.Add(DamageStatics().AttackPowerDef);
 }
 
 void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecutionParams, FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const
@@ -43,6 +44,9 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	EvaluationParameters.SourceTags = Spec.CapturedSourceTags.GetAggregatedTags();
 	EvaluationParameters.TargetTags = Spec.CapturedTargetTags.GetAggregatedTags();
 
+	float SourceAttackPower = 0.f;
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().AttackPowerDef, EvaluationParameters, SourceAttackPower);
+
 	bool HasJugularRip = SourceASC->HasMatchingGameplayTag(FatedBrandGameplayTags::Ability_Activate_JugularRip);
 
 	float CriticalHit = HasJugularRip && FMath::RandRange(1,100) < 50 ? 2.f : 1.f;
@@ -52,7 +56,7 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	{
 		if (TagMagnitude.Value <= 0.f) continue;
 
-		Damage = TagMagnitude.Value * CriticalHit;
+		Damage = (TagMagnitude.Value * SourceAttackPower);
 	}
 
 	const FGameplayModifierEvaluatedData EvaluatedData(UFatedBrandAttributeSet::GetIncomingDamageAttribute(), EGameplayModOp::Additive, Damage);

@@ -15,11 +15,11 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "HUD/FatedBrandHUD.h"
 #include "HUD/WidgetController/NebulaMenuWidgetController.h"
-#include "Project_FatedBrand/Project_FatedBrand.h"
 
 FGenericTeamId AFatedBrandPlayerController::GetGenericTeamId() const
 {
-	return FGenericTeamId(0);
+	if (!PlayerCombatInterface.IsValid()) return FGenericTeamId(0);
+	return PlayerCombatInterface->IsDead() ? FGenericTeamId(1) : FGenericTeamId(0);
 }
 
 void AFatedBrandPlayerController::BeginPlay()
@@ -31,6 +31,8 @@ void AFatedBrandPlayerController::BeginPlay()
 	if (GetFatedBrandASC()) FatedBrandCharacter = Cast<AFatedBrandCharacter>(GetFatedBrandASC()->GetAvatarActor());
 
 	if (!CachedFatedBrandHUD.IsValid()) CachedFatedBrandHUD = Cast<AFatedBrandHUD>(GetHUD());
+
+	PlayerCombatInterface = TWeakInterfacePtr<ICombatInterface>(GetOwner());
 
 	bShowMouseCursor = false;
 	DefaultMouseCursor = EMouseCursor::Default;

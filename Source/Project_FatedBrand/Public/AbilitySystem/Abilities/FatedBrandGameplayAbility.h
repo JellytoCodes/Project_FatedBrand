@@ -25,6 +25,9 @@ public :
 	FDamageEffectParams MakeDamageEffectParamsFromClassDefaults(AActor* TargetActor = nullptr);
 
 protected :
+	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
+	void ReceiveDeactivate(const FGameplayTag& AbilityTag);
+
 	UFUNCTION(BlueprintPure, Category = "FatedBrand|Ability")
 	UFatedBrandAbilitySystemComponent* GetFatedBrandAbilitySystemComponentFromActorInfo() const;
 

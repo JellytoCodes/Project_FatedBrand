@@ -7,6 +7,12 @@
 #include "AbilitySystem/Abilities/FatedBrandGameplayAbility.h"
 #include "DataAssets/DataAsset_AbilityInfo.h"
 #include "Game/FatedBrandSaveGame.h"
+#include "Project_FatedBrand/Project_FatedBrand.h"
+
+UFatedBrandAbilitySystemComponent::UFatedBrandAbilitySystemComponent()
+{
+	ImmediatelyPassiveAbilities.AddUnique(FatedBrandGameplayTags::Abilities_Passive_JugularRip);
+}
 
 void UFatedBrandAbilitySystemComponent::AddCharacterActivateAbilities(const TArray<TSubclassOf<UFatedBrandGameplayAbility>>& ActivateAbilities)
 {
@@ -69,7 +75,7 @@ void UFatedBrandAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag
 	FScopedAbilityListLock ActiveScopeLock(*this);
 	for (FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
 	{
-		if (AbilitySpec.GetDynamicSpecSourceTags().HasTagExact(InInputTag))
+		if (AbilitySpec.GetDynamicSpecSourceTags().HasTagExact(InInputTag) && !IsPassiveAbility(AbilitySpec))
 		{
 			AbilitySpecInputPressed(AbilitySpec);
 			if (!AbilitySpec.IsActive())
@@ -96,7 +102,7 @@ void UFatedBrandAbilitySystemComponent::OnAbilityInputReleased(const FGameplayTa
 	for (FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
 	{
 		AbilitySpecInputReleased(AbilitySpec);
-		if (AbilitySpec.GetDynamicSpecSourceTags().HasTagExact(InInputTag) && AbilitySpec.IsActive())
+		if (AbilitySpec.GetDynamicSpecSourceTags().HasTagExact(InInputTag) && AbilitySpec.IsActive() && !IsPassiveAbility(AbilitySpec))
 		{
 			const UGameplayAbility* Ability = AbilitySpec.GetPrimaryInstance();
 			PRAGMA_DISABLE_DEPRECATION_WARNINGS
@@ -114,7 +120,7 @@ void UFatedBrandAbilitySystemComponent::OnAbilityInputHeld(const FGameplayTag& I
 	FScopedAbilityListLock ActiveScopeLock(*this);
 	for (FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
 	{
-		if (AbilitySpec.GetDynamicSpecSourceTags().HasTagExact(InInputTag))
+		if (AbilitySpec.GetDynamicSpecSourceTags().HasTagExact(InInputTag) && !IsPassiveAbility(AbilitySpec))
 		{
 			AbilitySpecInputPressed(AbilitySpec);
 			if (!AbilitySpec.IsActive())
@@ -268,6 +274,7 @@ FGameplayAbilitySpec* UFatedBrandAbilitySystemComponent::GetSpecFromAbilityTag(c
 
 FGameplayAbilitySpec* UFatedBrandAbilitySystemComponent::GetSpecWithNebulaSlot(const FGameplayTag& InputTag)
 {
+	FScopedAbilityListLock ActiveScopeLock(*this);
 	for (FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
 	{
 		if (AbilitySpec.GetDynamicSpecSourceTags().HasTagExact(InputTag))
@@ -316,21 +323,37 @@ void UFatedBrandAbilitySystemComponent::EquipAbility(const FGameplayTag& Ability
 					{
 						AbilityEquipped.Broadcast(AbilityTag, FatedBrandGameplayTags::Abilities_Status_Equipped, InputTag, PrevInputTag);
 						return;
-					}	
+					}
+					ClearInputTag(SpecWithInputTag);
+
+					if (IsPassiveAbility(*SpecWithInputTag))
+					{
+						SpecWithInputTag->GetDynamicSpecSourceTags().RemoveTag(GetStatusFromSpec(*SpecWithInputTag));
+						SpecWithInputTag->GetDynamicSpecSourceTags().AddTag(FatedBrandGameplayTags::Abilities_Status_Unlocked);
+						DeactivatePassiveAbility.Broadcast(GetAbilityTagFromSpec(*SpecWithInputTag));
+					}
 				}
-				ClearInputTag(SpecWithInputTag);
 			}
+
 			if (!AbilityHasAnyInputTag(*AbilitySpec))
 			{
 				AbilitySpec->GetDynamicSpecSourceTags().RemoveTag(GetStatusFromSpec(*AbilitySpec));
 				AbilitySpec->GetDynamicSpecSourceTags().AddTag(FatedBrandGameplayTags::Abilities_Status_Equipped);
 			}
 
-			if (!IsPassiveAbility(*AbilitySpec))
+			if (IsPassiveAbility(*AbilitySpec))
 			{
-				AssignInputTagToAbility(*AbilitySpec, InputTag);
-				MarkAbilitySpecDirty(*AbilitySpec);	
+				for (FGameplayTag PassiveTag : ImmediatelyPassiveAbilities)
+				{
+					if (AbilityTag == PassiveTag)
+					{
+						TryActivateAbility(AbilitySpec->Handle);
+						break;
+					}
+				}
 			}
+			AssignInputTagToAbility(*AbilitySpec, InputTag);
+			MarkAbilitySpecDirty(*AbilitySpec);
 		}
 		AbilityEquipped.Broadcast(AbilityTag, FatedBrandGameplayTags::Abilities_Status_Equipped, InputTag, PrevInputTag);
 	}

@@ -63,9 +63,6 @@ void AFatedBrandCharacter::SaveProgress_Implementation(const FName& CheckPointTa
 		SaveData->AttackPower = UFatedBrandAttributeSet::GetAttackPowerAttribute().GetNumericValue(GetFatedBrandAttributeSet());
 		SaveData->VitalSurge = UFatedBrandAttributeSet::GetVitalSurgeAttribute().GetNumericValue(GetFatedBrandAttributeSet());
 
-		Debug::Print("Max Health : ", SaveData->MaxHealth);
-		Debug::Print("Current Health : ", SaveData->CurrentHealth);
-
 		SaveData->bFirstTimeLoadIn = false;
 
 		UFatedBrandAbilitySystemComponent* FatedBrandASC = Cast<UFatedBrandAbilitySystemComponent>(GetAbilitySystemComponent());

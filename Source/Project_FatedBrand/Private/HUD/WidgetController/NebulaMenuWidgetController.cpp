@@ -125,6 +125,7 @@ void UNebulaMenuWidgetController::UpdateEquipQuickSlot(const FGameplayTag& Abili
 	FFatedBrandAbilityInfo Info = AbilityInfo->FindAbilityInfoForTag(AbilityTag);
 	Info.StatusTag = StatusTag;
 	Info.InputTag = InputTag;
+
 	AbilityInfoDelegate.Broadcast(Info);
 }
 

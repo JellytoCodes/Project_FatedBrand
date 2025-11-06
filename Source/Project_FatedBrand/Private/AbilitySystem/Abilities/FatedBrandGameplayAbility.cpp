@@ -38,6 +38,24 @@ FDamageEffectParams UFatedBrandGameplayAbility::MakeDamageEffectParamsFromClassD
 	return Params;
 }
 
+void UFatedBrandGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
+{
+	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+
+	if (UFatedBrandAbilitySystemComponent* FatedBrandASC = Cast<UFatedBrandAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo())))
+	{
+		FatedBrandASC->DeactivatePassiveAbility.AddUObject(this, &ThisClass::ReceiveDeactivate);
+	}
+}
+
+void UFatedBrandGameplayAbility::ReceiveDeactivate(const FGameplayTag& AbilityTag)
+{
+	if (AbilityTags.HasTagExact(AbilityTag))
+	{
+		EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, true);
+	}
+}
+
 UFatedBrandAbilitySystemComponent* UFatedBrandGameplayAbility::GetFatedBrandAbilitySystemComponentFromActorInfo() const
 {
 	return Cast<UFatedBrandAbilitySystemComponent>(CurrentActorInfo->AbilitySystemComponent);

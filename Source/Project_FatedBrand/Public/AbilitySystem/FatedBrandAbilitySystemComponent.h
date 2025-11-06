@@ -12,6 +12,7 @@ class UFatedBrandGameplayAbility;
 
 DECLARE_MULTICAST_DELEGATE(FAbilitiesGiven);
 DECLARE_DELEGATE_OneParam(FForEachAbility, const FGameplayAbilitySpec&);
+DECLARE_MULTICAST_DELEGATE_OneParam(FDeactivatePassiveAbility, const FGameplayTag&);
 DECLARE_MULTICAST_DELEGATE_FourParams(FAbilityEquipped, const FGameplayTag& /*Ability Tag*/, const FGameplayTag& /*Status Tag*/, const FGameplayTag& /*Input Tag*/, const FGameplayTag& /*Previous Input Tag*/);
 DECLARE_MULTICAST_DELEGATE_TwoParams(FAbilityStatusChanged, const FGameplayTag& /*Ability Tag*/, const FGameplayTag& /*Status Tag*/);
 
@@ -21,9 +22,12 @@ class PROJECT_FATEDBRAND_API UFatedBrandAbilitySystemComponent : public UAbility
 	GENERATED_BODY()
 
 public :
+	UFatedBrandAbilitySystemComponent();
+
 	FAbilityEquipped AbilityEquipped;
 	FAbilitiesGiven AbilitiesGivenDelegate;
 	FAbilityStatusChanged AbilityStatusChanged;
+	FDeactivatePassiveAbility DeactivatePassiveAbility;
 
 	void AddCharacterActivateAbilities(const TArray<TSubclassOf<UFatedBrandGameplayAbility>>& ActivateAbilities);
 	void AddCharacterPassiveAbilities(const TArray<TSubclassOf<UFatedBrandGameplayAbility>>& PassiveAbilities);
@@ -63,4 +67,7 @@ public :
 
 protected :
 	virtual void OnRep_ActivateAbilities() override;
+
+private :
+	TArray<FGameplayTag> ImmediatelyPassiveAbilities;
 };

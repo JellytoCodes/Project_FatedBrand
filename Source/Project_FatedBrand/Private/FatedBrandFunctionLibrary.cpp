@@ -77,9 +77,6 @@ void UFatedBrandFunctionLibrary::InitializeDefaultAttributesFromSaveData(const U
 	ASC->SetNumericAttributeBase(UFatedBrandAttributeSet::GetCurrentHealthAttribute(), SaveGame->CurrentHealth);
 	ASC->SetNumericAttributeBase(UFatedBrandAttributeSet::GetAttackPowerAttribute(), SaveGame->AttackPower);
 	ASC->SetNumericAttributeBase(UFatedBrandAttributeSet::GetVitalSurgeAttribute(), SaveGame->VitalSurge);
-
-	Debug::Print("Max Health : ",SaveGame->MaxHealth);
-	Debug::Print("Current Health : ",SaveGame->CurrentHealth);
 }
 
 FGameplayEffectContextHandle UFatedBrandFunctionLibrary::ApplyDamageEffect(FDamageEffectParams DamageEffectParams)

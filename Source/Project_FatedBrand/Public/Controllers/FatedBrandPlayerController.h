@@ -8,6 +8,7 @@
 #include "GameFramework/PlayerController.h"
 #include "FatedBrandPlayerController.generated.h"
 
+class ICombatInterface;
 class AFatedBrandHUD;
 class UFatedBrandAbilitySystemComponent;
 class AFatedBrandCharacter;
@@ -59,6 +60,8 @@ private :
 
 	UPROPERTY()
 	TWeakObjectPtr<AFatedBrandHUD> CachedFatedBrandHUD;
+
+	TWeakInterfacePtr<ICombatInterface> PlayerCombatInterface;
 
 	bool bIsNebulaMenu = false;
 	bool bIsWidgetSelect = false;

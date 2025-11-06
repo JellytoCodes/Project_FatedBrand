@@ -115,5 +115,6 @@ protected:
 
 	void AddCharacterAbilities() const;
 
+	UPROPERTY(BlueprintReadWrite)
 	bool bIsDeath = false;
 };
