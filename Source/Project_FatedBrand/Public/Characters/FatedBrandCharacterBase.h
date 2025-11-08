@@ -62,6 +62,7 @@ public:
 
 	virtual AActor* GetAvatar_Implementation() override;
 	virtual bool IsDead_Implementation() const override;
+	virtual FVector GetProjectileSpawnSocketLocation_Implementation(const FName SocketName) override;
 
 	UPROPERTY(BlueprintAssignable, Category = "CombatInterface|Delegate")
 	FOnDeathSignature OnDeathDelegate;

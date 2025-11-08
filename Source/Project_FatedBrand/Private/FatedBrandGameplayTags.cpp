@@ -70,6 +70,11 @@ namespace FatedBrandGameplayTags
 
 #pragma endregion
 
+#pragma region AttackType
+	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Attack_Type_Melee, "Attack.Type.Melee")
+	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Attack_Type_Range, "Attack.Type.Range")
+#pragma endregion
+	
 #pragma region Event
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Event_SuccessfulBlock, "Event.SuccessfulBlock")
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Event_HitReact, "Event.HitReact")

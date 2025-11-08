@@ -168,3 +168,9 @@ bool AFatedBrandCharacterBase::IsDead_Implementation() const
 {
 	return bIsDeath;
 }
+
+FVector AFatedBrandCharacterBase::GetProjectileSpawnSocketLocation_Implementation(const FName SocketName)
+{
+	const FVector SocketLocation = GetMesh()->GetSocketLocation(SocketName);
+	return SocketLocation != FVector::ZeroVector ? SocketLocation : FVector();
+}

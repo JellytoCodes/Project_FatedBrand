@@ -36,5 +36,6 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	AActor* GetCombatTarget();
 
-	
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	FVector GetProjectileSpawnSocketLocation(const FName SocketName);
 };

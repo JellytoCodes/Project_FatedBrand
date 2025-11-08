@@ -73,8 +73,14 @@ namespace FatedBrandGameplayTags
 
 #pragma endregion
 
+#pragma region AttackType
+	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attack_Type_Melee)
+	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attack_Type_Range)
+#pragma endregion
+
 #pragma region Event
 	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_SuccessfulBlock)
 	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_HitReact)
+	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Montage_Range)
 #pragma endregion
 }

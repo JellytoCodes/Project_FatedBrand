@@ -36,9 +36,10 @@ void ASpawnPoint::BeginPlay()
 		FActorSpawnParameters SpawnParam;
 
 		SpawnParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-		Spawned = GetWorld()->SpawnActor<AActor>(Cls, GetActorTransform(), SpawnParam);
+		Spawned = GetWorld()->SpawnActorDeferred<AActor>(Cls, GetActorTransform());
 		if (Spawned.IsValid())
 		{
+			Spawned->FinishSpawning(GetActorTransform());
 			Spawned->OnDestroyed.AddUniqueDynamic(this, &ThisClass::OnSpawnedDestroyed);
 		}
 	}
