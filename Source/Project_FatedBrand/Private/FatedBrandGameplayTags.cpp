@@ -78,6 +78,7 @@ namespace FatedBrandGameplayTags
 #pragma region Event
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Event_SuccessfulBlock, "Event.SuccessfulBlock")
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Event_HitReact, "Event.HitReact")
+	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Event_Montage_Range, "Event.Montage.Range")
 	
 #pragma endregion
 }

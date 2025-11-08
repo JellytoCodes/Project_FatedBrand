@@ -38,4 +38,7 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	FVector GetProjectileSpawnSocketLocation(const FName SocketName);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void CombatFalling();
 };

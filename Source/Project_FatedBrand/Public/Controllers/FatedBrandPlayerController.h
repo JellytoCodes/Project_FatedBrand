@@ -66,7 +66,7 @@ private :
 	bool bIsNebulaMenu = false;
 	bool bIsWidgetSelect = false;
 	UPROPERTY(EditDefaultsOnly, Category="Input|Jump")
-	float WallJumpTraceDistance = 50.0f;
+	float WallJumpTraceDistance = 200.0f;
 
 	UPROPERTY(EditDefaultsOnly, Category="Input|Jump")
 	float WallJumpHorizontalImpulse = 150.0f;

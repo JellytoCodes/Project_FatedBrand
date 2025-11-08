@@ -20,5 +20,5 @@ void UFatedBrandProjectileAbility::SpawnProjectile(const FVector& ProjectileTarg
 
 	ProjectileActor->DamageEffectParams = MakeDamageEffectParamsFromClassDefaults();
 
-	ProjectileActor->FinishSpawning(SpawnTransform);	
+	ProjectileActor->FinishSpawning(SpawnTransform);
 }

@@ -8,8 +8,6 @@
 #include "AbilitySystem/FatedBrandAbilitySystemComponent.h"
 #include "AbilitySystem/FatedBrandAttributeSet.h"
 #include "Components/BoxComponent.h"
-#include "Interfaces/ActorInteractInterface.h"
-#include "Project_FatedBrand/Project_FatedBrand.h"
 
 AFatedBrandCharacterBase::AFatedBrandCharacterBase()
 {
@@ -173,4 +171,9 @@ FVector AFatedBrandCharacterBase::GetProjectileSpawnSocketLocation_Implementatio
 {
 	const FVector SocketLocation = GetMesh()->GetSocketLocation(SocketName);
 	return SocketLocation != FVector::ZeroVector ? SocketLocation : FVector();
+}
+
+void AFatedBrandCharacterBase::CombatFalling_Implementation()
+{
+	Jump();
 }

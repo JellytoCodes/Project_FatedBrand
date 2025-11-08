@@ -6,8 +6,10 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 #include "FatedBrandFunctionLibrary.h"
+#include "FatedBrandGameplayTags.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Project_FatedBrand/Project_FatedBrand.h"
 
 AFatedBrandProjectileActor::AFatedBrandProjectileActor()
 {
@@ -60,11 +62,24 @@ void AFatedBrandProjectileActor::OnSphereOverlap(UPrimitiveComponent* Overlapped
 
 	if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
 	{
-		DamageEffectParams.TargetAbilitySystemComponent = TargetASC;
-		UFatedBrandFunctionLibrary::ApplyDamageEffect(DamageEffectParams);
+		const bool bIsBlocking = TargetASC->HasMatchingGameplayTag(FatedBrandGameplayTags::Ability_Activate_Blocking);
 
-		Destroyed();
+		FGameplayEventData EventData;
+		EventData.Instigator = DamageEffectParams.SourceAbilitySystemComponent->GetAvatarActor();
+		EventData.Target = TargetASC->GetAvatarActor();
+
+		if (bIsBlocking)
+		{
+			UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(TargetASC->GetAvatarActor(), FatedBrandGameplayTags::Event_SuccessfulBlock, EventData);
+			UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(DamageEffectParams.SourceAbilitySystemComponent->GetAvatarActor(), FatedBrandGameplayTags::Event_SuccessfulBlock, EventData);
+		}
+		else
+		{
+			DamageEffectParams.TargetAbilitySystemComponent = TargetASC;
+			UFatedBrandFunctionLibrary::ApplyDamageEffect(DamageEffectParams);
+		}
 	}
+	Destroy();
 }
 
 
