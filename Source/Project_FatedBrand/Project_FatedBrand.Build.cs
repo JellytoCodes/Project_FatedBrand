@@ -19,7 +19,8 @@ public class Project_FatedBrand : ModuleRules
 			"GameplayTasks",
 			"GameplayTags",
 			"AIModule",
-			"Niagara"
+			"Niagara",
+			"MotionWarping"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });

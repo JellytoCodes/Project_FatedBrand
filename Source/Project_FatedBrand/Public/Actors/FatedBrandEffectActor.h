@@ -5,24 +5,10 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "GameplayEffectTypes.h"
+#include "FatedBrandStructTypes.h"
 #include "FatedBrandEffectActor.generated.h"
 
 class UGameplayEffect;
-
-UENUM(BlueprintType)
-enum class EEffectApplicationPolicy : uint8
-{
-	ApplyOnOverlap,
-	ApplyOnEndOverlap,
-	DoNotApply
-};
-
-UENUM(BlueprintType)
-enum class EEffectRemovalPolicy : uint8
-{
-	RemoveOnEndOverlap,
-	DoNotRemove
-};
 
 USTRUCT(BlueprintType)
 struct FFatedBrandGameplayEffectParams

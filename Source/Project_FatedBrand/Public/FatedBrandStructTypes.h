@@ -102,3 +102,18 @@ struct FFatedBrandAbilityInfo
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TObjectPtr<const UTexture2D> Icon = nullptr;
 };
+
+UENUM(BlueprintType)
+enum class EEffectApplicationPolicy : uint8
+{
+	ApplyOnOverlap,
+	ApplyOnEndOverlap,
+	DoNotApply
+};
+
+UENUM(BlueprintType)
+enum class EEffectRemovalPolicy : uint8
+{
+	RemoveOnEndOverlap,
+	DoNotRemove
+};

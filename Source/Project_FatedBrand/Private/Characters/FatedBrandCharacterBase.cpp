@@ -5,6 +5,7 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "FatedBrandFunctionLibrary.h"
 #include "FatedBrandGameplayTags.h"
+#include "MotionWarpingComponent.h"
 #include "AbilitySystem/FatedBrandAbilitySystemComponent.h"
 #include "AbilitySystem/FatedBrandAttributeSet.h"
 #include "Components/BoxComponent.h"
@@ -30,6 +31,8 @@ AFatedBrandCharacterBase::AFatedBrandCharacterBase()
 	
 	FatedBrandAbilitySystemComponent = CreateDefaultSubobject<UFatedBrandAbilitySystemComponent>("FatedBrandAbilitySystemComponent");
 	FatedBrandAttributeSet = CreateDefaultSubobject<UFatedBrandAttributeSet>("FatedBrandAttributeSet");
+
+	MotionWarpingComponent = CreateDefaultSubobject<UMotionWarpingComponent>("MotionWarpingComponent");
 }
 
 UAbilitySystemComponent* AFatedBrandCharacterBase::GetAbilitySystemComponent() const

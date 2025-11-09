@@ -10,6 +10,7 @@
 #include "Interfaces/CombatInterface.h"
 #include "FatedBrandCharacterBase.generated.h"
 
+class UMotionWarpingComponent;
 class UBoxComponent;
 
 UENUM(BlueprintType)
@@ -100,6 +101,8 @@ protected:
 
 	EToggleDamageType CurrentDamageType = EToggleDamageType::EquippedWeapon;
 #pragma endregion
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "MotionWarping")
+	TObjectPtr<UMotionWarpingComponent> MotionWarpingComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AbilitySystem")
 	TObjectPtr<UFatedBrandAbilitySystemComponent> FatedBrandAbilitySystemComponent;

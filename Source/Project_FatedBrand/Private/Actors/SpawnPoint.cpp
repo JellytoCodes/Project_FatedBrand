@@ -21,7 +21,6 @@ void ASpawnPoint::LoadActor_Implementation()
 	if (bUsePersistence && bReached)
 	{
 		Destroy();
-		return;
 	}
 }
 

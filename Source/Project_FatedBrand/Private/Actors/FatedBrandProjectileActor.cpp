@@ -15,10 +15,6 @@ AFatedBrandProjectileActor::AFatedBrandProjectileActor()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
-	Sphere = CreateDefaultSubobject<USphereComponent>("Sphere");
-	SetRootComponent(Sphere);
-	//Sphere->SetCollisionObjectType()
-
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>("ProjectileMovement");
 	ProjectileMovement->InitialSpeed = 550.f;
 	ProjectileMovement->MaxSpeed = 550.f;
@@ -30,8 +26,6 @@ void AFatedBrandProjectileActor::BeginPlay()
 	Super::BeginPlay();
 
 	SetLifeSpan(LifeSpan);
-
-	Sphere->OnComponentBeginOverlap.AddUniqueDynamic(this, &ThisClass::OnSphereOverlap);
 }
 
 void AFatedBrandProjectileActor::Destroyed()
@@ -55,12 +49,12 @@ void AFatedBrandProjectileActor::OnHit()
 	bHit = true;
 }
 
-void AFatedBrandProjectileActor::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void AFatedBrandProjectileActor::ApplyEffectToTarget(AActor* TargetActor)
 {
-	if (!IsValidOverlap(OtherActor)) return;
+	if (!IsValidOverlap(TargetActor)) return;
 	if (!bHit) OnHit();
 
-	if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
+	if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor))
 	{
 		const bool bIsBlocking = TargetASC->HasMatchingGameplayTag(FatedBrandGameplayTags::Ability_Activate_Blocking);
 
@@ -79,8 +73,5 @@ void AFatedBrandProjectileActor::OnSphereOverlap(UPrimitiveComponent* Overlapped
 			UFatedBrandFunctionLibrary::ApplyDamageEffect(DamageEffectParams);
 		}
 	}
-	Destroy();
+	if (bDestroyOnEffectApplication) Destroy();
 }
-
-
-

@@ -73,13 +73,18 @@ namespace FatedBrandGameplayTags
 #pragma region AttackType
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Attack_Type_Melee, "Attack.Type.Melee")
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Attack_Type_Range, "Attack.Type.Range")
+	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Attack_Type_JumpAttack, "Attack.Type.JumpAttack")
+	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Attack_Type_RangedAttack_A, "Attack.Type.RangedAttack.A")
+	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Attack_Type_RangedAttack_B, "Attack.Type.RangedAttack.B")
+	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Attack_Type_RangedAttack_C, "Attack.Type.RangedAttack.C")
 #pragma endregion
 	
 #pragma region Event
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Event_SuccessfulBlock, "Event.SuccessfulBlock")
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Event_HitReact, "Event.HitReact")
+	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Event_WakeUp, "Event.WakeUp")
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Event_Montage_Range, "Event.Montage.Range")
-	
+	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Event_Montage_JumpAttack, "Event.Montage.JumpAttack")
 #pragma endregion
 }
 
