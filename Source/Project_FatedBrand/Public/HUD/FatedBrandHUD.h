@@ -26,8 +26,12 @@ public :
 	UOverlayWidgetController* GetOverlayWidgetController(const FWidgetControllerParams& WCParams);
 	UNebulaMenuWidgetController* GetNebulaMenuWidgetController(const FWidgetControllerParams& WCParams);
 	void InitOverlay(APlayerController* PC, UAbilitySystemComponent* ASC, UAttributeSet* AS);
+
 	void VisibleNebulaMenu(APlayerController* PC, UAbilitySystemComponent* ASC, UAttributeSet* AS);
 	void HideNebulaMenu();
+
+	void VisiblePauseMenu(APlayerController* PC, UAbilitySystemComponent* ASC, UAttributeSet* AS);
+	void HidePauseMenu();
 
 	FORCEINLINE UInputMappingContext* GetWidgetMappingContext() { return WidgetMappingContext; }
 
@@ -64,7 +68,14 @@ private :
 
 	UPROPERTY(EditDefaultsOnly, Category = "WidgetClass")
 	TSubclassOf<UFatedBrandUserWidget> NebulaWidgetClass;
+
+	UPROPERTY()
+	TObjectPtr<UFatedBrandUserWidget> PauseWidget;
+
+	UPROPERTY(EditDefaultsOnly, Category = "WidgetClass")
+	TSubclassOf<UFatedBrandUserWidget> PauseWidgetClass;
 	
+
 	UPROPERTY()
 	TObjectPtr<UNebulaMenuWidgetController> NebulaWidgetController;
 

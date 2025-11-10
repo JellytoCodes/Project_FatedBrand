@@ -79,6 +79,27 @@ void AFatedBrandHUD::HideNebulaMenu()
 	NebulaWidget->SetVisibility(ESlateVisibility::Hidden);
 }
 
+void AFatedBrandHUD::VisiblePauseMenu(APlayerController* PC, UAbilitySystemComponent* ASC, UAttributeSet* AS)
+{
+	if (PauseWidget == nullptr)
+	{
+		UUserWidget* LocalPauseWidget = CreateWidget<UUserWidget>(GetWorld(), PauseWidgetClass);
+		PauseWidget = Cast<UFatedBrandUserWidget>(LocalPauseWidget);
+
+		//PauseWidget->SetWidget
+
+		PauseWidget->AddToViewport();
+		PauseWidget->SetPositionInViewport(NebulaWidgetPosition, true);
+	}
+}
+
+void AFatedBrandHUD::HidePauseMenu()
+{
+	if (PauseWidget == nullptr) return;
+
+	PauseWidget->RemoveFromParent();
+}
+
 void AFatedBrandHUD::CreateSaveScreenWidget()
 {
 	SaveScreenViewModel = NewObject<UMVVM_LoadScreen>(this, SaveScreenViewModelClass);

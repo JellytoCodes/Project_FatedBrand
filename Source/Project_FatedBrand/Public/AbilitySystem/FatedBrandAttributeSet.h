@@ -44,6 +44,10 @@ public :
     FGameplayAttributeData IncomingDamage;
     ATTRIBUTE_ACCESSORS(UFatedBrandAttributeSet, IncomingDamage)
 
+    UPROPERTY(BlueprintReadOnly, Category = "EnhancedCore")
+    FGameplayAttributeData EnhancedCore;
+    ATTRIBUTE_ACCESSORS(UFatedBrandAttributeSet, EnhancedCore)
+
 private :
     void HandleIncomingDamage(FEffectProperties& Props);
 	void SetEffectProperties(const FGameplayEffectModCallbackData &Data, FEffectProperties& Props) const;

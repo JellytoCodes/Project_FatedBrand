@@ -89,7 +89,7 @@ void AFatedBrandPlayerController::Input_Move(const FInputActionValue &InputActio
 void AFatedBrandPlayerController::Input_JumpStart()
 {
 	if (FatedBrandCharacter->GetFatedBrandAbilitySystemComponent()->HasMatchingGameplayTag(FatedBrandGameplayTags::Ability_Activate_VitalSurge)) return;
-	if (bIsNebulaMenu) return;
+	if (bIsNebulaMenu || bIsPauseMenu) return;
 
 	if (FatedBrandCharacter.IsValid())
 	{
@@ -182,11 +182,31 @@ void AFatedBrandPlayerController::Input_WidgetSelect()
 
 void AFatedBrandPlayerController::Input_WidgetDeSelect()
 {
+	if (FatedBrandCharacter == nullptr) return;
+
 	if (bIsNebulaMenu && bIsWidgetSelect)
 	{
 		UNebulaMenuWidgetController* NebulaMenuWidgetController = UFatedBrandFunctionLibrary::GetNebulaMenuWidgetController(this);
 		NebulaMenuWidgetController->SelectSocketFocusingController();
 		bIsWidgetSelect = !bIsWidgetSelect;
+		return;
+	}
+
+	if (CachedFatedBrandHUD.IsValid())
+	{
+		auto* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
+		if (!bIsPauseMenu)
+		{
+			CachedFatedBrandHUD->VisiblePauseMenu(this, FatedBrandCharacter->GetAbilitySystemComponent(), FatedBrandCharacter->GetFatedBrandAttributeSet());
+			bIsPauseMenu = true;
+			if (Subsystem) Subsystem->AddMappingContext(CachedFatedBrandHUD->GetWidgetMappingContext(), 1);
+		}
+		else
+		{
+			CachedFatedBrandHUD->HideNebulaMenu();
+			bIsPauseMenu = false;
+			if (Subsystem) Subsystem->RemoveMappingContext(CachedFatedBrandHUD->GetWidgetMappingContext());
+		}
 	}
 }
 
@@ -217,7 +237,7 @@ void AFatedBrandPlayerController::Input_NebulaMenu()
 
 void AFatedBrandPlayerController::Input_AbilityInputPressed(const FGameplayTag InInputTag)
 {
-	if (bIsNebulaMenu) return;
+	if (bIsNebulaMenu || bIsPauseMenu) return;
 
 	if (GetFatedBrandASC())
 	{
@@ -227,7 +247,7 @@ void AFatedBrandPlayerController::Input_AbilityInputPressed(const FGameplayTag I
 
 void AFatedBrandPlayerController::Input_AbilityInputReleased(const FGameplayTag InInputTag)
 {
-	if (bIsNebulaMenu) return;
+	if (bIsNebulaMenu || bIsPauseMenu) return;
 
 	if (GetFatedBrandASC())
 	{
@@ -237,7 +257,7 @@ void AFatedBrandPlayerController::Input_AbilityInputReleased(const FGameplayTag 
 
 void AFatedBrandPlayerController::Input_AbilityInputHeld(const FGameplayTag InInputTag)
 {
-	if (bIsNebulaMenu) return;
+	if (bIsNebulaMenu || bIsPauseMenu) return;
 
 	if (GetFatedBrandASC())
 	{

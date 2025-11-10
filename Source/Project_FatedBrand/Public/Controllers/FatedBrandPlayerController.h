@@ -64,6 +64,7 @@ private :
 	TWeakInterfacePtr<ICombatInterface> PlayerCombatInterface;
 
 	bool bIsNebulaMenu = false;
+	bool bIsPauseMenu = false;
 	bool bIsWidgetSelect = false;
 	UPROPERTY(EditDefaultsOnly, Category="Input|Jump")
 	float WallJumpTraceDistance = 200.0f;
