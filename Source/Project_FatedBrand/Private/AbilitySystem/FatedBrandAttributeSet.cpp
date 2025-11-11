@@ -13,7 +13,7 @@ UFatedBrandAttributeSet::UFatedBrandAttributeSet()
 	InitCurrentHealth(1.f);
 	InitMaxHealth(1.f);
 	InitAttackPower(1.f);
-	InitEnhancedCore(1.f);
+	InitIncomingEnhancedCore(1.f);
 }
 
 void UFatedBrandAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data)
@@ -36,6 +36,11 @@ void UFatedBrandAttributeSet::PostGameplayEffectExecute(const struct FGameplayEf
 	if (Data.EvaluatedData.Attribute == GetCurrentHealthAttribute())
 	{
 		SetCurrentHealth(FMath::Clamp(GetCurrentHealth(), 0.f, GetMaxHealth()));	
+	}
+
+	if (Data.EvaluatedData.Attribute == GetEnhancedCoreAttribute())
+	{
+		SetEnhancedCore(GetEnhancedCore());
 	}
 }
 

@@ -30,6 +30,9 @@ public :
 	UFatedBrandSaveGame* GetSaveSlotData(const FString& SlotName, int SlotIndex) const;
 
 	void TravelToMap(const UMVVM_LoadSlot* Slot);
+	void RetryForTravelToMap();
+	void TravelToMainMenu();
+
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<USaveGame> SaveGameClass;
@@ -58,7 +61,7 @@ public :
 	FString ProgressSlotName = "ProgressSaveSlot";
 	int32 ProgressSlotIndex = 99;
 
-	void RetryTravelToMap();
+	
 
 protected :
 	virtual void BeginPlay() override;

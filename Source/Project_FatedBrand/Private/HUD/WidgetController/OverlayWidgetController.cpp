@@ -33,6 +33,12 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 		OnVitalSurgeChanged.Broadcast(Data.NewValue);
 	});
 
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetFatedBrandAS()->GetEnhancedCoreAttribute()).
+	AddLambda([this](const FOnAttributeChangeData& Data)
+	{
+		OnEnhancedCoreChanged.Broadcast(Data.NewValue);
+	});
+
 	if (GetFatedBrandASC())
 	{
 		GetFatedBrandASC()->AbilityEquipped.AddUObject(this, &ThisClass::OnAbilityEquipped);

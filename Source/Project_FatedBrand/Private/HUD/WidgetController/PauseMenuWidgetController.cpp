@@ -39,21 +39,24 @@ void UPauseMenuWidgetController::EnteredInteraction()
 	}
 }
 
-void UPauseMenuWidgetController::QuitGame()
+void UPauseMenuWidgetController::QuitGame() const
 {
 	UKismetSystemLibrary::QuitGame(GetWorld(), nullptr, EQuitPreference::Quit, false);
 }
 
-void UPauseMenuWidgetController::MainMenu()
+void UPauseMenuWidgetController::MainMenu() const
 {
-
+	if (AFatedBrandGameModeBase* FatedBrandGameModeBase = Cast<AFatedBrandGameModeBase>(UGameplayStatics::GetGameMode(this)))
+	{
+		FatedBrandGameModeBase->TravelToMainMenu();
+	}
 }
 
-void UPauseMenuWidgetController::Retry()
+void UPauseMenuWidgetController::Retry() const
 {
-	if (AFatedBrandGameModeBase* GameModeBase = Cast<AFatedBrandGameModeBase>(UGameplayStatics::GetGameMode(this)))
+	if (AFatedBrandGameModeBase* FatedBrandGameModeBase = Cast<AFatedBrandGameModeBase>(UGameplayStatics::GetGameMode(this)))
 	{
-		GameModeBase->RetryTravelToMap();
+		FatedBrandGameModeBase->RetryForTravelToMap();
 	}
 }
 

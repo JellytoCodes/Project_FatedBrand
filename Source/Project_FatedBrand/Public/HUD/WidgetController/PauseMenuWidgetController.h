@@ -26,10 +26,10 @@ public :
 	void EnteredInteraction();
 
 private :
-	int32 AxisY;
+	int32 AxisY = -1;
 
-	void QuitGame();
-	void MainMenu();
-	void Retry();
+	void QuitGame() const;
+	void MainMenu() const;
+	void Retry() const;
 	void Resume();
 };

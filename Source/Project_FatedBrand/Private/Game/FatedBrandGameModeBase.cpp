@@ -215,16 +215,22 @@ void AFatedBrandGameModeBase::ProgressSaveDataToSlot(const FString& SlotName, co
 	}
 }
 
-void AFatedBrandGameModeBase::RetryTravelToMap()
+void AFatedBrandGameModeBase::RetryForTravelToMap()
 {
-	const UFatedBrandInstance* FatedBrandInstance = Cast<UFatedBrandInstance>(GetGameInstance());
+	UFatedBrandInstance* FatedBrandInstance = Cast<UFatedBrandInstance>(GetGameInstance());
 	check(FatedBrandInstance);
 
 	if (UGameplayStatics::DoesSaveGameExist(FatedBrandInstance->LoadSlotName, FatedBrandInstance->LoadSlotIndex))
 	{
 		UFatedBrandSaveGame* SaveGame = Cast<UFatedBrandSaveGame>(UGameplayStatics::LoadGameFromSlot(FatedBrandInstance->LoadSlotName, FatedBrandInstance->LoadSlotIndex));
+		FatedBrandInstance->PlayerStartTag = SaveGame->PlayerStartTag;
 		UGameplayStatics::OpenLevelBySoftObjectPtr(GetWorld(), Maps.FindChecked(SaveGame->MapName));
 	}
+}
+
+void AFatedBrandGameModeBase::TravelToMainMenu()
+{
+	UGameplayStatics::OpenLevelBySoftObjectPtr(GetWorld(), Maps.FindChecked("MainMenu"));
 }
 
 void AFatedBrandGameModeBase::BeginPlay()
@@ -232,7 +238,4 @@ void AFatedBrandGameModeBase::BeginPlay()
 	Super::BeginPlay();
 
 	Maps.Add(DefaultMapName, DefaultMap);
-
-	const UFatedBrandInstance* FatedBrandInstance = Cast<UFatedBrandInstance>(GetGameInstance());
-	check(FatedBrandInstance);
 }

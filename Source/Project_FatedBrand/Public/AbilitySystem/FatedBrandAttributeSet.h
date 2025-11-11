@@ -50,5 +50,6 @@ public :
 
 private :
     void HandleIncomingDamage(FEffectProperties& Props);
+
 	void SetEffectProperties(const FGameplayEffectModCallbackData &Data, FEffectProperties& Props) const;
 };

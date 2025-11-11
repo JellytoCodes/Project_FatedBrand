@@ -27,5 +27,8 @@ public :
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Attributes")
 	FOnAttribueChangedSignature OnVitalSurgeChanged;
 
+	UPROPERTY(BlueprintAssignable, Category = "GAS|Attributes")
+	FOnAttribueChangedSignature OnEnhancedCoreChanged;
+
 	void OnAbilityEquipped(const FGameplayTag& AbilityTag, const FGameplayTag& Status, const FGameplayTag& Slot, const FGameplayTag& PreviousSlot) const;
 };
