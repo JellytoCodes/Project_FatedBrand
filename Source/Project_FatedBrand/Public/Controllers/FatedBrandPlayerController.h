@@ -31,6 +31,8 @@ public :
 	UFUNCTION(BlueprintCallable)
 	void DisableDefaultMappingContext();
 
+	void PauseMenuDisable();
+
 protected :
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
@@ -53,6 +55,7 @@ private :
 	void Input_WidgetDeSelect();
 
 	void Input_NebulaMenu();
+	void Input_PauseMenu();
 
 	void Input_AbilityInputPressed(const FGameplayTag InInputTag);
 	void Input_AbilityInputReleased(const FGameplayTag InInputTag);

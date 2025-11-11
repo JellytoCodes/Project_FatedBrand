@@ -6,7 +6,6 @@
 #include "GameplayTagContainer.h"
 #include "FatedBrandGameplayTags.h"
 #include "HUD/WidgetController/FatedBrandWidgetController.h"
-#include "FatedBrandStructTypes.h"
 #include "FatedBrandEnumTypes.h"
 #include "NebulaMenuWidgetController.generated.h"
 

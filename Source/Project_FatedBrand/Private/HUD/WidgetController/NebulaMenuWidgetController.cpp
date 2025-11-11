@@ -5,7 +5,6 @@
 #include "DataAssets/DataAsset_AbilityInfo.h"
 #include "AbilitySystem/FatedBrandAbilitySystemComponent.h"
 #include "GameplayAbilitySpec.h"
-#include "Project_FatedBrand/Project_FatedBrand.h"
 
 void UNebulaMenuWidgetController::BroadcastInitialValues()
 {

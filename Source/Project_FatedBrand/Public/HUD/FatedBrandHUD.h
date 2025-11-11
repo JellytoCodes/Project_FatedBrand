@@ -6,6 +6,7 @@
 #include "GameFramework/HUD.h"
 #include "FatedBrandHUD.generated.h"
 
+class UPauseMenuWidgetController;
 class UMVVM_LoadScreen;
 class ULoadScreenWidget;
 class UInputMappingContext;
@@ -25,6 +26,8 @@ class PROJECT_FATEDBRAND_API AFatedBrandHUD : public AHUD
 public :
 	UOverlayWidgetController* GetOverlayWidgetController(const FWidgetControllerParams& WCParams);
 	UNebulaMenuWidgetController* GetNebulaMenuWidgetController(const FWidgetControllerParams& WCParams);
+	UPauseMenuWidgetController* GetPauseMenuWidgetController(const FWidgetControllerParams& WCParams);
+
 	void InitOverlay(APlayerController* PC, UAbilitySystemComponent* ASC, UAttributeSet* AS);
 
 	void VisibleNebulaMenu(APlayerController* PC, UAbilitySystemComponent* ASC, UAttributeSet* AS);
@@ -51,6 +54,10 @@ public :
 	void CreateSaveScreenWidget();
 
 private :
+	UPROPERTY(EditDefaultsOnly, Category = "WidgetContext")
+	TObjectPtr<UInputMappingContext> WidgetMappingContext;
+
+#pragma region OverlayWidget
 	UPROPERTY()
 	TObjectPtr<UFatedBrandUserWidget> OverlayWidget;
 
@@ -62,7 +69,9 @@ private :
 
 	UPROPERTY(EditDefaultsOnly, Category = "WidgetClass")
 	TSubclassOf<UOverlayWidgetController> OverlayWidgetControllerClass;
+#pragma endregion
 
+#pragma region NebulaWidget
 	UPROPERTY()
 	TObjectPtr<UFatedBrandUserWidget> NebulaWidget;
 
@@ -70,22 +79,31 @@ private :
 	TSubclassOf<UFatedBrandUserWidget> NebulaWidgetClass;
 
 	UPROPERTY()
-	TObjectPtr<UFatedBrandUserWidget> PauseWidget;
-
-	UPROPERTY(EditDefaultsOnly, Category = "WidgetClass")
-	TSubclassOf<UFatedBrandUserWidget> PauseWidgetClass;
-	
-
-	UPROPERTY()
 	TObjectPtr<UNebulaMenuWidgetController> NebulaWidgetController;
 
 	UPROPERTY(EditDefaultsOnly, Category = "WidgetClass")
 	TSubclassOf<UNebulaMenuWidgetController> NebulaWidgetControllerClass;
 
-	UPROPERTY(EditDefaultsOnly, Category = "WidgetContext")
-	TObjectPtr<UInputMappingContext> WidgetMappingContext;
-
 	UPROPERTY(EditDefaultsOnly, Category = "WidgetClass")
 	FVector2D NebulaWidgetPosition = FVector2D();
+#pragma endregion
+
+#pragma region PauseWidget
+	UPROPERTY()
+	TObjectPtr<UFatedBrandUserWidget> PauseWidget;
+
+	UPROPERTY(EditDefaultsOnly, Category = "WidgetClass")
+	TSubclassOf<UFatedBrandUserWidget> PauseWidgetClass;
+
+	UPROPERTY()
+	TObjectPtr<UPauseMenuWidgetController> PauseWidgetController;
+
+	UPROPERTY(EditDefaultsOnly, Category = "WidgetClass")
+	TSubclassOf<UPauseMenuWidgetController> PauseWidgetControllerClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "WidgetClass")
+	FVector2D PauseWidgetPosition = FVector2D();
+#pragma endregion
+
 
 };

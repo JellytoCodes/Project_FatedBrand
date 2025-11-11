@@ -215,6 +215,18 @@ void AFatedBrandGameModeBase::ProgressSaveDataToSlot(const FString& SlotName, co
 	}
 }
 
+void AFatedBrandGameModeBase::RetryTravelToMap()
+{
+	const UFatedBrandInstance* FatedBrandInstance = Cast<UFatedBrandInstance>(GetGameInstance());
+	check(FatedBrandInstance);
+
+	if (UGameplayStatics::DoesSaveGameExist(FatedBrandInstance->LoadSlotName, FatedBrandInstance->LoadSlotIndex))
+	{
+		UFatedBrandSaveGame* SaveGame = Cast<UFatedBrandSaveGame>(UGameplayStatics::LoadGameFromSlot(FatedBrandInstance->LoadSlotName, FatedBrandInstance->LoadSlotIndex));
+		UGameplayStatics::OpenLevelBySoftObjectPtr(GetWorld(), Maps.FindChecked(SaveGame->MapName));
+	}
+}
+
 void AFatedBrandGameModeBase::BeginPlay()
 {
 	Super::BeginPlay();

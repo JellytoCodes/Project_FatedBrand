@@ -60,6 +60,18 @@ UNebulaMenuWidgetController* UFatedBrandFunctionLibrary::GetNebulaMenuWidgetCont
 	return nullptr;
 }
 
+UPauseMenuWidgetController* UFatedBrandFunctionLibrary::GetPauseMenuWidgetController(const UObject* WorldContextObject)
+{
+	FWidgetControllerParams WCParams;
+	AFatedBrandHUD* FatedBrandHUD = nullptr;
+
+	if (MakeWidgetControllerParams(WorldContextObject, WCParams, FatedBrandHUD))
+	{
+		return FatedBrandHUD->GetPauseMenuWidgetController(WCParams);
+	}
+	return nullptr;
+}
+
 UDataAsset_AbilityInfo* UFatedBrandFunctionLibrary::GetAbilityInfo(const UObject* WorldContextObject)
 {
 	const AFatedBrandGameModeBase* FatedBrandGameMode = Cast<AFatedBrandGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));

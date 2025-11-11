@@ -48,8 +48,6 @@ public :
 
 	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
 
-	/** 리팩토링 진행 중 데이터 */
-
 	void SaveProgressWorldState(UWorld* World, const FString& DestinationMapAssetName = FString("")) const;
 	void SaveInGameProgressData(UFatedBrandSaveGame* SaveObject) const;
 	UFatedBrandSaveGame* GetProgressSaveData() const;
@@ -60,7 +58,7 @@ public :
 	FString ProgressSlotName = "ProgressSaveSlot";
 	int32 ProgressSlotIndex = 99;
 
-	/** */
+	void RetryTravelToMap();
 
 protected :
 	virtual void BeginPlay() override;

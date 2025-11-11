@@ -8,7 +8,7 @@
 #include "HUD/WidgetController/NebulaMenuWidgetController.h"
 #include "HUD/Widgets/LoadScreenWidget.h"
 #include "HUD/ViewModel/MVVM_LoadScreen.h"
-#include "Project_FatedBrand/Project_FatedBrand.h"
+#include "HUD/WidgetController/PauseMenuWidgetController.h"
 
 UOverlayWidgetController* AFatedBrandHUD::GetOverlayWidgetController(const FWidgetControllerParams& WCParams)
 {
@@ -30,6 +30,17 @@ UNebulaMenuWidgetController* AFatedBrandHUD::GetNebulaMenuWidgetController(const
 		NebulaWidgetController->BindCallbacksToDependencies();
 	}
 	return NebulaWidgetController;
+}
+
+UPauseMenuWidgetController* AFatedBrandHUD::GetPauseMenuWidgetController(const FWidgetControllerParams& WCParams)
+{
+	if (PauseWidgetController == nullptr)
+	{
+		PauseWidgetController = NewObject<UPauseMenuWidgetController>(this, PauseWidgetControllerClass);
+		PauseWidgetController->SetWidgetControllerParams(WCParams);
+		PauseWidgetController->BindCallbacksToDependencies();
+	}
+	return PauseWidgetController;
 }
 
 void AFatedBrandHUD::InitOverlay(APlayerController* PC, UAbilitySystemComponent* ASC, UAttributeSet* AS)
@@ -57,6 +68,19 @@ void AFatedBrandHUD::InitOverlay(APlayerController* PC, UAbilitySystemComponent*
 		WidgetController->BroadcastInitialValues();
 		NebulaWidget->SetVisibility(ESlateVisibility::Hidden);
 	}
+
+	if (PauseWidget == nullptr)
+	{
+		UUserWidget* LocalPauseWidget = CreateWidget<UUserWidget>(GetWorld(), PauseWidgetClass);
+		PauseWidget = Cast<UFatedBrandUserWidget>(LocalPauseWidget);
+
+		PauseWidget->SetWidgetController(PauseWidgetController);
+
+		PauseWidget->AddToViewport();
+		PauseWidget->SetPositionInViewport(PauseWidgetPosition, true);
+		WidgetController->BroadcastInitialValues();
+		PauseWidget->SetVisibility(ESlateVisibility::Hidden);
+	}
 }
 
 void AFatedBrandHUD::VisibleNebulaMenu(APlayerController* PC, UAbilitySystemComponent* ASC, UAttributeSet* AS)
@@ -81,23 +105,16 @@ void AFatedBrandHUD::HideNebulaMenu()
 
 void AFatedBrandHUD::VisiblePauseMenu(APlayerController* PC, UAbilitySystemComponent* ASC, UAttributeSet* AS)
 {
-	if (PauseWidget == nullptr)
-	{
-		UUserWidget* LocalPauseWidget = CreateWidget<UUserWidget>(GetWorld(), PauseWidgetClass);
-		PauseWidget = Cast<UFatedBrandUserWidget>(LocalPauseWidget);
+	if (PauseWidget == nullptr) return;
 
-		//PauseWidget->SetWidget
-
-		PauseWidget->AddToViewport();
-		PauseWidget->SetPositionInViewport(NebulaWidgetPosition, true);
-	}
+	PauseWidget->SetVisibility(ESlateVisibility::Visible);
 }
 
 void AFatedBrandHUD::HidePauseMenu()
 {
 	if (PauseWidget == nullptr) return;
 
-	PauseWidget->RemoveFromParent();
+	PauseWidget->SetVisibility(ESlateVisibility::Hidden);
 }
 
 void AFatedBrandHUD::CreateSaveScreenWidget()

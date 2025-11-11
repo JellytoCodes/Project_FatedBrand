@@ -7,6 +7,7 @@
 #include "FatedBrandStructTypes.h"
 #include "FatedBrandFunctionLibrary.generated.h"
 
+class UPauseMenuWidgetController;
 class UFatedBrandSaveGame;
 struct FGameplayEffectContextHandle;
 class AFatedBrandCharacterBase;
@@ -14,6 +15,7 @@ class AFatedBrandCharacter;
 class UDataAsset_AbilityInfo;
 class UNebulaMenuWidgetController;
 class UOverlayWidgetController;
+
 class AFatedBrandHUD;
 struct FWidgetControllerParams;
 
@@ -32,6 +34,9 @@ public :
 
 	UFUNCTION(BlueprintPure, Category = "FatedBrandFunctionBibrary", meta = (DefaultToSelf = "WorldContextObject"))
 	static UNebulaMenuWidgetController* GetNebulaMenuWidgetController(const UObject* WorldContextObject);
+
+	UFUNCTION(BlueprintPure, Category = "FatedBrandFunctionBibrary", meta = (DefaultToSelf = "WorldContextObject"))
+	static UPauseMenuWidgetController* GetPauseMenuWidgetController(const UObject* WorldContextObject);
 #pragma endregion
 
 #pragma region Ability System
