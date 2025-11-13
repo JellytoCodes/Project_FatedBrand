@@ -90,4 +90,9 @@ namespace FatedBrandGameplayTags
 	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Montage_Range)
 	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Montage_JumpAttack)
 #pragma endregion
+
+#pragma region GameplayCue
+	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_BlastingZone)
+	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_NobleBlood)
+#pragma endregion
 }

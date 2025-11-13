@@ -87,5 +87,10 @@ namespace FatedBrandGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Event_Montage_Range, "Event.Montage.Range")
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Event_Montage_JumpAttack, "Event.Montage.JumpAttack")
 #pragma endregion
+
+#pragma region GameplayCue
+	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::GameplayCue_BlastingZone, "GameplayCue.BlastingZone")
+	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::GameplayCue_NobleBlood, "GameplayCue.NobleBlood")
+#pragma endregion
 }
 

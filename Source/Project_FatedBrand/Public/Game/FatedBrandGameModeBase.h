@@ -61,8 +61,6 @@ public :
 	FString ProgressSlotName = "ProgressSaveSlot";
 	int32 ProgressSlotIndex = 99;
 
-	
-
 protected :
 	virtual void BeginPlay() override;
 };

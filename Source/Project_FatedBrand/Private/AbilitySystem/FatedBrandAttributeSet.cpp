@@ -9,11 +9,11 @@
 
 UFatedBrandAttributeSet::UFatedBrandAttributeSet()
 {
-	InitVitalSurge(1.f);
+	InitVitalSurge(0.f);
 	InitCurrentHealth(1.f);
 	InitMaxHealth(1.f);
 	InitAttackPower(1.f);
-	InitIncomingEnhancedCore(1.f);
+	InitEnhancedCore(0.f);
 }
 
 void UFatedBrandAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data)
