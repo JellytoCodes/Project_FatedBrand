@@ -2,6 +2,7 @@
 
 #include "AbilitySystem/Abilities/FatedBrandProjectileAbility.h"
 
+#include "AbilitySystemComponent.h"
 #include "Actors/FatedBrandProjectileActor.h"
 #include "Interfaces/CombatInterface.h"
 

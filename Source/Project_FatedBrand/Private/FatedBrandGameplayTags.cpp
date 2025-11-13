@@ -84,6 +84,7 @@ namespace FatedBrandGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Event_SuccessfulBlock, "Event.SuccessfulBlock")
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Event_HitReact, "Event.HitReact")
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Event_WakeUp, "Event.WakeUp")
+	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Event_Montage_Melee, "Event.Montage.Melee")
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Event_Montage_Range, "Event.Montage.Range")
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Event_Montage_JumpAttack, "Event.Montage.JumpAttack")
 #pragma endregion

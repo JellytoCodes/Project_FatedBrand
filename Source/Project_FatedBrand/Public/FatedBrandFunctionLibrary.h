@@ -60,6 +60,9 @@ public :
 
 	UFUNCTION(BlueprintCallable, Category = "FatedBrandFunctionBibrary|Attributes")
 	static void SetCurrentHealth(const UObject* WorldContextObject, UAbilitySystemComponent* ASC, const float InHealth);
-	
+
+
+	UFUNCTION(BlueprintCallable, Category = "FatedBrandFunctionBibrary|GameplayCue")
+	static void FatedBrandExecuteGameplayCue(const UAbilitySystemComponent* ASC, const FGameplayTag GameplayTagCue, const FGameplayCueParameters& GameplayCueParameters);
 #pragma endregion
 };

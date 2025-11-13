@@ -6,6 +6,7 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 #include "FatedBrandGameplayTags.h"
+#include "GameplayCueManager.h"
 #include "GenericTeamAgentInterface.h"
 #include "AbilitySystem/FatedBrandAttributeSet.h"
 #include "Characters/FatedBrandCharacter.h"
@@ -178,4 +179,10 @@ void UFatedBrandFunctionLibrary::GetLivePlayersWithinLine(const UObject* WorldCo
 void UFatedBrandFunctionLibrary::SetCurrentHealth(const UObject* WorldContextObject, UAbilitySystemComponent* ASC, const float InHealth)
 {
 	ASC->SetNumericAttributeBase(UFatedBrandAttributeSet::GetCurrentHealthAttribute(), InHealth);
+}
+
+void UFatedBrandFunctionLibrary::FatedBrandExecuteGameplayCue(const UAbilitySystemComponent* ASC, const FGameplayTag GameplayTagCue, const FGameplayCueParameters& GameplayCueParameters)
+{
+	if (!ASC || !GameplayTagCue.IsValid()) return;
+	UGameplayCueManager::ExecuteGameplayCue_NonReplicated(ASC->GetAvatarActor(), GameplayTagCue, GameplayCueParameters);
 }
