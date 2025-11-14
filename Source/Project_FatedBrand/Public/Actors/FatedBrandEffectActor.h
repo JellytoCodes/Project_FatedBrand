@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "FatedBrandEnumTypes.h"
 #include "GameFramework/Actor.h"
 #include "GameplayEffectTypes.h"
 #include "FatedBrandStructTypes.h"

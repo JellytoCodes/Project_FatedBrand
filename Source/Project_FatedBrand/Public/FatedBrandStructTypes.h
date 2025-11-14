@@ -103,17 +103,32 @@ struct FFatedBrandAbilityInfo
 	TObjectPtr<const UTexture2D> Icon = nullptr;
 };
 
-UENUM(BlueprintType)
-enum class EEffectApplicationPolicy : uint8
+USTRUCT(BlueprintType)
+struct FNebulaDescription : public FTableRowBase
 {
-	ApplyOnOverlap,
-	ApplyOnEndOverlap,
-	DoNotApply
+	GENERATED_BODY()
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FString NebulaName;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FString NebulaDescription;
 };
 
-UENUM(BlueprintType)
-enum class EEffectRemovalPolicy : uint8
+USTRUCT(BlueprintType)
+struct FLoadSaveSlotInfo : public FTableRowBase
 {
-	RemoveOnEndOverlap,
-	DoNotRemove
+	GENERATED_BODY()
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FString GetSlotName;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FString SlotName;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FString GetMapName;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FString MapName;
 };

@@ -19,7 +19,7 @@ public :
 	FGameplayTag StartupInputTag;
 
 	UFUNCTION(BlueprintCallable)
-	void CauseDamage(AActor* TargetActor);
+	FDamageEffectParams CauseDamage(AActor* TargetActor);
 
 	UFUNCTION(BlueprintCallable)
 	FDamageEffectParams MakeDamageEffectParamsFromClassDefaults(AActor* TargetActor = nullptr);
