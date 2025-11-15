@@ -32,6 +32,8 @@ public :
 	void DisableDefaultMappingContext();
 
 	void PauseMenuDisable();
+	void SetIsCanCreateSaveMenu(const bool InIsCan) { bCanOpenSaveMenu = InIsCan; }
+	void SetIsCanCreateAttributeMenu(const bool InIsCan) { bCanOpenAttributeMenu = InIsCan; }
 
 protected :
 	virtual void BeginPlay() override;
@@ -48,8 +50,8 @@ private :
 	TWeakObjectPtr<AFatedBrandCharacter> FatedBrandCharacter;
 
 	void Input_Move(const FInputActionValue &InputActionValue);
-	void Input_JumpStart();
-	void Input_JumpEnd();
+	void Input_InteractUpKeyPressed();
+	void Input_InteractUpKeyReleased();
 
 	void Input_WidgetSelect();
 	void Input_WidgetDeSelect();
@@ -61,14 +63,24 @@ private :
 	void Input_AbilityInputReleased(const FGameplayTag InInputTag);
 	void Input_AbilityInputHeld(const FGameplayTag InInputTag);
 
+	void PlayerJump();
+	void PlayerJumpEnd();
+
 	UPROPERTY()
 	TWeakObjectPtr<AFatedBrandHUD> CachedFatedBrandHUD;
 
 	TWeakInterfacePtr<ICombatInterface> PlayerCombatInterface;
 
-	bool bIsNebulaMenu = false;
-	bool bIsPauseMenu = false;
+	bool bCanOpenSaveMenu = false;
+	bool bCanOpenAttributeMenu = false;
+
+	bool bNebulaMenuOpen = false;
+	bool bPauseMenuOpen = false;
+	bool bSaveMenuOpen = false;
+	bool bAttributeMenuOpen = false;
+
 	bool bIsWidgetSelect = false;
+
 	UPROPERTY(EditDefaultsOnly, Category="Input|Jump")
 	float WallJumpTraceDistance = 200.0f;
 

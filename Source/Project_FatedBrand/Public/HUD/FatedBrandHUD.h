@@ -6,6 +6,7 @@
 #include "GameFramework/HUD.h"
 #include "FatedBrandHUD.generated.h"
 
+class UAttributeMenuWidgetController;
 class UPauseMenuWidgetController;
 class UMVVM_LoadScreen;
 class ULoadScreenWidget;
@@ -27,6 +28,7 @@ public :
 	UOverlayWidgetController* GetOverlayWidgetController(const FWidgetControllerParams& WCParams);
 	UNebulaMenuWidgetController* GetNebulaMenuWidgetController(const FWidgetControllerParams& WCParams);
 	UPauseMenuWidgetController* GetPauseMenuWidgetController(const FWidgetControllerParams& WCParams);
+	UAttributeMenuWidgetController* GetAttributeMenuWidgetController(const FWidgetControllerParams& WCParams);
 
 	void InitOverlay(APlayerController* PC, UAbilitySystemComponent* ASC, UAttributeSet* AS);
 
@@ -35,6 +37,12 @@ public :
 
 	void VisiblePauseMenu(APlayerController* PC, UAbilitySystemComponent* ASC, UAttributeSet* AS);
 	void HidePauseMenu();
+
+	UFUNCTION(BlueprintCallable)
+	void CreateSaveMenuWidget();
+
+	UFUNCTION(BlueprintCallable)
+	void CreateAttributeMenuWidget();
 
 	FORCEINLINE UInputMappingContext* GetWidgetMappingContext() { return WidgetMappingContext; }
 
@@ -49,9 +57,6 @@ public :
 
 	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<UMVVM_LoadScreen> SaveScreenViewModel;
-
-	UFUNCTION(BlueprintCallable)
-	void CreateSaveScreenWidget();
 
 private :
 	UPROPERTY(EditDefaultsOnly, Category = "WidgetContext")
@@ -105,5 +110,17 @@ private :
 	FVector2D PauseWidgetPosition = FVector2D();
 #pragma endregion
 
+#pragma region AttributeWidget
+	UPROPERTY()
+	TObjectPtr<UFatedBrandUserWidget> AttributeWidget;
 
+	UPROPERTY(EditDefaultsOnly, Category = "WidgetClass")
+	TSubclassOf<UFatedBrandUserWidget> AttributeWidgetClass;
+
+	UPROPERTY()
+	TObjectPtr<UAttributeMenuWidgetController> AttributeMenuWidgetController;
+
+	UPROPERTY(EditDefaultsOnly, Category = "WidgetClass")
+	TSubclassOf<UAttributeMenuWidgetController> AttributeMenuWidgetControllerClass;
+#pragma  endregion
 };

@@ -36,7 +36,7 @@ void ACheckPoint::OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 {
 	if (OtherActor->Implements<UPlayerInterface>())
 	{
-		if (AFatedBrandGameModeBase* FatedBrandGameMode = Cast<AFatedBrandGameModeBase>(UGameplayStatics::GetGameMode(this)))
+		if (const AFatedBrandGameModeBase* FatedBrandGameMode = Cast<AFatedBrandGameModeBase>(UGameplayStatics::GetGameMode(this)))
 		{
 			const UWorld* CurrentWorld = GetWorld();
 			FString MapName = CurrentWorld->GetMapName();

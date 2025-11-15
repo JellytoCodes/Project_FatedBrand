@@ -7,6 +7,7 @@
 #include "FatedBrandGameplayTags.h"
 #include "HUD/WidgetController/FatedBrandWidgetController.h"
 #include "FatedBrandEnumTypes.h"
+#include "FatedBrandStructTypes.h"
 #include "NebulaMenuWidgetController.generated.h"
 
 struct FSelectedAbility
@@ -18,7 +19,7 @@ struct FSelectedAbility
 
 class UFatedBrandUserWidget;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FNebulaSelectedSignature, bool, bEquipButtonEnabled, FString, DescriptionString);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnNebulaDescription, FString, AbilityName, FString, DescriptionString);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSelectNebulaSocketSignature, int32, PrevIndex, int32, CurrentIndex);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSelectQuickSlotSignature, int32, PrevIndex, int32, CurrentIndex);
@@ -36,7 +37,7 @@ public:
 	virtual void BindCallbacksToDependencies() override;
 
 	UPROPERTY(BlueprintAssignable)
-	FNebulaSelectedSignature NebulaSelectedDelegate;
+	FOnNebulaDescription OnNebulaDescriptionDelegate;
 
 	UPROPERTY(BlueprintAssignable)
 	FOnSelectNebulaSocketSignature SelectNebulaSocketDelegate;
@@ -72,6 +73,9 @@ private :
 
 	UFUNCTION()
 	void UpdateEquipQuickSlot(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag, const FGameplayTag& InputTag, const FGameplayTag& PreviousInputTag);
+
+	UPROPERTY(EditDefaultsOnly)
+	UDataTable* NebulaDescriptionTable;
 
 	ENebulaSelectSocket NebulaSelectSocket;
 	ENebulaSelectSocket NebulaHotBar;

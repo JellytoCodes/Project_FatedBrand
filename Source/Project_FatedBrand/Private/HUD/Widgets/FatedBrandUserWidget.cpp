@@ -45,9 +45,9 @@ void UFatedBrandUserWidget::CallSelectNebulaSocket(int32 PrevIndex, int32 Curren
     if (SlotWidgets.IsValidIndex(CurrentIndex))
     {
 	    UImage* CurrentSelectImage = Cast<UImage>(SlotWidgets[CurrentIndex]->GetWidgetFromName(TEXT("Select_Image")));
+        SlotWidgets[CurrentIndex]->OnSelectSocketDelegate.Broadcast();
         CurrentSelectImage->SetVisibility(ESlateVisibility::Visible);
     }
-
 }
 
 void UFatedBrandUserWidget::CallSelectSocketFocusing(const int32 CurrentIndex, const bool IsSelectSocketFocusing)
@@ -59,7 +59,6 @@ void UFatedBrandUserWidget::CallSelectSocketFocusing(const int32 CurrentIndex, c
             if (SlotWidgets[CurrentIndex] == SlotWidget) continue;
     		SlotWidget->SetRenderOpacity(0.5f);
 	    }
-        SlotWidgets[CurrentIndex]->OnSelectSocketDelegate.Broadcast();
     }
     else
     {

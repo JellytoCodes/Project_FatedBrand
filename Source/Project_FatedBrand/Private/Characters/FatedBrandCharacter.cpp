@@ -14,7 +14,6 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "HUD/FatedBrandHUD.h"
 #include "Kismet/GameplayStatics.h"
-#include "Project_FatedBrand/Project_FatedBrand.h"
 
 AFatedBrandCharacter::AFatedBrandCharacter()
 {
@@ -100,6 +99,16 @@ float AFatedBrandCharacter::GetVitalSurgeGage_Implementation()
 	return 0.f;
 }
 
+void AFatedBrandCharacter::InteractSavePoint_Implementation(const bool IsInteraction)
+{
+	if (PlayerController.IsValid()) PlayerController->SetIsCanCreateSaveMenu(IsInteraction);
+}
+
+void AFatedBrandCharacter::CanUpgradeAttribute_Implementation(const bool IsInteraction)
+{
+	if (PlayerController.IsValid()) PlayerController->SetIsCanCreateAttributeMenu(IsInteraction);
+}
+
 void AFatedBrandCharacter::LoadProgress()
 {
 	AddCharacterAbilities();
@@ -126,6 +135,8 @@ void AFatedBrandCharacter::LoadProgress()
 void AFatedBrandCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
+
+	if (!PlayerController.IsValid()) PlayerController = Cast<AFatedBrandPlayerController>(NewController);
 
 	InitAbilityActorInfo();
 	LoadProgress();

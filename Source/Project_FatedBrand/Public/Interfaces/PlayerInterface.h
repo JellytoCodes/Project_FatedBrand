@@ -34,4 +34,10 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	float GetVitalSurgeGage();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void InteractSavePoint(const bool IsInteraction);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void CanUpgradeAttribute(const bool IsInteraction);
 };

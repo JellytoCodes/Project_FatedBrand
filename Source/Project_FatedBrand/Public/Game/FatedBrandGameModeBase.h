@@ -33,7 +33,6 @@ public :
 	void RetryForTravelToMap();
 	void TravelToMainMenu();
 
-
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<USaveGame> SaveGameClass;
 

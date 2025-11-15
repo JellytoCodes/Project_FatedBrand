@@ -104,7 +104,7 @@ struct FFatedBrandAbilityInfo
 };
 
 USTRUCT(BlueprintType)
-struct FNebulaDescription : public FTableRowBase
+struct FNebulaDescriptionRow : public FTableRowBase
 {
 	GENERATED_BODY()
 
@@ -116,19 +116,16 @@ struct FNebulaDescription : public FTableRowBase
 };
 
 USTRUCT(BlueprintType)
-struct FLoadSaveSlotInfo : public FTableRowBase
+struct FMapInfoRow : public FTableRowBase
 {
 	GENERATED_BODY()
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	FString GetSlotName;
+	FString MapID;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	FString SlotName;
+	TSoftObjectPtr<UWorld> Map;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	FString GetMapName;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	FString MapName;
+	FString DisplayName;
 };

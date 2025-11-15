@@ -7,6 +7,7 @@
 #include "FatedBrandStructTypes.h"
 #include "FatedBrandFunctionLibrary.generated.h"
 
+class UAttributeMenuWidgetController;
 class UPauseMenuWidgetController;
 class UFatedBrandSaveGame;
 struct FGameplayEffectContextHandle;
@@ -37,6 +38,9 @@ public :
 
 	UFUNCTION(BlueprintPure, Category = "FatedBrandFunctionBibrary", meta = (DefaultToSelf = "WorldContextObject"))
 	static UPauseMenuWidgetController* GetPauseMenuWidgetController(const UObject* WorldContextObject);
+
+	UFUNCTION(BlueprintPure, Category = "FatedBrandFunctionBibrary", meta = (DefaultToSelf = "WorldContextObject"))
+	static UAttributeMenuWidgetController* GetAttributeMenuWidgetController(const UObject* WorldContextObject);
 #pragma endregion
 
 #pragma region Ability System

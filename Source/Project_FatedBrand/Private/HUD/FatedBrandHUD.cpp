@@ -8,6 +8,7 @@
 #include "HUD/WidgetController/NebulaMenuWidgetController.h"
 #include "HUD/Widgets/LoadScreenWidget.h"
 #include "HUD/ViewModel/MVVM_LoadScreen.h"
+#include "HUD/WidgetController/AttributeMenuWidgetController.h"
 #include "HUD/WidgetController/PauseMenuWidgetController.h"
 
 UOverlayWidgetController* AFatedBrandHUD::GetOverlayWidgetController(const FWidgetControllerParams& WCParams)
@@ -41,6 +42,17 @@ UPauseMenuWidgetController* AFatedBrandHUD::GetPauseMenuWidgetController(const F
 		PauseWidgetController->BindCallbacksToDependencies();
 	}
 	return PauseWidgetController;
+}
+
+UAttributeMenuWidgetController* AFatedBrandHUD::GetAttributeMenuWidgetController(const FWidgetControllerParams& WCParams)
+{
+	if (AttributeMenuWidgetController == nullptr)
+	{
+		AttributeMenuWidgetController = NewObject<UAttributeMenuWidgetController>(this, AttributeMenuWidgetControllerClass);
+		AttributeMenuWidgetController->SetWidgetControllerParams(WCParams);
+		AttributeMenuWidgetController->BindCallbacksToDependencies();
+	}
+	return AttributeMenuWidgetController;
 }
 
 void AFatedBrandHUD::InitOverlay(APlayerController* PC, UAbilitySystemComponent* ASC, UAttributeSet* AS)
@@ -117,7 +129,7 @@ void AFatedBrandHUD::HidePauseMenu()
 	PauseWidget->SetVisibility(ESlateVisibility::Hidden);
 }
 
-void AFatedBrandHUD::CreateSaveScreenWidget()
+void AFatedBrandHUD::CreateSaveMenuWidget()
 {
 	SaveScreenViewModel = NewObject<UMVVM_LoadScreen>(this, SaveScreenViewModelClass);
 	SaveScreenViewModel->InitializeLoadSlots();
@@ -127,4 +139,11 @@ void AFatedBrandHUD::CreateSaveScreenWidget()
 	SaveScreenWidget->BlueprintInitializeWidget();
 
 	SaveScreenViewModel->LoadData();
+}
+
+void AFatedBrandHUD::CreateAttributeMenuWidget()
+{
+	AttributeWidget = CreateWidget<UFatedBrandUserWidget>(GetWorld(), AttributeWidgetClass);
+	AttributeWidget->AddToViewport();
+	
 }
