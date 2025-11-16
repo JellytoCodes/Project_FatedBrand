@@ -31,6 +31,7 @@ public :
 	UAttributeMenuWidgetController* GetAttributeMenuWidgetController(const FWidgetControllerParams& WCParams);
 
 	void InitOverlay(APlayerController* PC, UAbilitySystemComponent* ASC, UAttributeSet* AS);
+	void HideOverlay();
 
 	void VisibleNebulaMenu(APlayerController* PC, UAbilitySystemComponent* ASC, UAttributeSet* AS);
 	void HideNebulaMenu();
@@ -57,6 +58,8 @@ public :
 
 	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<UMVVM_LoadScreen> SaveScreenViewModel;
+
+
 
 private :
 	UPROPERTY(EditDefaultsOnly, Category = "WidgetContext")

@@ -59,7 +59,6 @@ void UOverlayWidgetController::OnAbilityEquipped(const FGameplayTag& AbilityTag,
 	LastSlotInfo.StatusTag = FatedBrandGameplayTags::Abilities_Status_Unlocked;
 	LastSlotInfo.InputTag = PreviousSlot;
 	LastSlotInfo.AbilityTag = FatedBrandGameplayTags::Abilities_None;
-	//Broadcast empty info if PreviousSlot is a valid slot, Only if equipping an already-equipped spell
 	AbilityInfoDelegate.Broadcast(LastSlotInfo);
 
 	FFatedBrandAbilityInfo Info = AbilityInfo->FindAbilityInfoForTag(AbilityTag);

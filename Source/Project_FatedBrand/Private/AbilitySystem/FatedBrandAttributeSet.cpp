@@ -3,9 +3,11 @@
 #include "AbilitySystem/FatedBrandAttributeSet.h"
 
 #include "AbilitySystemBlueprintLibrary.h"
+#include "FatedBrandGameplayTags.h"
 #include "GameFramework/Character.h"
 #include "GameplayEffectExtension.h"
 #include "Interfaces/CombatInterface.h"
+#include "Project_FatedBrand/Project_FatedBrand.h"
 
 UFatedBrandAttributeSet::UFatedBrandAttributeSet()
 {
@@ -14,6 +16,12 @@ UFatedBrandAttributeSet::UFatedBrandAttributeSet()
 	InitMaxHealth(1.f);
 	InitAttackPower(1.f);
 	InitEnhancedCore(0.f);
+	InitRewardEnhancedCore(0.f);
+
+	TagsToAttributes.Add(FatedBrandGameplayTags::Attributes_MaxHealth, GetMaxHealthAttribute);
+	TagsToAttributes.Add(FatedBrandGameplayTags::Attributes_CurrentHealth, GetCurrentHealthAttribute);
+	TagsToAttributes.Add(FatedBrandGameplayTags::Attributes_AttackPower, GetAttackPowerAttribute);
+	TagsToAttributes.Add(FatedBrandGameplayTags::Attributes_EnhancedCore, GetEnhancedCoreAttribute);
 }
 
 void UFatedBrandAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data)
@@ -60,7 +68,22 @@ void UFatedBrandAttributeSet::HandleIncomingDamage(FEffectProperties& Props)
 			{
 				CombatInterface->Die();
 			}
+			HandleIncomingEnhancedCore(Props);
 		}
+	}
+}
+
+void UFatedBrandAttributeSet::HandleIncomingEnhancedCore(FEffectProperties& Props)
+{
+	if (Props.SourceASC)
+	{
+		const float Reward = GetRewardEnhancedCore();
+		const FGameplayAttribute EnhancedCoreAttr = UFatedBrandAttributeSet::GetEnhancedCoreAttribute();
+		const float CurrentCore = Props.SourceASC->GetNumericAttribute(EnhancedCoreAttr);
+
+		Props.SourceASC->SetNumericAttributeBase(EnhancedCoreAttr, CurrentCore + Reward);
+
+		SetRewardEnhancedCore(0.f);
 	}
 }
 

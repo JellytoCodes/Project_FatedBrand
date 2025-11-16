@@ -55,6 +55,7 @@ void AFatedBrandCharacterBase::PossessedBy(AController* NewController)
 	}
 }
 
+#if WITH_EDITOR
 void AFatedBrandCharacterBase::PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent)
 {
 	Super::PostEditChangeProperty(PropertyChangedEvent);
@@ -63,11 +64,13 @@ void AFatedBrandCharacterBase::PostEditChangeProperty(struct FPropertyChangedEve
 	{
 		LeftHandCollisionBox->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, LeftHandCollisionBoxAttachBoneName);
 	}
+
 	if (PropertyChangedEvent.GetMemberPropertyName() == GET_MEMBER_NAME_CHECKED(ThisClass, RightHandCollisionBoxAttachBoneName))
 	{
 		RightHandCollisionBox->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, RightHandCollisionBoxAttachBoneName);
 	}
 }
+#endif
 
 void AFatedBrandCharacterBase::ToggleCurrentCollision(const bool bShouldEnable, const EToggleDamageType ToggleDamageType)
 {

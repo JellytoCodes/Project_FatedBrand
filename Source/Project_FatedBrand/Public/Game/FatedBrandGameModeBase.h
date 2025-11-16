@@ -30,6 +30,8 @@ public :
 	UFatedBrandSaveGame* GetSaveSlotData(const FString& SlotName, int SlotIndex) const;
 
 	void TravelToMap(const UMVVM_LoadSlot* Slot);
+
+	UFUNCTION(BlueprintCallable)
 	void RetryForTravelToMap();
 	void TravelToMainMenu();
 

@@ -2,3 +2,15 @@
 
 #include "Game/FatedBrandInstance.h"
 
+#include "GameFramework/GameUserSettings.h"
+
+void UFatedBrandInstance::Init()
+{
+	Super::Init();
+
+	if (UGameUserSettings* Settings = GEngine->GetGameUserSettings())
+	{
+		Settings->SetOverallScalabilityLevel(2);
+		Settings->ApplySettings(false);
+	}
+}

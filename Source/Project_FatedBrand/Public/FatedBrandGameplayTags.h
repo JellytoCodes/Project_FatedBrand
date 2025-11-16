@@ -31,6 +31,13 @@ namespace FatedBrandGameplayTags
 	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_VitalSurge)
 	/** ~End Ability Input */
 #pragma endregion
+
+#pragma region Attributes
+	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attributes_MaxHealth)
+	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attributes_CurrentHealth)
+	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attributes_AttackPower)
+	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attributes_EnhancedCore)
+#pragma endregion
 	
 #pragma region Abilities Status
 	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_None)

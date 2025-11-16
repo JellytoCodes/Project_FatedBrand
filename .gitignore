@@ -80,6 +80,9 @@ DerivedDataCache/*
 # Content Assets
 Content/Assets
 
+# Package
+Package/*
+
 ### UnrealEngine Patch ###
 # Don't ignore icon and splash images for mobile app
 !Build/IOS/Resources/

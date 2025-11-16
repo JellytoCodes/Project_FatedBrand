@@ -14,6 +14,8 @@ class PROJECT_FATEDBRAND_API UFatedBrandInstance : public UGameInstance
 	GENERATED_BODY()
 
 public :
+	virtual void Init() override;
+
 	UPROPERTY()
 	FName PlayerStartTag = FName();
 

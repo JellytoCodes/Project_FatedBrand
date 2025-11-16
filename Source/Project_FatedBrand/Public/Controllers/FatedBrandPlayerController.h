@@ -31,6 +31,9 @@ public :
 	UFUNCTION(BlueprintCallable)
 	void DisableDefaultMappingContext();
 
+	UFUNCTION(BlueprintCallable)
+	void DisableHUD();
+
 	void PauseMenuDisable();
 	void SetIsCanCreateSaveMenu(const bool InIsCan) { bCanOpenSaveMenu = InIsCan; }
 	void SetIsCanCreateAttributeMenu(const bool InIsCan) { bCanOpenAttributeMenu = InIsCan; }

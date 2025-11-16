@@ -95,6 +95,12 @@ void AFatedBrandHUD::InitOverlay(APlayerController* PC, UAbilitySystemComponent*
 	}
 }
 
+void AFatedBrandHUD::HideOverlay()
+{
+	if (OverlayWidget == nullptr) return;
+	OverlayWidget->SetVisibility(ESlateVisibility::Hidden);
+}
+
 void AFatedBrandHUD::VisibleNebulaMenu(APlayerController* PC, UAbilitySystemComponent* ASC, UAttributeSet* AS)
 {
 	if (NebulaWidget == nullptr) return;

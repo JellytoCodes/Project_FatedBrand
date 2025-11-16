@@ -118,7 +118,7 @@ void AFatedBrandPlayerController::Input_InteractUpKeyPressed()
 		}
 
 		// 애트리뷰트 포인트에서 점프가 발생하지 않도록 하기 위한 리턴
-		return;
+		return;   
 	}
 
 	PlayerJump();
@@ -346,8 +346,16 @@ void AFatedBrandPlayerController::EnableDefaultMappingContext()
 
 void AFatedBrandPlayerController::DisableDefaultMappingContext()
 {
-if (auto* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
+	if (auto* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
 	{
 		Subsystem->RemoveMappingContext(InputConfigDataAsset->DefaultMappingContext);	
+	}
+}
+
+void AFatedBrandPlayerController::DisableHUD()
+{
+	if (CachedFatedBrandHUD.IsValid())
+	{
+		CachedFatedBrandHUD->HideOverlay();
 	}
 }

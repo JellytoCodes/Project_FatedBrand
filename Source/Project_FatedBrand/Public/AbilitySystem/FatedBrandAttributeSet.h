@@ -14,6 +14,9 @@
  	GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) \
  	GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
 
+template <class T>
+using TStaticFuncPtr = typename TBaseStaticDelegateInstance<T, FDefaultDelegateUserPolicy>::FFuncPtr;
+
 UCLASS()
 class PROJECT_FATEDBRAND_API UFatedBrandAttributeSet : public UAttributeSet
 {
@@ -23,7 +26,9 @@ public :
     UFatedBrandAttributeSet();
 
     virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
-    
+
+    TMap<FGameplayTag, TStaticFuncPtr<FGameplayAttribute()>> TagsToAttributes;
+
     UPROPERTY(BlueprintReadOnly, Category = "Health")
     FGameplayAttributeData CurrentHealth;
     ATTRIBUTE_ACCESSORS(UFatedBrandAttributeSet, CurrentHealth)
@@ -48,8 +53,13 @@ public :
     FGameplayAttributeData EnhancedCore;
     ATTRIBUTE_ACCESSORS(UFatedBrandAttributeSet, EnhancedCore)
 
+    UPROPERTY(BlueprintReadOnly, Category = "RewardEnhancedCore")
+    FGameplayAttributeData RewardEnhancedCore;
+    ATTRIBUTE_ACCESSORS(UFatedBrandAttributeSet, RewardEnhancedCore)
+
 private :
     void HandleIncomingDamage(FEffectProperties& Props);
+    void HandleIncomingEnhancedCore(FEffectProperties& Props);
 
 	void SetEffectProperties(const FGameplayEffectModCallbackData &Data, FEffectProperties& Props) const;
 };

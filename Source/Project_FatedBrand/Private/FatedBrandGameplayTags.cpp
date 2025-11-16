@@ -28,7 +28,15 @@ namespace FatedBrandGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Input_VitalSurge, "Input.VitalSurge")
 	/** ~End Ability Input */
 #pragma endregion
-	
+
+#pragma region Attributes
+	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Attributes_MaxHealth, "Attributes.MaxHealth")
+	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Attributes_CurrentHealth, "Attributes.CurrentHealth")
+	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Attributes_AttackPower, "Attributes.AttackPower")
+	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Attributes_EnhancedCore, "Attributes.EnhancedCore")
+
+#pragma endregion
+
 #pragma region Abilities Status
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Abilities_None, "Abilities.None")
 
