@@ -27,7 +27,7 @@ bool UFatedBrandFunctionLibrary::MakeWidgetControllerParams(const UObject* World
 		
 		if (const AFatedBrandCharacter* FatedBrandCharacter = Cast<AFatedBrandCharacter>(PC->GetPawn()))
 		{
-			OutWCParams.AttributeSet = FatedBrandCharacter->GetFatedBrandAttributeSet();
+			OutWCParams.AttributeSet = FatedBrandCharacter->GetAttributeSet();
 			OutWCParams.AbilitySystemComponent = FatedBrandCharacter->GetAbilitySystemComponent();
 			OutWCParams.PlayerController = PC;
 

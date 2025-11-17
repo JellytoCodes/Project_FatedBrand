@@ -9,11 +9,13 @@
 #include "Controllers/FatedBrandPlayerController.h"
 #include "DataAssets/DataAsset_AbilityInfo.h"
 #include "Game/FatedBrandGameModeBase.h"
+#include "Game/FatedBrandPlayerState.h"
 #include "Game/FatedBrandSaveGame.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "HUD/FatedBrandHUD.h"
 #include "Kismet/GameplayStatics.h"
+#include "Project_FatedBrand/Project_FatedBrand.h"
 
 AFatedBrandCharacter::AFatedBrandCharacter()
 {
@@ -25,9 +27,6 @@ AFatedBrandCharacter::AFatedBrandCharacter()
 	CameraBoom->SetupAttachment(GetRootComponent());
 	CameraBoom->TargetArmLength = 200.f;
 	CameraBoom->bUsePawnControlRotation = true;
-
-	FatedBrandAbilitySystemComponent->SetIsReplicated(true);
-	FatedBrandAbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Full);
 
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>("FollowCamera");
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
@@ -45,7 +44,8 @@ AFatedBrandCharacter::AFatedBrandCharacter()
 
 void AFatedBrandCharacter::UpdateAbilities_Implementation(const FGameplayTag& AbilityTag)
 {
-	GetFatedBrandAbilitySystemComponent()->UpdateAbilityStatuses(AbilityTag);
+	UFatedBrandAbilitySystemComponent* FatedBrandASC = CastChecked<UFatedBrandAbilitySystemComponent>(FatedBrandAbilitySystemComponent);
+	FatedBrandASC->UpdateAbilityStatuses(AbilityTag);
 }
 
 void AFatedBrandCharacter::SaveProgress_Implementation(const FName& CheckPointTag)
@@ -57,10 +57,10 @@ void AFatedBrandCharacter::SaveProgress_Implementation(const FName& CheckPointTa
 
 		SaveData->PlayerStartTag = CheckPointTag;
 
-		SaveData->MaxHealth = UFatedBrandAttributeSet::GetMaxHealthAttribute().GetNumericValue(GetFatedBrandAttributeSet());
-		SaveData->CurrentHealth = UFatedBrandAttributeSet::GetCurrentHealthAttribute().GetNumericValue(GetFatedBrandAttributeSet());
-		SaveData->AttackPower = UFatedBrandAttributeSet::GetAttackPowerAttribute().GetNumericValue(GetFatedBrandAttributeSet());
-		SaveData->VitalSurge = UFatedBrandAttributeSet::GetVitalSurgeAttribute().GetNumericValue(GetFatedBrandAttributeSet());
+		SaveData->MaxHealth = UFatedBrandAttributeSet::GetMaxHealthAttribute().GetNumericValue(FatedBrandAttributeSet);
+		SaveData->CurrentHealth = UFatedBrandAttributeSet::GetCurrentHealthAttribute().GetNumericValue(FatedBrandAttributeSet);
+		SaveData->AttackPower = UFatedBrandAttributeSet::GetAttackPowerAttribute().GetNumericValue(FatedBrandAttributeSet);
+		SaveData->VitalSurge = UFatedBrandAttributeSet::GetVitalSurgeAttribute().GetNumericValue(FatedBrandAttributeSet);
 
 		SaveData->bFirstTimeLoadIn = false;
 
@@ -91,7 +91,7 @@ void AFatedBrandCharacter::SaveProgress_Implementation(const FName& CheckPointTa
 
 float AFatedBrandCharacter::GetVitalSurgeGage_Implementation()
 {
-	float CurrentValue = UFatedBrandAttributeSet::GetVitalSurgeAttribute().GetNumericValue(GetFatedBrandAttributeSet());
+	float CurrentValue = UFatedBrandAttributeSet::GetVitalSurgeAttribute().GetNumericValue(FatedBrandAttributeSet);
 	if (CurrentValue > 0.f)
 	{
 		return CurrentValue;
@@ -151,9 +151,16 @@ void AFatedBrandCharacter::InitAbilityActorInfo()
 {
 	if (AFatedBrandPlayerController* FatedBrandPlayerController = Cast<AFatedBrandPlayerController>(GetController()))
 	{
+		AFatedBrandPlayerState* FatedBrandPlayerState = GetPlayerState<AFatedBrandPlayerState>();
+		check(FatedBrandPlayerState);
+
+		FatedBrandPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(FatedBrandPlayerState, this);
+		FatedBrandAbilitySystemComponent = FatedBrandPlayerState->GetAbilitySystemComponent();
+		FatedBrandAttributeSet = FatedBrandPlayerState->GetAttributeSet();
+
 		if (AFatedBrandHUD* FatedBrandHUD = Cast<AFatedBrandHUD>(FatedBrandPlayerController->GetHUD()))
 		{
-			FatedBrandHUD->InitOverlay(FatedBrandPlayerController, GetAbilitySystemComponent(), FatedBrandAttributeSet);
+			FatedBrandHUD->InitOverlay(FatedBrandPlayerController, FatedBrandAbilitySystemComponent, FatedBrandAttributeSet);
 		}
 	}
 }

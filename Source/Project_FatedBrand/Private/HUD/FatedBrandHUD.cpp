@@ -10,6 +10,7 @@
 #include "HUD/ViewModel/MVVM_LoadScreen.h"
 #include "HUD/WidgetController/AttributeMenuWidgetController.h"
 #include "HUD/WidgetController/PauseMenuWidgetController.h"
+#include "Project_FatedBrand/Project_FatedBrand.h"
 
 UOverlayWidgetController* AFatedBrandHUD::GetOverlayWidgetController(const FWidgetControllerParams& WCParams)
 {
@@ -64,7 +65,6 @@ void AFatedBrandHUD::InitOverlay(APlayerController* PC, UAbilitySystemComponent*
 	UOverlayWidgetController* WidgetController = GetOverlayWidgetController(WidgetControllerParams);
 
 	OverlayWidget->SetWidgetController(OverlayWidgetController);
-	WidgetController->BroadcastInitialValues();
 
 	Widget->AddToViewport();
 
@@ -77,7 +77,6 @@ void AFatedBrandHUD::InitOverlay(APlayerController* PC, UAbilitySystemComponent*
 		
 		NebulaWidget->AddToViewport();
 		NebulaWidget->SetPositionInViewport(NebulaWidgetPosition, true);
-		WidgetController->BroadcastInitialValues();
 		NebulaWidget->SetVisibility(ESlateVisibility::Hidden);
 	}
 
@@ -90,9 +89,9 @@ void AFatedBrandHUD::InitOverlay(APlayerController* PC, UAbilitySystemComponent*
 
 		PauseWidget->AddToViewport();
 		PauseWidget->SetPositionInViewport(PauseWidgetPosition, true);
-		WidgetController->BroadcastInitialValues();
 		PauseWidget->SetVisibility(ESlateVisibility::Hidden);
 	}
+	WidgetController->BroadcastInitialValues();
 }
 
 void AFatedBrandHUD::HideOverlay()

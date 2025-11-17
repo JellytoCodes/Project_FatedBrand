@@ -39,10 +39,7 @@ public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
 	UFUNCTION(BlueprintPure)
-	FORCEINLINE UFatedBrandAbilitySystemComponent* GetFatedBrandAbilitySystemComponent() const { return FatedBrandAbilitySystemComponent; }
-
-	UFUNCTION(BlueprintPure)
-	FORCEINLINE UAttributeSet* GetFatedBrandAttributeSet() const { return FatedBrandAttributeSet; }
+	FORCEINLINE UFatedBrandAbilitySystemComponent* GetFatedBrandAbilitySystemComponent() const { return CastChecked<UFatedBrandAbilitySystemComponent>(FatedBrandAbilitySystemComponent); }
 
 	// -----------------------------
 	UPROPERTY(BlueprintAssignable, Category = "AbilitySystem")
@@ -104,10 +101,10 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "MotionWarping")
 	TObjectPtr<UMotionWarpingComponent> MotionWarpingComponent;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AbilitySystem")
-	TObjectPtr<UFatedBrandAbilitySystemComponent> FatedBrandAbilitySystemComponent;
+	UPROPERTY()
+	TObjectPtr<UAbilitySystemComponent> FatedBrandAbilitySystemComponent;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AbilitySystem")
+	UPROPERTY()
 	TObjectPtr<UAttributeSet> FatedBrandAttributeSet;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CharacterData")

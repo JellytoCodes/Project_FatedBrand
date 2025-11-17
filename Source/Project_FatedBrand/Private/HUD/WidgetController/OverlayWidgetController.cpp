@@ -5,12 +5,13 @@
 #include "FatedBrandGameplayTags.h"
 #include "AbilitySystem/FatedBrandAttributeSet.h"
 #include "DataAssets/DataAsset_AbilityInfo.h"
+#include "Project_FatedBrand/Project_FatedBrand.h"
 
 void UOverlayWidgetController::BroadcastInitialValues()
 {
-	OnCurrentHealthChanged.Broadcast(GetFatedBrandAS()->GetCurrentHealth());
-	OnMaxHealthChanged.Broadcast(GetFatedBrandAS()->GetMaxHealth());
-	OnVitalSurgeChanged.Broadcast(GetFatedBrandAS()->GetVitalSurge());
+	// OnCurrentHealthChanged.Broadcast(GetFatedBrandAS()->GetCurrentHealth());
+	// OnMaxHealthChanged.Broadcast(GetFatedBrandAS()->GetMaxHealth());
+	// OnVitalSurgeChanged.Broadcast(GetFatedBrandAS()->GetVitalSurge());
 }
 
 void UOverlayWidgetController::BindCallbacksToDependencies()

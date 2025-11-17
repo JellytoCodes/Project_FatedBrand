@@ -5,7 +5,6 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Controllers/FatedBrandAIController.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "AbilitySystem/FatedBrandAbilitySystemComponent.h"
 #include "Project_FatedBrand/Project_FatedBrand.h"
 
 AFatedBrandEnemy::AFatedBrandEnemy()
@@ -15,9 +14,6 @@ AFatedBrandEnemy::AFatedBrandEnemy()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
-
-	FatedBrandAbilitySystemComponent->SetIsReplicated(true);
-	FatedBrandAbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Full);
 
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 720.f, 0.f);
 

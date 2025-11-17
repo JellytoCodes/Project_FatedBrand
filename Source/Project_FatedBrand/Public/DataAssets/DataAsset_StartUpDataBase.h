@@ -6,9 +6,9 @@
 #include "Engine/DataAsset.h"
 #include "DataAsset_StartUpDataBase.generated.h"
 
+class UAbilitySystemComponent;
 class UGameplayEffect;
 class UFatedBrandGameplayAbility;
-class UFatedBrandAbilitySystemComponent;
 
 UENUM()
 enum class EStartUpCharacterName : uint8
@@ -36,7 +36,7 @@ class PROJECT_FATEDBRAND_API UDataAsset_StartUpDataBase : public UDataAsset
 	GENERATED_BODY()
 
 public :
-	virtual void InitializeGameplayEffect(UFatedBrandAbilitySystemComponent* InASCToGive,EStartUpCharacterName StartUpCharacterName, int32 ApplyLevel = 1);
+	virtual void InitializeGameplayEffect(UAbilitySystemComponent* InASCToGive,EStartUpCharacterName StartUpCharacterName, int32 ApplyLevel = 1);
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "StartUpData")
 	TArray<FFatedBrandStartUpAttributeInfo> StartUpAttributeInfo;

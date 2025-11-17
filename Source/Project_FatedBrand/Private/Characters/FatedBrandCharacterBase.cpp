@@ -7,7 +7,6 @@
 #include "FatedBrandGameplayTags.h"
 #include "MotionWarpingComponent.h"
 #include "AbilitySystem/FatedBrandAbilitySystemComponent.h"
-#include "AbilitySystem/FatedBrandAttributeSet.h"
 #include "Components/BoxComponent.h"
 
 AFatedBrandCharacterBase::AFatedBrandCharacterBase()
@@ -28,9 +27,6 @@ AFatedBrandCharacterBase::AFatedBrandCharacterBase()
 	RightHandCollisionBox->SetupAttachment(GetMesh());
 	RightHandCollisionBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	RightHandCollisionBox->OnComponentBeginOverlap.AddUniqueDynamic(this, &ThisClass::OnComponentBeginOverlap);
-	
-	FatedBrandAbilitySystemComponent = CreateDefaultSubobject<UFatedBrandAbilitySystemComponent>("FatedBrandAbilitySystemComponent");
-	FatedBrandAttributeSet = CreateDefaultSubobject<UFatedBrandAttributeSet>("FatedBrandAttributeSet");
 
 	MotionWarpingComponent = CreateDefaultSubobject<UMotionWarpingComponent>("MotionWarpingComponent");
 }
@@ -150,9 +146,10 @@ void AFatedBrandCharacterBase::AddCharacterAbilities() const
 		{
 			LoadedData->InitializeGameplayEffect(FatedBrandAbilitySystemComponent, StartUpCharacterName, 1);
 
+			UFatedBrandAbilitySystemComponent* FatedBrandASC = CastChecked<UFatedBrandAbilitySystemComponent>(FatedBrandAbilitySystemComponent);
 			// 캐릭터 기본 소유 액티브/패시브 스킬 ASC에 등록
-			GetFatedBrandAbilitySystemComponent()->AddCharacterActivateAbilities(LoadedData->StartUpOffensiveAbilities);
-			GetFatedBrandAbilitySystemComponent()->AddCharacterPassiveAbilities(LoadedData->StartUpPassiveAbilities);
+			FatedBrandASC->AddCharacterActivateAbilities(LoadedData->StartUpOffensiveAbilities);
+			FatedBrandASC->AddCharacterPassiveAbilities(LoadedData->StartUpPassiveAbilities);
 		}
 	}	
 }

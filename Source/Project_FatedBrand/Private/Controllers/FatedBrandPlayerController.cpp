@@ -183,7 +183,7 @@ void AFatedBrandPlayerController::Input_NebulaMenu()
 		
 		if (!bNebulaMenuOpen)
 		{
-			CachedFatedBrandHUD->VisibleNebulaMenu(this, FatedBrandCharacter->GetAbilitySystemComponent(), FatedBrandCharacter->GetFatedBrandAttributeSet());
+			CachedFatedBrandHUD->VisibleNebulaMenu(this, FatedBrandCharacter->GetAbilitySystemComponent(), FatedBrandCharacter->GetAttributeSet());
 			bNebulaMenuOpen = true;
 			if (Subsystem) Subsystem->AddMappingContext(CachedFatedBrandHUD->GetWidgetMappingContext(), 1);
 		}
@@ -206,7 +206,7 @@ void AFatedBrandPlayerController::Input_PauseMenu()
 		auto* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
 		if (!bPauseMenuOpen)
 		{
-			CachedFatedBrandHUD->VisiblePauseMenu(this, FatedBrandCharacter->GetAbilitySystemComponent(), FatedBrandCharacter->GetFatedBrandAttributeSet());
+			CachedFatedBrandHUD->VisiblePauseMenu(this, FatedBrandCharacter->GetAbilitySystemComponent(), FatedBrandCharacter->GetAttributeSet());
 			bPauseMenuOpen = true;
 			if (Subsystem) Subsystem->AddMappingContext(CachedFatedBrandHUD->GetWidgetMappingContext(), 1);
 		}

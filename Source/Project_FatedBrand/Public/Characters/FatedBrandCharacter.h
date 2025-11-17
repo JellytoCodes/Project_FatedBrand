@@ -34,6 +34,8 @@ public :
 
 	void LoadProgress();
 
+	UAttributeSet* GetAttributeSet() const { return FatedBrandAttributeSet; }
+
 protected :
 	virtual void PossessedBy(AController* NewController) override;
 
@@ -48,4 +50,6 @@ private :
 
 	UPROPERTY()
 	TWeakObjectPtr<AFatedBrandPlayerController> PlayerController;
+
+
 };
