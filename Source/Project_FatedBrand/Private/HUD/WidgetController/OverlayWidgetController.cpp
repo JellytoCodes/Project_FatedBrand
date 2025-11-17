@@ -9,9 +9,9 @@
 
 void UOverlayWidgetController::BroadcastInitialValues()
 {
-	// OnCurrentHealthChanged.Broadcast(GetFatedBrandAS()->GetCurrentHealth());
-	// OnMaxHealthChanged.Broadcast(GetFatedBrandAS()->GetMaxHealth());
-	// OnVitalSurgeChanged.Broadcast(GetFatedBrandAS()->GetVitalSurge());
+	OnCurrentHealthChanged.Broadcast(GetFatedBrandAS()->GetCurrentHealth());
+	OnMaxHealthChanged.Broadcast(GetFatedBrandAS()->GetMaxHealth());
+	OnVitalSurgeChanged.Broadcast(GetFatedBrandAS()->GetVitalSurge());
 }
 
 void UOverlayWidgetController::BindCallbacksToDependencies()
