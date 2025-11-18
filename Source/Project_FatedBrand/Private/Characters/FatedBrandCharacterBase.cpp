@@ -147,7 +147,7 @@ void AFatedBrandCharacterBase::AddCharacterAbilities() const
 			LoadedData->InitializeGameplayEffect(FatedBrandAbilitySystemComponent, StartUpCharacterName, 1);
 
 			UFatedBrandAbilitySystemComponent* FatedBrandASC = CastChecked<UFatedBrandAbilitySystemComponent>(FatedBrandAbilitySystemComponent);
-			// 캐릭터 기본 소유 액티브/패시브 스킬 ASC에 등록
+			
 			FatedBrandASC->AddCharacterActivateAbilities(LoadedData->StartUpOffensiveAbilities);
 			FatedBrandASC->AddCharacterPassiveAbilities(LoadedData->StartUpPassiveAbilities);
 		}
