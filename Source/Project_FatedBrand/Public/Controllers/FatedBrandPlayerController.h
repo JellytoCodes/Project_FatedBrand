@@ -35,6 +35,7 @@ public :
 	void DisableHUD();
 
 	void PauseMenuDisable();
+	void AttributeMenuDisable();
 	void SetIsCanCreateSaveMenu(const bool InIsCan) { bCanOpenSaveMenu = InIsCan; }
 	void SetIsCanCreateAttributeMenu(const bool InIsCan) { bCanOpenAttributeMenu = InIsCan; }
 
@@ -79,7 +80,6 @@ private :
 
 	bool bNebulaMenuOpen = false;
 	bool bPauseMenuOpen = false;
-	bool bSaveMenuOpen = false;
 	bool bAttributeMenuOpen = false;
 
 	bool bIsWidgetSelect = false;

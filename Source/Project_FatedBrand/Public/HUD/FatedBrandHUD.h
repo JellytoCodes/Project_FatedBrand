@@ -45,6 +45,8 @@ public :
 	UFUNCTION(BlueprintCallable)
 	void CreateAttributeMenuWidget();
 
+	void RemoveAttributeMenuWidget();
+
 	FORCEINLINE UInputMappingContext* GetWidgetMappingContext() { return WidgetMappingContext; }
 
 	UPROPERTY(EditDefaultsOnly)

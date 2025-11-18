@@ -148,7 +148,17 @@ void AFatedBrandHUD::CreateSaveMenuWidget()
 
 void AFatedBrandHUD::CreateAttributeMenuWidget()
 {
-	AttributeWidget = CreateWidget<UFatedBrandUserWidget>(GetWorld(), AttributeWidgetClass);
+	if (AttributeWidget == nullptr)
+	{
+		AttributeWidget = CreateWidget<UFatedBrandUserWidget>(GetWorld(), AttributeWidgetClass);	
+	}
 	AttributeWidget->AddToViewport();
-	
+}
+
+void AFatedBrandHUD::RemoveAttributeMenuWidget()
+{
+	if (AttributeWidget)
+	{
+		AttributeWidget->RemoveFromParent();
+	}
 }
