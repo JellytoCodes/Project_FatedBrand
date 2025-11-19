@@ -14,6 +14,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "HUD/FatedBrandHUD.h"
+#include "HUD/WidgetController/AttributeMenuWidgetController.h"
 #include "HUD/WidgetController/NebulaMenuWidgetController.h"
 #include "HUD/WidgetController/PauseMenuWidgetController.h"
 
@@ -80,7 +81,8 @@ void AFatedBrandPlayerController::Input_Move(const FInputActionValue &InputActio
 
 	else if (bAttributeMenuOpen)
 	{
-		
+		UAttributeMenuWidgetController* AttributeWidgetController = UFatedBrandFunctionLibrary::GetAttributeMenuWidgetController(this);
+		AttributeWidgetController->WidgetAxisControl(InputAxisVector.X, InputAxisVector.Y);
 	}
 
 	else

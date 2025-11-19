@@ -30,6 +30,13 @@ void UAttributeMenuWidgetController::UpgradeAttribute(const FGameplayTag& Attrib
 
 }
 
+void UAttributeMenuWidgetController::WidgetAxisControl(const int32 AxisX, const int32 AxisY)
+{
+    CachedAxisY = FMath::Clamp(CachedAxisY + AxisY, 0, 4);
+
+	SelectSocketDelegate.Broadcast(AxisX, CachedAxisY);
+}
+
 void UAttributeMenuWidgetController::BroadcastAttributeInfo(const FGameplayTag& AttributeTag, const FGameplayAttribute& Attribute)
 {
 	Info.AttributeTag = AttributeTag;

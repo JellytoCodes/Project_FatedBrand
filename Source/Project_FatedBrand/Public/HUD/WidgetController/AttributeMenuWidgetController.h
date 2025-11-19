@@ -4,10 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+#include "FatedBrandEnumTypes.h"
 #include "HUD/WidgetController/FatedBrandWidgetController.h"
 #include "AttributeMenuWidgetController.generated.h"
 
 struct FGameplayAttribute;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSelectSocketSignature, int32, CurrentAxisX, int32, SelectSocketIndex);
 
 USTRUCT(BlueprintType)
 struct FAttributeInfo
@@ -35,11 +38,19 @@ public :
 	UPROPERTY(BlueprintAssignable)
 	FAttributeInfoSignature AttributeInfoDelegate;
 
+	UPROPERTY(BlueprintAssignable)
+	FOnSelectSocketSignature SelectSocketDelegate;
+
 	UFUNCTION(BlueprintCallable)
 	void UpgradeAttribute(const FGameplayTag& AttributeTag);
 
+	void WidgetAxisControl(const int32 AxisX, const int32 AxisY);
+
 private :
 	void BroadcastAttributeInfo(const FGameplayTag& AttributeTag, const FGameplayAttribute& Attribute);
+
+	int32 CachedAxisX;
+	int32 CachedAxisY;
 
 	FAttributeInfo Info;
 };
