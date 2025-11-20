@@ -21,10 +21,17 @@ public :
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 
+	UCurveTable* GetStatCurveTable() const { return StatCurveTable; }
+
 protected :
+
 	UPROPERTY()
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 
 	UPROPERTY()
 	TObjectPtr<UAttributeSet> AttributeSet;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Stat")
+	TObjectPtr<UCurveTable> StatCurveTable;
+	
 };

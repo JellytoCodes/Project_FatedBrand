@@ -6,17 +6,23 @@
 #include "FatedBrandGameplayTags.h"
 #include "GameFramework/Character.h"
 #include "GameplayEffectExtension.h"
+#include "Game/FatedBrandPlayerState.h"
 #include "Interfaces/CombatInterface.h"
 #include "Project_FatedBrand/Project_FatedBrand.h"
 
 UFatedBrandAttributeSet::UFatedBrandAttributeSet()
 {
+	InitStrength(1.f);
+	InitVigor(1.f);
 	InitVitalSurge(0.f);
 	InitCurrentHealth(1.f);
 	InitMaxHealth(1.f);
 	InitAttackPower(1.f);
 	InitEnhancedCore(0.f);
 	InitRewardEnhancedCore(0.f);
+
+	TagsToAttributes.Add(FatedBrandGameplayTags::Attributes_Strength, GetStrengthAttribute);
+	TagsToAttributes.Add(FatedBrandGameplayTags::Attributes_Vigor, GetVigorAttribute);
 
 	TagsToAttributes.Add(FatedBrandGameplayTags::Attributes_MaxHealth, GetMaxHealthAttribute);
 	TagsToAttributes.Add(FatedBrandGameplayTags::Attributes_CurrentHealth, GetCurrentHealthAttribute);
@@ -30,6 +36,16 @@ void UFatedBrandAttributeSet::PostGameplayEffectExecute(const struct FGameplayEf
 
 	FEffectProperties Props;
 	SetEffectProperties(Data, Props);
+
+	if (Data.EvaluatedData.Attribute == GetStrengthAttribute())
+	{
+		HandleIncomingStrength(Props);
+	}
+
+	if (Data.EvaluatedData.Attribute == GetVigorAttribute())
+	{
+		HandleIncomingVigor(Props);
+	}
 
 	if (Data.EvaluatedData.Attribute == GetIncomingDamageAttribute())
 	{
@@ -78,12 +94,59 @@ void UFatedBrandAttributeSet::HandleIncomingEnhancedCore(FEffectProperties& Prop
 	if (Props.SourceASC)
 	{
 		const float Reward = GetRewardEnhancedCore();
-		const FGameplayAttribute EnhancedCoreAttr = UFatedBrandAttributeSet::GetEnhancedCoreAttribute();
+		const FGameplayAttribute EnhancedCoreAttr = GetEnhancedCoreAttribute();
 		const float CurrentCore = Props.SourceASC->GetNumericAttribute(EnhancedCoreAttr);
 
 		Props.SourceASC->SetNumericAttributeBase(EnhancedCoreAttr, CurrentCore + Reward);
 
 		SetRewardEnhancedCore(0.f);
+	}
+}
+
+void UFatedBrandAttributeSet::HandleIncomingVigor(FEffectProperties& Props)
+{
+	const float NewVigor = FMath::Clamp(GetVigor(), 1.f, 100.f);
+	SetVigor(NewVigor);
+	
+	if (Props.TargetController == nullptr) return;
+
+	if (const AFatedBrandPlayerState* PS =Props.TargetController->GetPlayerState<AFatedBrandPlayerState>())
+	{
+		if (UCurveTable* StatTable = PS->GetStatCurveTable())
+		{
+			const FGameplayTag AttributeTag = FatedBrandGameplayTags::Attributes_MaxHealth;
+			const FName TagName(*AttributeTag.ToString());
+			if (const FRealCurve* Curve = StatTable->FindCurve(TagName, TEXT("StatCurve")))
+			{
+				const float NewMaxHealth = Curve->Eval(NewVigor);
+				const float OldMaxHealth = GetMaxHealth();
+
+				const float Ratio = (OldMaxHealth > 0.f) ? (GetCurrentHealth() / OldMaxHealth) : 1.f;
+				SetMaxHealth(NewMaxHealth);
+				SetCurrentHealth(FMath::Clamp(NewMaxHealth * Ratio, 0.f, NewMaxHealth));
+			}
+		}
+	}
+}
+
+void UFatedBrandAttributeSet::HandleIncomingStrength(FEffectProperties& Props)
+{
+	const float NewStrength = FMath::Clamp(GetStrength(), 1.f, 100.f);
+	SetStrength(NewStrength);
+
+	if (Props.TargetController == nullptr) return;
+
+	if (const AFatedBrandPlayerState* PS =Props.TargetController->GetPlayerState<AFatedBrandPlayerState>())
+	{
+		if (UCurveTable* StatTable = PS->GetStatCurveTable())
+		{
+			const FGameplayTag AttributeTag = FatedBrandGameplayTags::Attributes_AttackPower;
+			const FName TagName(*AttributeTag.ToString());
+			if (const FRealCurve* Curve = StatTable->FindCurve(TagName, TEXT("StatCurve")))
+			{
+				SetAttackPower(Curve->Eval(NewStrength));
+			}
+		}
 	}
 }
 

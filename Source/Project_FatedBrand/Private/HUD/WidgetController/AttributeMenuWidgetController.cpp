@@ -27,7 +27,7 @@ void UAttributeMenuWidgetController::BindCallbacksToDependencies()
 
 void UAttributeMenuWidgetController::UpgradeAttribute(const FGameplayTag& AttributeTag)
 {
-
+	//GetFatedBrandASC()
 }
 
 void UAttributeMenuWidgetController::WidgetAxisControl(const int32 AxisX, const int32 AxisY)
@@ -41,5 +41,6 @@ void UAttributeMenuWidgetController::BroadcastAttributeInfo(const FGameplayTag& 
 {
 	Info.AttributeTag = AttributeTag;
 	Info.AttributeValue = Attribute.GetNumericValue(AttributeSet);
+	
 	AttributeInfoDelegate.Broadcast(Info);
 }

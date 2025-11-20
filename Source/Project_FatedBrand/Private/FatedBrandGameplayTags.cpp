@@ -30,6 +30,9 @@ namespace FatedBrandGameplayTags
 #pragma endregion
 
 #pragma region Attributes
+	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Attributes_Strength, "Attributes.Strength")
+	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Attributes_Vigor, "Attributes.Vigor")
+
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Attributes_MaxHealth, "Attributes.MaxHealth")
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Attributes_CurrentHealth, "Attributes.CurrentHealth")
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Attributes_AttackPower, "Attributes.AttackPower")
