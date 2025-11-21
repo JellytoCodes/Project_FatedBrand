@@ -3,7 +3,11 @@
 
 #include "HUD/WidgetController/AttributeMenuWidgetController.h"
 
+#include "FatedBrandGameplayTags.h"
 #include "AbilitySystem/FatedBrandAttributeSet.h"
+#include "Controllers/FatedBrandPlayerController.h"
+#include "HUD/FatedBrandHUD.h"
+#include "Project_FatedBrand/Project_FatedBrand.h"
 
 void UAttributeMenuWidgetController::BroadcastInitialValues()
 {
@@ -30,11 +34,30 @@ void UAttributeMenuWidgetController::UpgradeAttribute(const FGameplayTag& Attrib
 	//GetFatedBrandASC()
 }
 
+void UAttributeMenuWidgetController::CloseAttributeMenu()
+{
+	GetFatedBrandPC()->AttributeMenuDisable();
+}
+
 void UAttributeMenuWidgetController::WidgetAxisControl(const int32 AxisX, const int32 AxisY)
 {
     CachedAxisY = FMath::Clamp(CachedAxisY + AxisY, 0, 4);
 
 	SelectSocketDelegate.Broadcast(AxisX, CachedAxisY);
+}
+
+void UAttributeMenuWidgetController::SetCachedSpendEnhancedCore(const FGameplayTag AttributeTag, const float AttributeValue, const int UpgradeValue, const int CachedValue)
+{
+	const float InCachedValue = UpgradeValue < 0 ? CachedValue + 1 : CachedValue;
+	
+	const FName TagName(AttributeTag.ToString());
+
+	if (const FRealCurve* Curve = SpendEnhancedCoreTable->FindCurve(TagName, TEXT("StatCurve")))
+	{
+		const float NewEnhancedCoreValue = Curve->Eval(InCachedValue);
+		CachedSpendEnhancedCore = UpgradeValue > 0 ? CachedSpendEnhancedCore + NewEnhancedCoreValue : CachedSpendEnhancedCore - NewEnhancedCoreValue;
+	}
+	CachedSpendEnhancedDelegate.Broadcast(CachedSpendEnhancedCore);
 }
 
 void UAttributeMenuWidgetController::BroadcastAttributeInfo(const FGameplayTag& AttributeTag, const FGameplayAttribute& Attribute)
@@ -43,4 +66,13 @@ void UAttributeMenuWidgetController::BroadcastAttributeInfo(const FGameplayTag& 
 	Info.AttributeValue = Attribute.GetNumericValue(AttributeSet);
 	
 	AttributeInfoDelegate.Broadcast(Info);
+
+	if (AttributeDescriptionTable)
+	{
+		const FName RowName(AttributeTag.ToString());
+		if (const auto* Row = AttributeDescriptionTable->FindRow<FAttributeDescriptionRow>(RowName, TEXT("AttributeInfo")))
+		{
+			AttributeDescriptionDelegate.Broadcast(Row->AttributeName, Row->AttributeDescription);
+		}
+	}
 }

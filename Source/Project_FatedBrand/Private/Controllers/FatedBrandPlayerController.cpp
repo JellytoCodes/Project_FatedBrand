@@ -167,6 +167,12 @@ void AFatedBrandPlayerController::Input_WidgetSelect()
 		UPauseMenuWidgetController* PauseMenuWidgetController = UFatedBrandFunctionLibrary::GetPauseMenuWidgetController(this);
 		PauseMenuWidgetController->EnteredInteraction();		
 	}
+
+	else if (bAttributeMenuOpen)
+	{
+		UAttributeMenuWidgetController* AttributeMenuWidgetController = UFatedBrandFunctionLibrary::GetAttributeMenuWidgetController(this);
+		AttributeMenuWidgetController->InteractEnterDelegate.Broadcast();
+	}
 }
 
 void AFatedBrandPlayerController::Input_WidgetDeSelect()
@@ -197,6 +203,13 @@ void AFatedBrandPlayerController::Input_NebulaMenu()
 			CachedFatedBrandHUD->VisibleNebulaMenu(this, FatedBrandCharacter->GetAbilitySystemComponent(), FatedBrandCharacter->GetAttributeSet());
 			bNebulaMenuOpen = true;
 			if (Subsystem) Subsystem->AddMappingContext(CachedFatedBrandHUD->GetWidgetMappingContext(), 1);
+		}
+		else
+		{
+			CachedFatedBrandHUD->HideNebulaMenu();
+			bNebulaMenuOpen = false;
+			bIsWidgetSelect = false;
+			if (Subsystem) Subsystem->RemoveMappingContext(CachedFatedBrandHUD->GetWidgetMappingContext());
 		}
 	}
 }

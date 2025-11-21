@@ -30,6 +30,8 @@ namespace FatedBrandGameplayTags
 #pragma endregion
 
 #pragma region Attributes
+	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Attributes_Locked, "Attributes.Locked")
+
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Attributes_Strength, "Attributes.Strength")
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Attributes_Vigor, "Attributes.Vigor")
 

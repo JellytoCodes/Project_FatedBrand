@@ -103,6 +103,7 @@ struct FFatedBrandAbilityInfo
 	TObjectPtr<const UTexture2D> Icon = nullptr;
 };
 
+#pragma region UseDataTable
 USTRUCT(BlueprintType)
 struct FNebulaDescriptionRow : public FTableRowBase
 {
@@ -116,16 +117,14 @@ struct FNebulaDescriptionRow : public FTableRowBase
 };
 
 USTRUCT(BlueprintType)
-struct FMapInfoRow : public FTableRowBase
+struct FAttributeDescriptionRow : public FTableRowBase
 {
 	GENERATED_BODY()
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	FString MapID;
+	FString AttributeName;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TSoftObjectPtr<UWorld> Map;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	FString DisplayName;
+	FString AttributeDescription;
 };
+#pragma endregion

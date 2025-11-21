@@ -33,6 +33,8 @@ namespace FatedBrandGameplayTags
 #pragma endregion
 
 #pragma region Attributes
+	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attributes_Locked)
+
 	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attributes_Strength)
 	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attributes_Vigor)
 

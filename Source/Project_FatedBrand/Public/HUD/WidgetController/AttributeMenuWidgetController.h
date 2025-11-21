@@ -11,7 +11,9 @@
 struct FGameplayAttribute;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSelectSocketSignature, int32, CurrentAxisX, int32, SelectSocketIndex);
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAttributeDescriptionSignature, FString, AttributeName, FString, AttributeDesc);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCachedSpendEnhancedCoreSignature, int32, InSpendPoint);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInteractEnterDelegate);
 USTRUCT(BlueprintType)
 struct FAttributeInfo
 {
@@ -39,12 +41,27 @@ public :
 	FAttributeInfoSignature AttributeInfoDelegate;
 
 	UPROPERTY(BlueprintAssignable)
+	FOnInteractEnterDelegate InteractEnterDelegate;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnCachedSpendEnhancedCoreSignature CachedSpendEnhancedDelegate;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnAttributeDescriptionSignature AttributeDescriptionDelegate;
+
+	UPROPERTY(BlueprintAssignable)
 	FOnSelectSocketSignature SelectSocketDelegate;
 
 	UFUNCTION(BlueprintCallable)
 	void UpgradeAttribute(const FGameplayTag& AttributeTag);
 
+	UFUNCTION(BlueprintCallable)
+	void CloseAttributeMenu();
+
 	void WidgetAxisControl(const int32 AxisX, const int32 AxisY);
+
+	UFUNCTION(BlueprintCallable)
+	void SetCachedSpendEnhancedCore(const FGameplayTag AttributeTag, const float AttributeValue, const int UpgradeValue, const int CachedValue);
 
 private :
 	void BroadcastAttributeInfo(const FGameplayTag& AttributeTag, const FGameplayAttribute& Attribute);
@@ -53,4 +70,12 @@ private :
 	int32 CachedAxisY;
 
 	FAttributeInfo Info;
+
+	UPROPERTY(EditDefaultsOnly)
+	UDataTable* AttributeDescriptionTable;
+
+	int32 CachedSpendEnhancedCore = 0;
+
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<UCurveTable> SpendEnhancedCoreTable;
 };
