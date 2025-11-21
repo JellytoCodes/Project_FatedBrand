@@ -7,6 +7,7 @@
 #include "Interfaces/PlayerInterface.h"
 #include "FatedBrandCharacter.generated.h"
 
+struct FGameplayEventData;
 class AFatedBrandPlayerController;
 struct FInputActionValue;
 
@@ -30,6 +31,7 @@ public :
 	virtual float GetVitalSurgeGage_Implementation() override;
 	virtual void InteractSavePoint_Implementation(const bool IsInteraction) override;
 	virtual void CanUpgradeAttribute_Implementation(const bool IsInteraction) override;
+	virtual AFatedBrandPlayerState* GetPlayerState_Implementation() override;
 #pragma endregion
 
 	void LoadProgress();

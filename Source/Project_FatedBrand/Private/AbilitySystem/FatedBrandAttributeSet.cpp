@@ -37,16 +37,6 @@ void UFatedBrandAttributeSet::PostGameplayEffectExecute(const struct FGameplayEf
 	FEffectProperties Props;
 	SetEffectProperties(Data, Props);
 
-	if (Data.EvaluatedData.Attribute == GetStrengthAttribute())
-	{
-		HandleIncomingStrength(Props);
-	}
-
-	if (Data.EvaluatedData.Attribute == GetVigorAttribute())
-	{
-		HandleIncomingVigor(Props);
-	}
-
 	if (Data.EvaluatedData.Attribute == GetIncomingDamageAttribute())
 	{
 		HandleIncomingDamage(Props);
@@ -59,13 +49,36 @@ void UFatedBrandAttributeSet::PostGameplayEffectExecute(const struct FGameplayEf
 
 	if (Data.EvaluatedData.Attribute == GetCurrentHealthAttribute())
 	{
-		SetCurrentHealth(FMath::Clamp(GetCurrentHealth(), 0.f, GetMaxHealth()));	
+		SetCurrentHealth(FMath::Clamp(GetCurrentHealth(), 0.f, GetMaxHealth()));
 	}
 
 	if (Data.EvaluatedData.Attribute == GetEnhancedCoreAttribute())
 	{
 		SetEnhancedCore(GetEnhancedCore());
 	}
+}
+
+void UFatedBrandAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
+{
+	Super::PreAttributeChange(Attribute, NewValue);
+
+	if (Attribute == GetVigorAttribute())
+	{
+		HandleIncomingVigor(NewValue);
+	}
+	if (Attribute == GetStrengthAttribute())
+	{
+		HandleIncomingStrength(NewValue);
+	}
+}
+
+FGameplayAttribute UFatedBrandAttributeSet::FindAttributeByTag(const FGameplayTag& AttributeTag) const
+{
+	if (const TStaticFuncPtr<FGameplayAttribute()>* FuncPtr = TagsToAttributes.Find(AttributeTag))
+	{
+		return (*FuncPtr)();
+	}
+	return FGameplayAttribute();
 }
 
 void UFatedBrandAttributeSet::HandleIncomingDamage(FEffectProperties& Props)
@@ -103,49 +116,45 @@ void UFatedBrandAttributeSet::HandleIncomingEnhancedCore(FEffectProperties& Prop
 	}
 }
 
-void UFatedBrandAttributeSet::HandleIncomingVigor(FEffectProperties& Props)
+void UFatedBrandAttributeSet::HandleIncomingVigor(float NewValue)
 {
-	const float NewVigor = FMath::Clamp(GetVigor(), 1.f, 100.f);
-	SetVigor(NewVigor);
-	
-	if (Props.TargetController == nullptr) return;
+    NewValue = FMath::Clamp(NewValue, 1.f, 100.f);
 
-	if (const AFatedBrandPlayerState* PS =Props.TargetController->GetPlayerState<AFatedBrandPlayerState>())
-	{
-		if (UCurveTable* StatTable = PS->GetStatCurveTable())
-		{
-			const FGameplayTag AttributeTag = FatedBrandGameplayTags::Attributes_MaxHealth;
-			const FName TagName(*AttributeTag.ToString());
-			if (const FRealCurve* Curve = StatTable->FindCurve(TagName, TEXT("StatCurve")))
-			{
-				const float NewMaxHealth = Curve->Eval(NewVigor);
-				const float OldMaxHealth = GetMaxHealth();
+    const AFatedBrandPlayerState* PS = Cast<AFatedBrandPlayerState>(GetOwningActor());
+    if (!PS) return;
 
-				const float Ratio = (OldMaxHealth > 0.f) ? (GetCurrentHealth() / OldMaxHealth) : 1.f;
-				SetMaxHealth(NewMaxHealth);
-				SetCurrentHealth(FMath::Clamp(NewMaxHealth * Ratio, 0.f, NewMaxHealth));
-			}
-		}
-	}
+    if (UCurveTable* StatTable = PS->GetStatCurveTable())
+    {
+        const FGameplayTag AttributeTag = FatedBrandGameplayTags::Attributes_MaxHealth;
+        const FName TagName(*AttributeTag.ToString());
+
+        if (const FRealCurve* Curve = StatTable->FindCurve(TagName, TEXT("StatCurve")))
+        {
+            const float NewMaxHealth = Curve->Eval(NewValue);
+            const float OldMaxHealth = GetMaxHealth();
+
+            const float Ratio = (OldMaxHealth > 0.f) ? (GetCurrentHealth() / OldMaxHealth) : 1.f;
+
+            SetMaxHealth(NewMaxHealth);
+            SetCurrentHealth(FMath::Clamp(NewMaxHealth * Ratio, 0.f, NewMaxHealth));
+        }
+    }
 }
 
-void UFatedBrandAttributeSet::HandleIncomingStrength(FEffectProperties& Props)
+void UFatedBrandAttributeSet::HandleIncomingStrength(float NewValue)
 {
-	const float NewStrength = FMath::Clamp(GetStrength(), 1.f, 100.f);
-	SetStrength(NewStrength);
+	NewValue = FMath::Clamp(NewValue, 1.f, 100.f);
 
-	if (Props.TargetController == nullptr) return;
+    const AFatedBrandPlayerState* PS = Cast<AFatedBrandPlayerState>(GetOwningActor());
+    if (!PS) return;
 
-	if (const AFatedBrandPlayerState* PS =Props.TargetController->GetPlayerState<AFatedBrandPlayerState>())
-	{
-		if (UCurveTable* StatTable = PS->GetStatCurveTable())
+    if (UCurveTable* StatTable = PS->GetStatCurveTable())
+    {
+		const FGameplayTag AttributeTag = FatedBrandGameplayTags::Attributes_AttackPower;
+		const FName TagName(*AttributeTag.ToString());
+		if (const FRealCurve* Curve = StatTable->FindCurve(TagName, TEXT("StatCurve")))
 		{
-			const FGameplayTag AttributeTag = FatedBrandGameplayTags::Attributes_AttackPower;
-			const FName TagName(*AttributeTag.ToString());
-			if (const FRealCurve* Curve = StatTable->FindCurve(TagName, TEXT("StatCurve")))
-			{
-				SetAttackPower(Curve->Eval(NewStrength));
-			}
+			SetAttackPower(Curve->Eval(NewValue));
 		}
 	}
 }

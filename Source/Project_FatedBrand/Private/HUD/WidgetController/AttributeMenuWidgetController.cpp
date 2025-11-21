@@ -29,9 +29,18 @@ void UAttributeMenuWidgetController::BindCallbacksToDependencies()
 	}
 }
 
-void UAttributeMenuWidgetController::UpgradeAttribute(const FGameplayTag& AttributeTag)
+void UAttributeMenuWidgetController::UpgradeAttribute(const FGameplayTag& AttributeTag, const float AttributeValue, const float NewValue)
 {
-	//GetFatedBrandASC()
+	if (AttributeTag == FatedBrandGameplayTags::Attributes_Locked || AttributeValue == NewValue) return;
+
+	GetFatedBrandASC()->UpgradeAttribute(AttributeTag, NewValue);
+}
+
+void UAttributeMenuWidgetController::SpendEnhancedCore(const float SpendValue)
+{
+	GetFatedBrandASC()->SpendEnhancedCore(SpendValue);
+	CachedSpendEnhancedCore = 0;
+	CachedSpendEnhancedDelegate.Broadcast(CachedSpendEnhancedCore);
 }
 
 void UAttributeMenuWidgetController::CloseAttributeMenu()

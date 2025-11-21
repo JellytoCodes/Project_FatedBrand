@@ -6,6 +6,8 @@
 #include "UObject/Interface.h"
 #include "PlayerInterface.generated.h"
 
+class AFatedBrandPlayerState;
+
 UINTERFACE(MinimalAPI)
 class UPlayerInterface : public UInterface
 {
@@ -40,4 +42,8 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void CanUpgradeAttribute(const bool IsInteraction);
+
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	AFatedBrandPlayerState* GetPlayerState();
 };

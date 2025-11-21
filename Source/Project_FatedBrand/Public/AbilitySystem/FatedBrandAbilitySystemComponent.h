@@ -65,6 +65,9 @@ public :
 	UFUNCTION(BlueprintCallable, Category = "UpdateAbility")
 	void EquipAbility(const FGameplayTag& AbilityTag, const FGameplayTag& InputTag);
 
+	void UpgradeAttribute(const FGameplayTag& AttributeTag, const float NewValue);
+	void SpendEnhancedCore(const float SpendValue);
+
 protected :
 	virtual void OnRep_ActivateAbilities() override;
 

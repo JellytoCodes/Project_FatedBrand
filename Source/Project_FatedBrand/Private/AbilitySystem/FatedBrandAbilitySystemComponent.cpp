@@ -2,11 +2,15 @@
 
 #include "AbilitySystem/FatedBrandAbilitySystemComponent.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
 #include "FatedBrandFunctionLibrary.h"
 #include "FatedBrandGameplayTags.h"
+#include "AbilitySystem/FatedBrandAttributeSet.h"
 #include "AbilitySystem/Abilities/FatedBrandGameplayAbility.h"
 #include "DataAssets/DataAsset_AbilityInfo.h"
+#include "Game/FatedBrandPlayerState.h"
 #include "Game/FatedBrandSaveGame.h"
+#include "Interfaces/PlayerInterface.h"
 #include "Project_FatedBrand/Project_FatedBrand.h"
 
 UFatedBrandAbilitySystemComponent::UFatedBrandAbilitySystemComponent()
@@ -356,6 +360,41 @@ void UFatedBrandAbilitySystemComponent::EquipAbility(const FGameplayTag& Ability
 			MarkAbilitySpecDirty(*AbilitySpec);
 		}
 		AbilityEquipped.Broadcast(AbilityTag, FatedBrandGameplayTags::Abilities_Status_Equipped, InputTag, PrevInputTag);
+	}
+}
+
+void UFatedBrandAbilitySystemComponent::UpgradeAttribute(const FGameplayTag& AttributeTag, const float NewValue)
+{
+	if (const IPlayerInterface* PlayerInterface = Cast<IPlayerInterface>(GetAvatarActor()))
+	{
+		const AFatedBrandPlayerState* PS = PlayerInterface->Execute_GetPlayerState(GetAvatarActor());
+		if (PS == nullptr) return;
+
+		if (const UFatedBrandAttributeSet* AS = Cast<UFatedBrandAttributeSet>(PS->GetAttributeSet()))
+		{
+			const FGameplayAttribute StatAttr = AS->FindAttributeByTag(AttributeTag);
+			if (!StatAttr.IsValid()) return;
+			SetNumericAttributeBase(StatAttr, NewValue);
+		}	
+	}
+}
+
+void UFatedBrandAbilitySystemComponent::SpendEnhancedCore(const float SpendValue)
+{
+	if (const IPlayerInterface* PlayerInterface = Cast<IPlayerInterface>(GetAvatarActor()))
+	{
+		const AFatedBrandPlayerState* PS = PlayerInterface->Execute_GetPlayerState(GetAvatarActor());
+		if (PS == nullptr) return;
+
+		if (const UFatedBrandAttributeSet* AS = Cast<UFatedBrandAttributeSet>(PS->GetAttributeSet()))
+		{
+			const FGameplayAttribute EnhancedCoreAttr = AS->FindAttributeByTag(FatedBrandGameplayTags::Attributes_EnhancedCore);
+			if (!EnhancedCoreAttr.IsValid()) return;
+
+			const float NewValue = GetNumericAttributeBase(EnhancedCoreAttr) - SpendValue;
+			
+			SetNumericAttributeBase(EnhancedCoreAttr, NewValue);
+		}
 	}
 }
 

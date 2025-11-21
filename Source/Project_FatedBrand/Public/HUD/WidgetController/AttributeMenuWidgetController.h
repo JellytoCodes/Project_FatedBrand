@@ -53,7 +53,10 @@ public :
 	FOnSelectSocketSignature SelectSocketDelegate;
 
 	UFUNCTION(BlueprintCallable)
-	void UpgradeAttribute(const FGameplayTag& AttributeTag);
+	void UpgradeAttribute(const FGameplayTag& AttributeTag, const float AttributeValue, const float NewValue);
+
+	UFUNCTION(BlueprintCallable)
+	void SpendEnhancedCore(const float SpendValue);
 
 	UFUNCTION(BlueprintCallable)
 	void CloseAttributeMenu();

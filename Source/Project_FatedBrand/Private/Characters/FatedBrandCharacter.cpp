@@ -15,6 +15,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "HUD/FatedBrandHUD.h"
 #include "Kismet/GameplayStatics.h"
+#include "Game/FatedBrandPlayerState.h"
 #include "Project_FatedBrand/Project_FatedBrand.h"
 
 AFatedBrandCharacter::AFatedBrandCharacter()
@@ -107,6 +108,11 @@ void AFatedBrandCharacter::InteractSavePoint_Implementation(const bool IsInterac
 void AFatedBrandCharacter::CanUpgradeAttribute_Implementation(const bool IsInteraction)
 {
 	if (PlayerController.IsValid()) PlayerController->SetIsCanCreateAttributeMenu(IsInteraction);
+}
+
+AFatedBrandPlayerState* AFatedBrandCharacter::GetPlayerState_Implementation()
+{
+	return PlayerController->GetPlayerState<AFatedBrandPlayerState>();
 }
 
 void AFatedBrandCharacter::LoadProgress()

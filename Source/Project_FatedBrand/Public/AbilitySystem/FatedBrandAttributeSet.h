@@ -26,8 +26,10 @@ public :
     UFatedBrandAttributeSet();
 
     virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
-    
+    virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
+
     TMap<FGameplayTag, TStaticFuncPtr<FGameplayAttribute()>> TagsToAttributes;
+    FGameplayAttribute FindAttributeByTag(const FGameplayTag& AttributeTag) const;
 
     UPROPERTY(BlueprintReadOnly, Category = "Strength")
     FGameplayAttributeData Strength;
@@ -68,8 +70,8 @@ public :
 private :
     void HandleIncomingDamage(FEffectProperties& Props);
     void HandleIncomingEnhancedCore(FEffectProperties& Props);
-    void HandleIncomingVigor(FEffectProperties& Props);
-    void HandleIncomingStrength(FEffectProperties& Props);
+    void HandleIncomingVigor(const float NewValue);
+    void HandleIncomingStrength(float NewValue);
 
 	void SetEffectProperties(const FGameplayEffectModCallbackData &Data, FEffectProperties& Props) const;
 };
