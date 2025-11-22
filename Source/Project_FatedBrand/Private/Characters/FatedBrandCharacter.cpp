@@ -58,10 +58,11 @@ void AFatedBrandCharacter::SaveProgress_Implementation(const FName& CheckPointTa
 
 		SaveData->PlayerStartTag = CheckPointTag;
 
-		SaveData->MaxHealth = UFatedBrandAttributeSet::GetMaxHealthAttribute().GetNumericValue(FatedBrandAttributeSet);
+		SaveData->Vigor = UFatedBrandAttributeSet::GetVigorAttribute().GetNumericValue(FatedBrandAttributeSet);
 		SaveData->CurrentHealth = UFatedBrandAttributeSet::GetCurrentHealthAttribute().GetNumericValue(FatedBrandAttributeSet);
-		SaveData->AttackPower = UFatedBrandAttributeSet::GetAttackPowerAttribute().GetNumericValue(FatedBrandAttributeSet);
+		SaveData->Strength = UFatedBrandAttributeSet::GetStrengthAttribute().GetNumericValue(FatedBrandAttributeSet);
 		SaveData->VitalSurge = UFatedBrandAttributeSet::GetVitalSurgeAttribute().GetNumericValue(FatedBrandAttributeSet);
+		SaveData->EnhancedCore = UFatedBrandAttributeSet::GetEnhancedCoreAttribute().GetNumericValue(FatedBrandAttributeSet);
 
 		SaveData->bFirstTimeLoadIn = false;
 

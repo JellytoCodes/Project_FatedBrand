@@ -61,11 +61,11 @@ public :
 	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<UMVVM_LoadScreen> SaveScreenViewModel;
 
-
-
 private :
 	UPROPERTY(EditDefaultsOnly, Category = "WidgetContext")
 	TObjectPtr<UInputMappingContext> WidgetMappingContext;
+
+	FVector2D ViewportSize;
 
 #pragma region OverlayWidget
 	UPROPERTY()
@@ -93,9 +93,6 @@ private :
 
 	UPROPERTY(EditDefaultsOnly, Category = "WidgetClass")
 	TSubclassOf<UNebulaMenuWidgetController> NebulaWidgetControllerClass;
-
-	UPROPERTY(EditDefaultsOnly, Category = "WidgetClass")
-	FVector2D NebulaWidgetPosition = FVector2D();
 #pragma endregion
 
 #pragma region PauseWidget
@@ -110,9 +107,6 @@ private :
 
 	UPROPERTY(EditDefaultsOnly, Category = "WidgetClass")
 	TSubclassOf<UPauseMenuWidgetController> PauseWidgetControllerClass;
-
-	UPROPERTY(EditDefaultsOnly, Category = "WidgetClass")
-	FVector2D PauseWidgetPosition = FVector2D();
 #pragma endregion
 
 #pragma region AttributeWidget

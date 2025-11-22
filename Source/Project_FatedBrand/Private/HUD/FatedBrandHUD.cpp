@@ -58,6 +58,11 @@ UAttributeMenuWidgetController* AFatedBrandHUD::GetAttributeMenuWidgetController
 
 void AFatedBrandHUD::InitOverlay(APlayerController* PC, UAbilitySystemComponent* ASC, UAttributeSet* AS)
 {
+	if (GEngine && GEngine->GameViewport)
+	{
+		GEngine->GameViewport->GetViewportSize(ViewportSize);
+	}
+
 	UUserWidget* Widget = CreateWidget<UUserWidget>(GetWorld(), OverlayWidgetClass);
 	OverlayWidget = Cast<UFatedBrandUserWidget>(Widget);
 
@@ -76,7 +81,8 @@ void AFatedBrandHUD::InitOverlay(APlayerController* PC, UAbilitySystemComponent*
 		NebulaWidget->SetWidgetController(NebulaWidgetController);
 		
 		NebulaWidget->AddToViewport();
-		NebulaWidget->SetPositionInViewport(NebulaWidgetPosition, true);
+		NebulaWidget->SetAlignmentInViewport(FVector2D(0.5f, 0.5f));
+		NebulaWidget->SetPositionInViewport(ViewportSize * 0.5f, true);
 		NebulaWidget->SetVisibility(ESlateVisibility::Hidden);
 	}
 
@@ -88,7 +94,8 @@ void AFatedBrandHUD::InitOverlay(APlayerController* PC, UAbilitySystemComponent*
 		PauseWidget->SetWidgetController(PauseWidgetController);
 
 		PauseWidget->AddToViewport();
-		PauseWidget->SetPositionInViewport(PauseWidgetPosition, true);
+		PauseWidget->SetAlignmentInViewport(FVector2D(0.5f, 0.5f));
+		PauseWidget->SetPositionInViewport(ViewportSize * 0.5f, true);
 		PauseWidget->SetVisibility(ESlateVisibility::Hidden);
 	}
 	WidgetController->BroadcastInitialValues();
@@ -153,6 +160,8 @@ void AFatedBrandHUD::CreateAttributeMenuWidget()
 		AttributeWidget = CreateWidget<UFatedBrandUserWidget>(GetWorld(), AttributeWidgetClass);	
 	}
 	AttributeWidget->AddToViewport();
+	AttributeWidget->SetAlignmentInViewport(FVector2D(0.5f, 0.5f));
+	AttributeWidget->SetPositionInViewport(ViewportSize * 0.5f, true);
 }
 
 void AFatedBrandHUD::RemoveAttributeMenuWidget()

@@ -104,16 +104,19 @@ public :
 	/** Player Status */
 
 	UPROPERTY()
-	float MaxHealth;
+	float Vigor;
+
+	UPROPERTY()
+	float Strength;
 
 	UPROPERTY()
 	float CurrentHealth;
 
 	UPROPERTY()
-	float AttackPower;
+	float VitalSurge;
 
 	UPROPERTY()
-	float VitalSurge;
+	float EnhancedCore;
 
 	/** */
 

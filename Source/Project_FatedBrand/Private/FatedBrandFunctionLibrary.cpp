@@ -98,10 +98,11 @@ void UFatedBrandFunctionLibrary::InitializeDefaultAttributesFromSaveData(const U
 	const UFatedBrandAttributeSet* AttrSet = ASC->GetSet<UFatedBrandAttributeSet>();
     if (!AttrSet) return;
 
-	ASC->SetNumericAttributeBase(UFatedBrandAttributeSet::GetMaxHealthAttribute(), SaveGame->MaxHealth);
+	ASC->SetNumericAttributeBase(UFatedBrandAttributeSet::GetVigorAttribute(), SaveGame->Vigor);
 	ASC->SetNumericAttributeBase(UFatedBrandAttributeSet::GetCurrentHealthAttribute(), SaveGame->CurrentHealth);
-	ASC->SetNumericAttributeBase(UFatedBrandAttributeSet::GetAttackPowerAttribute(), SaveGame->AttackPower);
+	ASC->SetNumericAttributeBase(UFatedBrandAttributeSet::GetStrengthAttribute(), SaveGame->Strength);
 	ASC->SetNumericAttributeBase(UFatedBrandAttributeSet::GetVitalSurgeAttribute(), SaveGame->VitalSurge);
+	ASC->SetNumericAttributeBase(UFatedBrandAttributeSet::GetEnhancedCoreAttribute(), SaveGame->EnhancedCore);
 }
 
 FGameplayEffectContextHandle UFatedBrandFunctionLibrary::ApplyDamageEffect(FDamageEffectParams DamageEffectParams)
