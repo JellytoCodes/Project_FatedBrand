@@ -105,6 +105,7 @@ namespace FatedBrandGameplayTags
 #pragma endregion
 
 #pragma region GameplayCue
+	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_MeleeAttack)
 	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_BlastingZone)
 	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_NobleBlood)
 #pragma endregion

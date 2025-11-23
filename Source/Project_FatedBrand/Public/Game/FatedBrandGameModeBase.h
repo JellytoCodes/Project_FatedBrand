@@ -59,9 +59,22 @@ public :
 	UFUNCTION(BlueprintCallable)
 	void ProgressSaveDataToSlot(const FString& SlotName, const int SlotIndex);
 
-	FString ProgressSlotName = "ProgressSaveSlot";
-	int32 ProgressSlotIndex = 99;
+	UFUNCTION(BlueprintCallable)
+	void PlayBGM(USoundBase* NewSound, const float FadeInTime);
+
+	UFUNCTION(BlueprintCallable)
+	void ChangeBGM(USoundBase* NewSound, const float FadeInTime, const float FadeOutTime);
+
+	UFUNCTION(BlueprintCallable)
+	void StopBGM(const float FadeOutTime);
 
 protected :
 	virtual void BeginPlay() override;
+
+private :
+	FString ProgressSlotName = "ProgressSaveSlot";
+	int32 ProgressSlotIndex = 99;
+
+	UPROPERTY()
+	TObjectPtr<UAudioComponent> BGMComponent;
 };

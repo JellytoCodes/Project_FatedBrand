@@ -103,6 +103,7 @@ namespace FatedBrandGameplayTags
 #pragma endregion
 
 #pragma region GameplayCue
+	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::GameplayCue_MeleeAttack, "GameplayCue.MeleeAttack")
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::GameplayCue_BlastingZone, "GameplayCue.BlastingZone")
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::GameplayCue_NobleBlood, "GameplayCue.NobleBlood")
 #pragma endregion

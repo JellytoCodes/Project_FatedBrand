@@ -31,6 +31,15 @@ FDamageEffectParams UFatedBrandGameplayAbility::MakeDamageEffectParamsFromClassD
 	return Params;
 }
 
+void UFatedBrandGameplayAbility::ExecuteGameplayCue(const UAbilitySystemComponent* TargetASC, const FGameplayTag& GameplayTagCue)
+{
+	if (TargetASC == nullptr) return;
+
+	FGameplayCueParameters CueParams;
+	CueParams.SourceObject = TargetASC;
+	UFatedBrandFunctionLibrary::FatedBrandExecuteGameplayCue(TargetASC, GameplayTagCue, CueParams);
+}
+
 void UFatedBrandGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);

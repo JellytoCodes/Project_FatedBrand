@@ -24,6 +24,9 @@ public :
 	UFUNCTION(BlueprintCallable)
 	FDamageEffectParams MakeDamageEffectParamsFromClassDefaults(AActor* TargetActor = nullptr);
 
+	UFUNCTION(BlueprintCallable)
+	void ExecuteGameplayCue(const UAbilitySystemComponent* TargetASC, const FGameplayTag& GameplayTagCue);
+
 protected :
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 	void ReceiveDeactivate(const FGameplayTag& AbilityTag);

@@ -12,6 +12,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "Project_FatedBrand/Project_FatedBrand.h"
 #include "Serialization/ObjectAndNameAsStringProxyArchive.h"
+#include "Sound/SoundBase.h"
+#include "Components/AudioComponent.h"
 
 void AFatedBrandGameModeBase::LoadWorldSate(UWorld* World) const
 {
@@ -215,6 +217,43 @@ void AFatedBrandGameModeBase::ProgressSaveDataToSlot(const FString& SlotName, co
 	}
 }
 
+void AFatedBrandGameModeBase::PlayBGM(USoundBase* NewSound, const float FadeInTime)
+{
+	if (NewSound == nullptr) return;
+
+	BGMComponent->SetSound(NewSound);
+
+	Debug::Print(NewSound->GetName());
+
+	if (FadeInTime > 0.f)
+	{
+		BGMComponent->FadeIn(FadeInTime, 1.f);
+	}
+	else
+	{
+		BGMComponent->Play();
+	}
+}
+
+void AFatedBrandGameModeBase::ChangeBGM(USoundBase* NewSound, const float FadeInTime, const float FadeOutTime)
+{
+	PlayBGM(NewSound, FadeInTime);
+}
+
+void AFatedBrandGameModeBase::StopBGM(const float FadeOutTime)
+{
+	if (BGMComponent == nullptr || BGMComponent->IsPlaying() == false) return;
+
+	if (FadeOutTime > 0.f)
+	{
+		BGMComponent->FadeOut(FadeOutTime, 0.f);
+	}
+	else
+	{
+		BGMComponent->Stop();
+	}
+}
+
 void AFatedBrandGameModeBase::RetryForTravelToMap()
 {
 	UFatedBrandInstance* FatedBrandInstance = Cast<UFatedBrandInstance>(GetGameInstance());
@@ -238,4 +277,12 @@ void AFatedBrandGameModeBase::BeginPlay()
 	Super::BeginPlay();
 
 	Maps.Add(DefaultMapName, DefaultMap);
+
+	BGMComponent = NewObject<UAudioComponent>(this);
+	if (BGMComponent)
+	{
+		BGMComponent->bAutoActivate = false;
+		BGMComponent->bIsUISound = true;
+		BGMComponent->RegisterComponent();
+	}
 }
