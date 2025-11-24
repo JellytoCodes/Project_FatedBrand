@@ -79,6 +79,7 @@ void AFatedBrandGameModeBase::SaveSlotData(UMVVM_LoadSlot* LoadSlot, const int32
 
 	USaveGame* SaveGameObject = UGameplayStatics::CreateSaveGameObject(SaveGameClass);
 	UFatedBrandSaveGame* LoadSaveGame = Cast<UFatedBrandSaveGame>(SaveGameObject);
+
 	LoadSaveGame->SaveSlotStatus = Valid;
 	LoadSaveGame->MapName = LoadSlot->GetMapName();
 	LoadSaveGame->MapAssetName = LoadSlot->MapAssetName;
@@ -126,7 +127,7 @@ void AFatedBrandGameModeBase::TravelToMap(const UMVVM_LoadSlot* Slot)
 AActor* AFatedBrandGameModeBase::ChoosePlayerStart_Implementation(AController* Player)
 {
 	TArray<AActor*> Actors;
-	UFatedBrandInstance* FatedBrandInstance = Cast<UFatedBrandInstance>(GetGameInstance());
+	const UFatedBrandInstance* FatedBrandInstance = Cast<UFatedBrandInstance>(GetGameInstance());
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerStart::StaticClass(), Actors);
 	if (Actors.Num() <= 0) return nullptr;
 
@@ -285,4 +286,11 @@ void AFatedBrandGameModeBase::BeginPlay()
 		BGMComponent->bIsUISound = true;
 		BGMComponent->RegisterComponent();
 	}
+}
+
+const FMapInfoRow* AFatedBrandGameModeBase::FindMapInfo(FName RowName) const
+{
+	if (!MapInfoTable || RowName.IsNone()) return nullptr;
+
+	return MapInfoTable->FindRow<FMapInfoRow>(RowName, TEXT("AFatedBrandGameModeBase::FindMapInfo"), false);
 }

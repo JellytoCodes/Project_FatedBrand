@@ -128,3 +128,18 @@ struct FAttributeDescriptionRow : public FTableRowBase
 	FString AttributeDescription;
 };
 #pragma endregion
+
+USTRUCT(BlueprintType)
+struct FMapInfoRow : public FTableRowBase
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FString DisplayName;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSoftObjectPtr<UWorld> MapAsset;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSoftObjectPtr<USoundBase> BGM;
+};

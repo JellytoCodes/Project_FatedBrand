@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "FatedBrandStructTypes.h"
 #include "GameFramework/GameModeBase.h"
 #include "FatedBrandGameModeBase.generated.h"
 
@@ -77,4 +78,9 @@ private :
 
 	UPROPERTY()
 	TObjectPtr<UAudioComponent> BGMComponent;
+
+	UPROPERTY(EditDefaultsOnly)
+	UDataTable* MapInfoTable;
+
+	const FMapInfoRow* FindMapInfo(FName RowName) const;
 };
