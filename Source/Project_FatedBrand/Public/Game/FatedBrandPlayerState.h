@@ -4,9 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystemInterface.h"
+#include "FatedBrandStructTypes.h"
 #include "GameFramework/PlayerState.h"
 #include "FatedBrandPlayerState.generated.h"
 
+struct FGameplayAbilitySpec;
 class UAbilitySystemComponent;
 class UAttributeSet;
 
@@ -23,6 +25,8 @@ public :
 
 	UCurveTable* GetStatCurveTable() const { return StatCurveTable; }
 
+	void CaptureRunningCooldowns();
+
 protected :
 
 	UPROPERTY()
@@ -33,5 +37,7 @@ protected :
 
 	UPROPERTY(EditDefaultsOnly, Category = "Stat")
 	TObjectPtr<UCurveTable> StatCurveTable;
-	
+
+	UPROPERTY()
+	TArray<FAbilityCooldownSaveData> RunningCooldowns;
 };

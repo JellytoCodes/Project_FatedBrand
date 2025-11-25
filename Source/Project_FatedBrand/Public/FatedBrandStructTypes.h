@@ -103,6 +103,18 @@ struct FFatedBrandAbilityInfo
 	TObjectPtr<const UTexture2D> Icon = nullptr;
 };
 
+USTRUCT()
+struct FAbilityCooldownSaveData
+{
+	GENERATED_BODY()
+
+	FGameplayTag CooldownTag;
+
+	float CooldownRemaining;
+
+	float CooldownDuration;
+};
+
 #pragma region UseDataTable
 USTRUCT(BlueprintType)
 struct FNebulaDescriptionRow : public FTableRowBase

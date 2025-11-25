@@ -171,3 +171,14 @@ void AFatedBrandCharacter::InitAbilityActorInfo()
 		}
 	}
 }
+
+void AFatedBrandCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	AFatedBrandPlayerState* FatedBrandPlayerState = GetPlayerState<AFatedBrandPlayerState>();
+	check(FatedBrandPlayerState);
+
+	// TEST
+	FatedBrandPlayerState->CaptureRunningCooldowns();
+}

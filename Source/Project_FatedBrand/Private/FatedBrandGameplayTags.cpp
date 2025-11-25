@@ -70,6 +70,7 @@ namespace FatedBrandGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Cooldown_BlastingZone, "Cooldown.BlastingZone")
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Cooldown_NobleBlood, "Cooldown.NobleBlood")
 	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Cooldown_LivingDead, "Cooldown.LivingDead")
+	UE_DEFINE_GAMEPLAY_TAG(FatedBrandGameplayTags::Cooldown_Parrying, "Cooldown.Parrying")
 #pragma endregion
 
 #pragma region Abilities Passive

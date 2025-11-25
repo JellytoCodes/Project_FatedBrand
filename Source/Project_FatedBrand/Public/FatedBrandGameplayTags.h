@@ -72,6 +72,7 @@ namespace FatedBrandGameplayTags
 	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Cooldown_BlastingZone)
 	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Cooldown_NobleBlood)
 	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Cooldown_LivingDead)
+	PROJECT_FATEDBRAND_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Cooldown_Parrying)
 #pragma endregion
 
 #pragma region Abilities Passive

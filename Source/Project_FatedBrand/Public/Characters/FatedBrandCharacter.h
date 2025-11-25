@@ -43,6 +43,8 @@ protected :
 
 	virtual void InitAbilityActorInfo() override;
 
+	virtual void BeginPlay() override;
+
 private :
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<USpringArmComponent> CameraBoom;
@@ -52,6 +54,4 @@ private :
 
 	UPROPERTY()
 	TWeakObjectPtr<AFatedBrandPlayerController> PlayerController;
-
-
 };
