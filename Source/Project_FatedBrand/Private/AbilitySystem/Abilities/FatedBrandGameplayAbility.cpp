@@ -40,6 +40,25 @@ void UFatedBrandGameplayAbility::ExecuteGameplayCue(const UAbilitySystemComponen
 	UFatedBrandFunctionLibrary::FatedBrandExecuteGameplayCue(TargetASC, GameplayTagCue, CueParams);
 }
 
+void UFatedBrandGameplayAbility::ApplyCooldown(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo) const
+{
+	const FGameplayEffectContextHandle Context = GetAbilitySystemComponentFromActorInfo()->MakeEffectContext();
+	const FGameplayEffectSpecHandle SpecHandle = GetAbilitySystemComponentFromActorInfo()->MakeOutgoingSpec(GetCooldownGameplayEffect()->GetClass(), 1.f, Context);
+
+	if (!SpecHandle.IsValid()) return;
+
+	const FGameplayTagContainer CooldownTags = *GetCooldownTags();
+	FGameplayTag CooldownTag;
+	for (const FGameplayTag Tag : CooldownTags)
+	{
+		if (Tag.MatchesTag(FGameplayTag::RequestGameplayTag(FName("Cooldown")))) CooldownTag = Tag;
+	}
+	FGameplayEffectSpec* Spec = SpecHandle.Data.Get();
+
+	Spec->SetSetByCallerMagnitude(CooldownTag, CooldownTime);
+	GetAbilitySystemComponentFromActorInfo()->ApplyGameplayEffectSpecToSelf(*Spec);
+}
+
 void UFatedBrandGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);

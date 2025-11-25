@@ -13,7 +13,6 @@ void ANextDestinationPoint::OnBoxOverlap(UPrimitiveComponent* OverlappedComponen
 	{
 		if (AFatedBrandGameModeBase* FatedBrandGameMode = Cast<AFatedBrandGameModeBase>(UGameplayStatics::GetGameMode(this)))
 		{
-
 			FatedBrandGameMode->SaveProgressWorldState(GetWorld(), DestinationMap.ToSoftObjectPath().GetAssetName());
 		}
 		IPlayerInterface::Execute_SaveProgress(OtherActor, DestinationPlayerStartTag);

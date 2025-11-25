@@ -25,7 +25,11 @@ public :
 
 	UCurveTable* GetStatCurveTable() const { return StatCurveTable; }
 
+	UFUNCTION(BlueprintCallable)
 	void CaptureRunningCooldowns();
+
+	UFUNCTION(BlueprintCallable)
+	void ApplyRunningCooldowns();
 
 protected :
 
@@ -37,7 +41,4 @@ protected :
 
 	UPROPERTY(EditDefaultsOnly, Category = "Stat")
 	TObjectPtr<UCurveTable> StatCurveTable;
-
-	UPROPERTY()
-	TArray<FAbilityCooldownSaveData> RunningCooldowns;
 };

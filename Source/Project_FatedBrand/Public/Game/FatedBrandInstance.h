@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "FatedBrandStructTypes.h"
 #include "Engine/GameInstance.h"
 #include "FatedBrandInstance.generated.h"
 
@@ -24,4 +25,7 @@ public :
 
 	UPROPERTY()
 	int32 LoadSlotIndex = 0;
+
+	UPROPERTY()
+	TArray<FRunningCooldownData> RunningCooldowns;
 };

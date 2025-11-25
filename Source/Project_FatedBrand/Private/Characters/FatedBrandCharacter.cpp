@@ -151,6 +151,11 @@ void AFatedBrandCharacter::PossessedBy(AController* NewController)
 	if (const AFatedBrandGameModeBase* FatedBrandGameMode = Cast<AFatedBrandGameModeBase>(UGameplayStatics::GetGameMode(this)))
 	{
 		FatedBrandGameMode->LoadWorldSate(GetWorld());
+
+		AFatedBrandPlayerState* FatedBrandPlayerState = GetPlayerState<AFatedBrandPlayerState>();
+		check(FatedBrandPlayerState);
+
+		FatedBrandPlayerState->ApplyRunningCooldowns();
 	}
 }
 
@@ -170,15 +175,4 @@ void AFatedBrandCharacter::InitAbilityActorInfo()
 			FatedBrandHUD->InitOverlay(FatedBrandPlayerController, FatedBrandAbilitySystemComponent, FatedBrandAttributeSet);
 		}
 	}
-}
-
-void AFatedBrandCharacter::BeginPlay()
-{
-	Super::BeginPlay();
-
-	AFatedBrandPlayerState* FatedBrandPlayerState = GetPlayerState<AFatedBrandPlayerState>();
-	check(FatedBrandPlayerState);
-
-	// TEST
-	FatedBrandPlayerState->CaptureRunningCooldowns();
 }

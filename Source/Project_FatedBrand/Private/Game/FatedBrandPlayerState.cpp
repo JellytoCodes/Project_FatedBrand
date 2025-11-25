@@ -3,9 +3,9 @@
 #include "Game/FatedBrandPlayerState.h"
 
 #include "AbilitySystemComponent.h"
-#include "FatedBrandGameplayTags.h"
 #include "AbilitySystem/FatedBrandAbilitySystemComponent.h"
 #include "AbilitySystem/FatedBrandAttributeSet.h"
+#include "Game/FatedBrandInstance.h"
 #include "Project_FatedBrand/Project_FatedBrand.h"
 
 AFatedBrandPlayerState::AFatedBrandPlayerState()
@@ -26,11 +26,11 @@ void AFatedBrandPlayerState::CaptureRunningCooldowns()
 {
 	if (!AbilitySystemComponent) return;
 
-	RunningCooldowns.Empty();
-
-	if (const FGameplayAbilityActorInfo* ActorInfo = AbilitySystemComponent->AbilityActorInfo.Get())
+	if (UFatedBrandInstance* FatedBrandInstance = Cast<UFatedBrandInstance>(GetGameInstance()))
 	{
-		for (const auto& Spec : AbilitySystemComponent->GetActivatableAbilities())
+		FatedBrandInstance->RunningCooldowns.Empty();
+
+		for (const FGameplayAbilitySpec& Spec : AbilitySystemComponent->GetActivatableAbilities())
 		{
 			const UGameplayAbility* AbilityCDO = Spec.Ability;
 			if (!AbilityCDO || !Spec.GetDynamicSpecSourceTags().HasTag(FGameplayTag::RequestGameplayTag(FName("Input")))) continue;
@@ -43,25 +43,48 @@ void AFatedBrandPlayerState::CaptureRunningCooldowns()
 				float CooldownDuration = 0.f;
 				AbilityCDO->GetCooldownTimeRemainingAndDuration(
 				Spec.Handle,
-				ActorInfo,
+				AbilitySystemComponent->AbilityActorInfo.Get(),
 				TimeRemaining,
 				CooldownDuration);
 
 				if (TimeRemaining > 0.f)
 				{
-					FAbilityCooldownSaveData Data;
+					FRunningCooldownData Data;
 					for (const FGameplayTag Tag : CooldownTags)
 					{
-						Debug::Print(Tag.ToString(), Spec.Ability->GetCooldownTimeRemaining());
+						if (Tag.MatchesTag(FGameplayTag::RequestGameplayTag(FName("Cooldown")))) Data.CooldownTag = Tag;
 					}
+					Data.CooldownEffectClass = CooldownGE->GetClass();
 
-					Data.CooldownRemaining = TimeRemaining;
-					Data.CooldownDuration = CooldownDuration;
+					Data.RemainingTime = TimeRemaining;
+
+					FatedBrandInstance->RunningCooldowns.Add(Data);
 				}
-
-				Debug::Print(Spec.Ability->GetCooldownGameplayEffect()->GetName());
-
 			}
 		}
+	}
+}
+
+void AFatedBrandPlayerState::ApplyRunningCooldowns()
+{
+	if (!AbilitySystemComponent) return;
+
+	if (UFatedBrandInstance* FatedBrandInstance = Cast<UFatedBrandInstance>(GetGameInstance()))
+	{
+		if (FatedBrandInstance->RunningCooldowns.Num() == 0) return;
+
+		for (const FRunningCooldownData& Data : FatedBrandInstance->RunningCooldowns)
+		{
+			const FGameplayEffectContextHandle Context = AbilitySystemComponent->MakeEffectContext();
+			FGameplayEffectSpecHandle SpecHandle = AbilitySystemComponent->MakeOutgoingSpec(Data.CooldownEffectClass, 1.f, Context);
+
+			if (!SpecHandle.IsValid()) continue;
+
+			FGameplayEffectSpec* Spec = SpecHandle.Data.Get();
+
+			Spec->SetSetByCallerMagnitude(Data.CooldownTag, Data.RemainingTime);
+			AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*Spec);
+		}
+		FatedBrandInstance->RunningCooldowns.Empty();
 	}
 }

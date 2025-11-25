@@ -103,16 +103,19 @@ struct FFatedBrandAbilityInfo
 	TObjectPtr<const UTexture2D> Icon = nullptr;
 };
 
-USTRUCT()
-struct FAbilityCooldownSaveData
+USTRUCT(BlueprintType)
+struct FRunningCooldownData
 {
 	GENERATED_BODY()
 
+	UPROPERTY()
 	FGameplayTag CooldownTag;
 
-	float CooldownRemaining;
+	UPROPERTY()
+	TSubclassOf<UGameplayEffect> CooldownEffectClass;
 
-	float CooldownDuration;
+	UPROPERTY()
+	float RemainingTime;
 };
 
 #pragma region UseDataTable

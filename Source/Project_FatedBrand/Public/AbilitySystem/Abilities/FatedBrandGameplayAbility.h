@@ -27,6 +27,8 @@ public :
 	UFUNCTION(BlueprintCallable)
 	void ExecuteGameplayCue(const UAbilitySystemComponent* TargetASC, const FGameplayTag& GameplayTagCue);
 
+	virtual void ApplyCooldown(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo) const override;
+
 protected :
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 	void ReceiveDeactivate(const FGameplayTag& AbilityTag);
@@ -58,7 +60,12 @@ protected :
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage")
 	float RadialDamageOuterRadius = 0.f;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Cooldown")
+	float CooldownTime = 0.f;
+
+
 private :
 	TWeakObjectPtr<AFatedBrandCharacter> CachedFatedBrandCharacter;
 	TWeakObjectPtr<AFatedBrandEnemy> CachedFatedBrandEnemy;
+
 };
