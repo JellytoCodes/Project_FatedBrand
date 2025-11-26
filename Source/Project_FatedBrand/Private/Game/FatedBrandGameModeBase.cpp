@@ -10,7 +10,6 @@
 #include "HUD/ViewModel/MVVM_LoadSlot.h"
 #include "Interfaces/SaveInterface.h"
 #include "Kismet/GameplayStatics.h"
-#include "Project_FatedBrand/Project_FatedBrand.h"
 #include "Serialization/ObjectAndNameAsStringProxyArchive.h"
 #include "Sound/SoundBase.h"
 #include "Components/AudioComponent.h"
@@ -28,12 +27,12 @@ void AFatedBrandGameModeBase::LoadWorldSate(UWorld* World) const
 	if (UGameplayStatics::DoesSaveGameExist(FatedBrandInstance->LoadSlotName, FatedBrandInstance->LoadSlotIndex))
 	{
 		SaveGame = Cast<UFatedBrandSaveGame>(UGameplayStatics::LoadGameFromSlot(FatedBrandInstance->LoadSlotName, FatedBrandInstance->LoadSlotIndex));
-		Debug::Print("Exist Load Slot Data");
 	}
 	else
 	{
+		// 테스트 맵 플레이 시 로드 슬롯 데이터를 불러올 수 없으니
+		// 진행 현황 저장에 대한 데이터를 불러오도록 한다.
 		SaveGame = Cast<UFatedBrandSaveGame>(UGameplayStatics::LoadGameFromSlot(ProgressSlotName, ProgressSlotIndex));
-		Debug::Print("Exist Progress Slot Data");
 	}
 
 	if (SaveGame == nullptr) return;
@@ -223,8 +222,6 @@ void AFatedBrandGameModeBase::PlayBGM(USoundBase* NewSound, const float FadeInTi
 	if (NewSound == nullptr) return;
 
 	BGMComponent->SetSound(NewSound);
-
-	Debug::Print(NewSound->GetName());
 
 	if (FadeInTime > 0.f)
 	{

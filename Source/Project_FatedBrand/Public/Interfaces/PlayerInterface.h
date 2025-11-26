@@ -43,7 +43,9 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void CanUpgradeAttribute(const bool IsInteraction);
 
-
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	AFatedBrandPlayerState* GetPlayerState();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void PlayerHideHUD();
 };

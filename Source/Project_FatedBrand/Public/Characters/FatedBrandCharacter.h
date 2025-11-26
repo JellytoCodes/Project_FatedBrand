@@ -32,6 +32,7 @@ public :
 	virtual void InteractSavePoint_Implementation(const bool IsInteraction) override;
 	virtual void CanUpgradeAttribute_Implementation(const bool IsInteraction) override;
 	virtual AFatedBrandPlayerState* GetPlayerState_Implementation() override;
+	virtual void PlayerHideHUD_Implementation() override;
 #pragma endregion
 
 	void LoadProgress();

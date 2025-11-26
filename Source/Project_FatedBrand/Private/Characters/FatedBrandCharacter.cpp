@@ -15,8 +15,6 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "HUD/FatedBrandHUD.h"
 #include "Kismet/GameplayStatics.h"
-#include "Game/FatedBrandPlayerState.h"
-#include "Project_FatedBrand/Project_FatedBrand.h"
 
 AFatedBrandCharacter::AFatedBrandCharacter()
 {
@@ -114,6 +112,17 @@ void AFatedBrandCharacter::CanUpgradeAttribute_Implementation(const bool IsInter
 AFatedBrandPlayerState* AFatedBrandCharacter::GetPlayerState_Implementation()
 {
 	return PlayerController->GetPlayerState<AFatedBrandPlayerState>();
+}
+
+void AFatedBrandCharacter::PlayerHideHUD_Implementation()
+{
+	if (PlayerController.IsValid())
+	{
+		// HUD를 제거하는 상황은 대부분
+		// 컨트롤 권한을 잃는 경우가 많기에 MappingContext도 해제한다.
+		PlayerController->DisableDefaultMappingContext();
+		PlayerController->DisableHUD();
+	}
 }
 
 void AFatedBrandCharacter::LoadProgress()

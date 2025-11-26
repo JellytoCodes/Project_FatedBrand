@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystemInterface.h"
-#include "FatedBrandStructTypes.h"
 #include "GameFramework/PlayerState.h"
 #include "FatedBrandPlayerState.generated.h"
 
