@@ -43,6 +43,7 @@ void UMVVM_LoadScreen::SlotPressedForLoading(const int32 Slot)
 		LoadSlots[Slot]->SlotStatus = Valid;
 		LoadSlots[Slot]->PlayerStartTag = FatedBrandGameMode->DefaultPlayerStartTag;
 		LoadSlots[Slot]->MapAssetName = FatedBrandGameMode->DefaultMap.ToSoftObjectPath().GetAssetName();
+		FatedBrandGameMode->DeleteProgressData();
 		FatedBrandGameMode->SaveSlotData(LoadSlots[Slot], Slot);
 
 		UFatedBrandInstance* FatedBrandInstance = Cast<UFatedBrandInstance>(FatedBrandGameMode->GetGameInstance());
@@ -51,11 +52,6 @@ void UMVVM_LoadScreen::SlotPressedForLoading(const int32 Slot)
 		FatedBrandInstance->PlayerStartTag = LoadSlots[Slot]->PlayerStartTag;
 	}
 	SelectedSlot = LoadSlots[Slot];
-}
-
-void UMVVM_LoadScreen::SlotPressedForSaving(const int32 Slot)
-{
-	// TODO : 세이브 포인트에서 사용으로 구현필요
 }
 
 void UMVVM_LoadScreen::SelectSlotPressedForPlay()

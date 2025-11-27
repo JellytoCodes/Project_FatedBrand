@@ -115,6 +115,14 @@ void AFatedBrandGameModeBase::SaveInGameProgressData(UFatedBrandSaveGame* SaveOb
 	UGameplayStatics::SaveGameToSlot(SaveObject, ProgressSlotName, ProgressSlotIndex);
 }
 
+void AFatedBrandGameModeBase::DeleteProgressData()
+{
+	if (UGameplayStatics::DoesSaveGameExist(ProgressSlotName, ProgressSlotIndex))
+	{
+		UGameplayStatics::DeleteGameInSlot(ProgressSlotName, ProgressSlotIndex);
+	}
+}
+
 void AFatedBrandGameModeBase::TravelToMap(const UMVVM_LoadSlot* Slot)
 {
 	const FString SlotName = Slot->GetLoadSlotName();

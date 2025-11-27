@@ -25,9 +25,6 @@ public :
 	void SlotPressedForLoading(const int32 Slot);
 
 	UFUNCTION(BlueprintCallable)
-	void SlotPressedForSaving(const int32 Slot);
-
-	UFUNCTION(BlueprintCallable)
 	void SelectSlotPressedForPlay();
 
 	UFUNCTION(BlueprintCallable)

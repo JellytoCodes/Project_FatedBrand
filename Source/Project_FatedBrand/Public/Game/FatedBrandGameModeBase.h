@@ -55,7 +55,9 @@ public :
 
 	void SaveProgressWorldState(UWorld* World, const FString& DestinationMapAssetName = FString("")) const;
 	void SaveInGameProgressData(UFatedBrandSaveGame* SaveObject) const;
+	void DeleteProgressData();
 	UFatedBrandSaveGame* GetProgressSaveData() const;
+	
 
 	UFUNCTION(BlueprintCallable)
 	void ProgressSaveDataToSlot(const FString& SlotName, const int SlotIndex);
