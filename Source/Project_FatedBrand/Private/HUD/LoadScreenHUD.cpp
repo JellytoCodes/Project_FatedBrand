@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "HUD/LoadScreenHUD.h"
 
 #include "Blueprint/UserWidget.h"
@@ -14,9 +13,9 @@ void ALoadScreenHUD::ShowMainMenu()
 	{
 		MainMenuWidget = CreateWidget<UFatedBrandUserWidget>(GetWorld(), MainMenuWidgetClass);
 
-		//MainMenuWidget->SetAlignmentInViewport(FVector2D(0.5f, 0.5f));
-		//MainMenuWidget->SetPositionInViewport(ViewportSize * 0.5f, false);
 		MainMenuWidget->AddToViewport();
+		MainMenuWidget->SetAlignmentInViewport(FVector2D(0.5f, 0.5f));
+		//MainMenuWidget->SetPositionInViewport(ViewportSize * 0.5f, false);
 	}
 }
 
@@ -36,11 +35,10 @@ void ALoadScreenHUD::ShowLoadScreen()
 		LoadScreenWidget = CreateWidget<ULoadScreenWidget>(GetWorld(), LoadScreenWidgetClass);
 		LoadScreenWidget->BlueprintInitializeWidget();
 
-		//LoadScreenWidget->SetAlignmentInViewport(FVector2D(1.0f, 1.0f));
-		//LoadScreenWidget->SetPositionInViewport(ViewportSize * 0.5f, true);
-
 		LoadScreenViewModel->LoadData();
 		LoadScreenWidget->AddToViewport();
+		LoadScreenWidget->SetAlignmentInViewport(FVector2D(0.5f, 0.5f));
+		//LoadScreenWidget->SetPositionInViewport(ViewportSize * 0.5f, true);
 	}
 }
 

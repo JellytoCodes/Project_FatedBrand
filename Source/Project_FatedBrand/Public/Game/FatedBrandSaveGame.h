@@ -87,10 +87,10 @@ class PROJECT_FATEDBRAND_API UFatedBrandSaveGame : public USaveGame
 
 public :
 	UPROPERTY()
-	FString MapName = FString("Default Map Name");
+	FString MapName = FString("Empty");
 
 	UPROPERTY()
-	FString MapAssetName = FString("Default Map Asset Name");
+	FString MapAssetName = FString("Empty");
 
 	UPROPERTY()
 	FName PlayerStartTag;
