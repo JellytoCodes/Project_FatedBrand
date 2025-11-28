@@ -33,11 +33,16 @@ public :
 	virtual void CanUpgradeAttribute_Implementation(const bool IsInteraction) override;
 	virtual AFatedBrandPlayerState* GetPlayerState_Implementation() override;
 	virtual void PlayerHideHUD_Implementation() override;
+	virtual void ChangeToTravelState_Implementation() override;
+	virtual bool CanRopeSwing_Implementation(const bool IsCanGrab) override;
 #pragma endregion
 
 	void LoadProgress();
 
 	UAttributeSet* GetAttributeSet() const { return FatedBrandAttributeSet; }
+
+	UPROPERTY(BlueprintReadWrite)
+	bool IsHanging = false;
 
 protected :
 	virtual void PossessedBy(AController* NewController) override;
@@ -45,12 +50,6 @@ protected :
 	virtual void InitAbilityActorInfo() override;
 
 private :
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<USpringArmComponent> CameraBoom;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<UCameraComponent> FollowCamera;
-
 	UPROPERTY()
 	TWeakObjectPtr<AFatedBrandPlayerController> PlayerController;
 };

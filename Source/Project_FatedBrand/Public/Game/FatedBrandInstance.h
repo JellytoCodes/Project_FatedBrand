@@ -28,4 +28,7 @@ public :
 
 	UPROPERTY()
 	TArray<FRunningCooldownData> RunningCooldowns;
+
+	UPROPERTY()
+	bool IsPlayerTravelTrigger = false;
 };

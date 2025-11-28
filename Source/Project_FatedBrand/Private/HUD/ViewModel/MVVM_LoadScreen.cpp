@@ -7,7 +7,6 @@
 #include "Game/FatedBrandInstance.h"
 #include "HUD/ViewModel/MVVM_LoadSlot.h"
 #include "Kismet/GameplayStatics.h"
-#include "Project_FatedBrand/Project_FatedBrand.h"
 
 void UMVVM_LoadScreen::InitializeLoadSlots()
 {

@@ -48,4 +48,13 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void PlayerHideHUD();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void ChangeToTravelState();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	bool CanRopeSwing(const bool IsCanGrab);
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void CanGrabRope(const AActor* OutActor);
 };

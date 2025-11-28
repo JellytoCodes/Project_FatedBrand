@@ -5,14 +5,13 @@
 #include "FatedBrandFunctionLibrary.h"
 #include "AbilitySystem/FatedBrandAbilitySystemComponent.h"
 #include "AbilitySystem/FatedBrandAttributeSet.h"
-#include "Camera/CameraComponent.h"
 #include "Controllers/FatedBrandPlayerController.h"
 #include "DataAssets/DataAsset_AbilityInfo.h"
 #include "Game/FatedBrandGameModeBase.h"
+#include "Game/FatedBrandInstance.h"
 #include "Game/FatedBrandPlayerState.h"
 #include "Game/FatedBrandSaveGame.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "GameFramework/SpringArmComponent.h"
 #include "HUD/FatedBrandHUD.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -21,15 +20,6 @@ AFatedBrandCharacter::AFatedBrandCharacter()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
-
-	CameraBoom = CreateDefaultSubobject<USpringArmComponent>("CameraBoom");
-	CameraBoom->SetupAttachment(GetRootComponent());
-	CameraBoom->TargetArmLength = 200.f;
-	CameraBoom->bUsePawnControlRotation = true;
-
-	FollowCamera = CreateDefaultSubobject<UCameraComponent>("FollowCamera");
-	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
-	FollowCamera->bUsePawnControlRotation = false;
 
 	GetCharacterMovement()->PerchRadiusThreshold = 15.0f;
 	GetCharacterMovement()->LedgeCheckThreshold = 6.0f;
@@ -49,7 +39,7 @@ void AFatedBrandCharacter::UpdateAbilities_Implementation(const FGameplayTag& Ab
 
 void AFatedBrandCharacter::SaveProgress_Implementation(const FName& CheckPointTag)
 {
-	if (AFatedBrandGameModeBase* FatedBrandGameMode = Cast<AFatedBrandGameModeBase>(UGameplayStatics::GetGameMode(this)))
+	if (const AFatedBrandGameModeBase* FatedBrandGameMode = Cast<AFatedBrandGameModeBase>(UGameplayStatics::GetGameMode(this)))
 	{
 		UFatedBrandSaveGame* SaveData = FatedBrandGameMode->GetProgressSaveData();
 		if (SaveData == nullptr) return;
@@ -91,12 +81,9 @@ void AFatedBrandCharacter::SaveProgress_Implementation(const FName& CheckPointTa
 
 float AFatedBrandCharacter::GetVitalSurgeGage_Implementation()
 {
-	float CurrentValue = UFatedBrandAttributeSet::GetVitalSurgeAttribute().GetNumericValue(FatedBrandAttributeSet);
-	if (CurrentValue > 0.f)
-	{
-		return CurrentValue;
-	}
-	return 0.f;
+	const float CurrentValue = UFatedBrandAttributeSet::GetVitalSurgeAttribute().GetNumericValue(FatedBrandAttributeSet);
+
+	return CurrentValue > 0.f ? CurrentValue : 0.f;
 }
 
 void AFatedBrandCharacter::InteractSavePoint_Implementation(const bool IsInteraction)
@@ -118,11 +105,25 @@ void AFatedBrandCharacter::PlayerHideHUD_Implementation()
 {
 	if (PlayerController.IsValid())
 	{
-		// HUD를 제거하는 상황은 대부분
-		// 컨트롤 권한을 잃는 경우가 많기에 MappingContext도 해제한다.
+		// Player Overlay를 제거하는 상황은 대부분
+		// 컨트롤 권한을 잃는 경우가 많기에 MappingContext도 해제.
 		PlayerController->DisableDefaultMappingContext();
 		PlayerController->DisableHUD();
 	}
+}
+
+void AFatedBrandCharacter::ChangeToTravelState_Implementation()
+{
+	if (UFatedBrandInstance* FatedBrandInstance = Cast<UFatedBrandInstance>(GetGameInstance()))
+	{
+		FatedBrandInstance->IsPlayerTravelTrigger = true;
+	}
+}
+
+bool AFatedBrandCharacter::CanRopeSwing_Implementation(const bool IsCanGrab)
+{
+	IsHanging = IsCanGrab;
+	return IsHanging;
 }
 
 void AFatedBrandCharacter::LoadProgress()
@@ -130,12 +131,16 @@ void AFatedBrandCharacter::LoadProgress()
 	AddCharacterAbilities();
 	if (const AFatedBrandGameModeBase* FatedBrandGameMode = Cast<AFatedBrandGameModeBase>(UGameplayStatics::GetGameMode(this)))
 	{
-		UFatedBrandSaveGame* SaveData = FatedBrandGameMode->GetProgressSaveData();
+		UFatedBrandInstance* FatedBrandInstance = Cast<UFatedBrandInstance>(GetGameInstance());
+		if (FatedBrandInstance == nullptr) return;
+		
+		UFatedBrandSaveGame* SaveData = FatedBrandInstance->IsPlayerTravelTrigger ? FatedBrandGameMode->GetProgressSaveData() : FatedBrandGameMode->RetrieveInGameSaveData();
 		if (SaveData == nullptr) return;
 
 		if (SaveData->bFirstTimeLoadIn)
 		{
-			//
+			// 현재 데이터가 첫 시작일 경우 로드하고자 하는 데이터가 있을 때 사용
+			// 아직은 기능 추가할 경우가 없어 공백 유지
 		}
 		else
 		{
@@ -145,6 +150,9 @@ void AFatedBrandCharacter::LoadProgress()
 				UFatedBrandFunctionLibrary::InitializeDefaultAttributesFromSaveData(this, FatedBrandASC, SaveData);
 			}
 		}
+		// 경우에 상관없이 무조건적으로 false로 처리하여
+		// 재시작 발생 시 불러오는 데이터가 꼬이는 것을 방지하기 위함.
+		FatedBrandInstance->IsPlayerTravelTrigger = false;
 	}
 }
 

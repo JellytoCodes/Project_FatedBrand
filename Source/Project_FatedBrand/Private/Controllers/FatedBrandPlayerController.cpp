@@ -104,7 +104,7 @@ void AFatedBrandPlayerController::Input_Move(const FInputActionValue &InputActio
 void AFatedBrandPlayerController::Input_InteractUpKeyPressed()
 {
 	if (FatedBrandCharacter->GetFatedBrandAbilitySystemComponent()->HasMatchingGameplayTag(FatedBrandGameplayTags::Ability_Activate_VitalSurge)) return;
-	if (bNebulaMenuOpen || bPauseMenuOpen) return;
+	if (bNebulaMenuOpen || bPauseMenuOpen || FatedBrandCharacter->IsHanging) return;
 
 	if (bCanOpenSaveMenu)
 	{
@@ -141,7 +141,7 @@ void AFatedBrandPlayerController::ResetWallJump()
 
 void AFatedBrandPlayerController::Input_InteractUpKeyReleased()
 {
-	if (bNebulaMenuOpen || bPauseMenuOpen || bCanOpenSaveMenu || bCanOpenAttributeMenu) return;
+	if (bNebulaMenuOpen || bPauseMenuOpen || bCanOpenSaveMenu || bCanOpenAttributeMenu || FatedBrandCharacter->IsHanging) return;
 
 	PlayerJumpEnd();
 }
@@ -192,7 +192,7 @@ void AFatedBrandPlayerController::Input_WidgetDeSelect()
 
 void AFatedBrandPlayerController::Input_NebulaMenu()
 {
-	if (FatedBrandCharacter == nullptr || bPauseMenuOpen) return;
+	if (FatedBrandCharacter == nullptr || bPauseMenuOpen || FatedBrandCharacter->IsHanging) return;
 
 	if (CachedFatedBrandHUD.IsValid())
 	{
@@ -216,7 +216,7 @@ void AFatedBrandPlayerController::Input_NebulaMenu()
 
 void AFatedBrandPlayerController::Input_PauseMenu()
 {
-	if (FatedBrandCharacter == nullptr || bNebulaMenuOpen) return;
+	if (FatedBrandCharacter == nullptr || bNebulaMenuOpen || FatedBrandCharacter->IsHanging) return;
 
 	if (CachedFatedBrandHUD.IsValid())
 	{
@@ -258,7 +258,7 @@ void AFatedBrandPlayerController::AttributeMenuDisable()
 
 void AFatedBrandPlayerController::Input_AbilityInputPressed(const FGameplayTag InInputTag)
 {
-	if (bNebulaMenuOpen || bPauseMenuOpen) return;
+	if (bNebulaMenuOpen || bPauseMenuOpen || FatedBrandCharacter->IsHanging) return;
 
 	if (GetFatedBrandASC())
 	{
@@ -268,7 +268,7 @@ void AFatedBrandPlayerController::Input_AbilityInputPressed(const FGameplayTag I
 
 void AFatedBrandPlayerController::Input_AbilityInputReleased(const FGameplayTag InInputTag)
 {
-	if (bNebulaMenuOpen || bPauseMenuOpen) return;
+	if (bNebulaMenuOpen || bPauseMenuOpen || FatedBrandCharacter->IsHanging) return;
 
 	if (GetFatedBrandASC())
 	{
@@ -278,7 +278,7 @@ void AFatedBrandPlayerController::Input_AbilityInputReleased(const FGameplayTag 
 
 void AFatedBrandPlayerController::Input_AbilityInputHeld(const FGameplayTag InInputTag)
 {
-	if (bNebulaMenuOpen || bPauseMenuOpen) return;
+	if (bNebulaMenuOpen || bPauseMenuOpen || FatedBrandCharacter->IsHanging) return;
 
 	if (GetFatedBrandASC())
 	{
@@ -290,6 +290,7 @@ void AFatedBrandPlayerController::PlayerJump()
 {
 	if (FatedBrandCharacter.IsValid())
 	{
+		if (FatedBrandCharacter->IsHanging) return;
 		if (!FatedBrandCharacter->GetCharacterMovement()->IsFalling())
 		{
 			FatedBrandCharacter->Jump();
