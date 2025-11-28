@@ -35,14 +35,22 @@ public :
 	virtual void PlayerHideHUD_Implementation() override;
 	virtual void ChangeToTravelState_Implementation() override;
 	virtual bool CanRopeSwing_Implementation(const bool IsCanGrab) override;
+	virtual void SetCanRest_Implementation(const bool InCanRest, AActor* InActor) override;
 #pragma endregion
 
 	void LoadProgress();
 
 	UAttributeSet* GetAttributeSet() const { return FatedBrandAttributeSet; }
 
+#pragma region CanState Definition
 	UPROPERTY(BlueprintReadWrite)
 	bool IsHanging = false;
+
+	UPROPERTY(BlueprintReadWrite)
+	bool IsRestState = false;
+
+	bool CanShit = false;
+#pragma endregion
 
 protected :
 	virtual void PossessedBy(AController* NewController) override;
@@ -52,4 +60,7 @@ protected :
 private :
 	UPROPERTY()
 	TWeakObjectPtr<AFatedBrandPlayerController> PlayerController;
+
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	TWeakObjectPtr<AActor> InteractActor;
 };

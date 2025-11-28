@@ -66,6 +66,11 @@ void AFatedBrandInteractActor::OnHit_Implementation()
 	}
 }
 
+AFatedBrandInteractActor* AFatedBrandInteractActor::GetInteractActor_Implementation()
+{
+	return this;
+}
+
 void AFatedBrandInteractActor::BeginPlay()
 {
 	Super::BeginPlay();

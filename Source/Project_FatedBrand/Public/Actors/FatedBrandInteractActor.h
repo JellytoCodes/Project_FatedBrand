@@ -25,6 +25,7 @@ public:
 	virtual FGameplayTag GetConditionTag_Implementation() override;
 	virtual bool GetMatchesTagByTarget_Implementation(AActor* TargetActor) override;
 	virtual void OnHit_Implementation() override;
+	virtual AFatedBrandInteractActor* GetInteractActor_Implementation() override;
 
 protected :
 	virtual void BeginPlay() override;

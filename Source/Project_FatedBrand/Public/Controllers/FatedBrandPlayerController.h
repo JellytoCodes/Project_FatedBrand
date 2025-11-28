@@ -106,4 +106,9 @@ private :
 	float LastFallTime = 0.0f;
 
 	void ResetWallJump();
+
+	void CanOpenWidget(bool &IsCanJump);
+	void RestStateControl(bool &IsCanJump);
+
+	bool CanKeyInput() const;
 };

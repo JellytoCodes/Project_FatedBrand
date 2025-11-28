@@ -7,6 +7,8 @@
 #include "GameplayTagContainer.h"
 #include "ActorInteractInterface.generated.h"
 
+class AFatedBrandInteractActor;
+
 UINTERFACE(MinimalAPI)
 class UActorInteractInterface : public UInterface
 {
@@ -29,4 +31,7 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void OnHit();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	AFatedBrandInteractActor* GetInteractActor();
 };

@@ -57,4 +57,10 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void CanGrabRope(const AActor* OutActor);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void SetCanRest(const bool InCanRest, AActor* InActor);
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void RestStateInKey();
 };

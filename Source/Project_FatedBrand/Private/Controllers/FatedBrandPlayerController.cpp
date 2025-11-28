@@ -106,18 +106,26 @@ void AFatedBrandPlayerController::Input_InteractUpKeyPressed()
 	if (FatedBrandCharacter->GetFatedBrandAbilitySystemComponent()->HasMatchingGameplayTag(FatedBrandGameplayTags::Ability_Activate_VitalSurge)) return;
 	if (bNebulaMenuOpen || bPauseMenuOpen || FatedBrandCharacter->IsHanging) return;
 
+	bool IsInteractUpKeyCanJump = true;
+
+	CanOpenWidget(IsInteractUpKeyCanJump);
+	RestStateControl(IsInteractUpKeyCanJump);
+
+	if (IsInteractUpKeyCanJump) PlayerJump();
+}
+
+void AFatedBrandPlayerController::CanOpenWidget(bool& IsCanJump)
+{
 	if (bCanOpenSaveMenu)
 	{
 		if (CachedFatedBrandHUD.IsValid())
 		{
 			CachedFatedBrandHUD->CreateSaveMenuWidget();
 		}
-
-		// 세이브 포인트에서 점프가 발생하지 않도록 하기 위한 리턴
-		return;
+		IsCanJump = false;
 	}
 
-	else if (bCanOpenAttributeMenu)
+	if (bCanOpenAttributeMenu)
 	{
 		if (CachedFatedBrandHUD.IsValid())
 		{
@@ -126,22 +134,33 @@ void AFatedBrandPlayerController::Input_InteractUpKeyPressed()
 			bAttributeMenuOpen = true;
 			if (Subsystem) Subsystem->AddMappingContext(CachedFatedBrandHUD->GetWidgetMappingContext(), 1);
 		}
-
-		// 애트리뷰트 포인트에서 점프가 발생하지 않도록 하기 위한 리턴
-		return;   
+		IsCanJump = false;  
 	}
-
-	PlayerJump();
 }
 
-void AFatedBrandPlayerController::ResetWallJump()
+void AFatedBrandPlayerController::RestStateControl(bool& IsCanJump)
 {
-	bHasWallJumped = false;
+	if (FatedBrandCharacter->CanShit == false) return;
+
+	if (IPlayerInterface* PlayerInterface = Cast<IPlayerInterface>(FatedBrandCharacter.Get()))
+	{
+		IPlayerInterface::Execute_RestStateInKey(FatedBrandCharacter.Get());
+		IsCanJump = false;
+	}
+}
+
+bool AFatedBrandPlayerController::CanKeyInput() const
+{
+	if (bNebulaMenuOpen || bPauseMenuOpen || bCanOpenSaveMenu || bCanOpenAttributeMenu) return false;
+	if (FatedBrandCharacter->IsHanging) return false;
+	if (FatedBrandCharacter->IsRestState) return false;
+
+	return true;
 }
 
 void AFatedBrandPlayerController::Input_InteractUpKeyReleased()
 {
-	if (bNebulaMenuOpen || bPauseMenuOpen || bCanOpenSaveMenu || bCanOpenAttributeMenu || FatedBrandCharacter->IsHanging) return;
+	if (CanKeyInput() == false) return;
 
 	PlayerJumpEnd();
 }
@@ -216,7 +235,7 @@ void AFatedBrandPlayerController::Input_NebulaMenu()
 
 void AFatedBrandPlayerController::Input_PauseMenu()
 {
-	if (FatedBrandCharacter == nullptr || bNebulaMenuOpen || FatedBrandCharacter->IsHanging) return;
+	if (FatedBrandCharacter == nullptr || bNebulaMenuOpen || FatedBrandCharacter->IsHanging || FatedBrandCharacter->IsRestState) return;
 
 	if (CachedFatedBrandHUD.IsValid())
 	{
@@ -258,7 +277,7 @@ void AFatedBrandPlayerController::AttributeMenuDisable()
 
 void AFatedBrandPlayerController::Input_AbilityInputPressed(const FGameplayTag InInputTag)
 {
-	if (bNebulaMenuOpen || bPauseMenuOpen || FatedBrandCharacter->IsHanging) return;
+	if (CanKeyInput() == false) return;
 
 	if (GetFatedBrandASC())
 	{
@@ -268,7 +287,7 @@ void AFatedBrandPlayerController::Input_AbilityInputPressed(const FGameplayTag I
 
 void AFatedBrandPlayerController::Input_AbilityInputReleased(const FGameplayTag InInputTag)
 {
-	if (bNebulaMenuOpen || bPauseMenuOpen || FatedBrandCharacter->IsHanging) return;
+	if (CanKeyInput() == false) return;
 
 	if (GetFatedBrandASC())
 	{
@@ -278,7 +297,7 @@ void AFatedBrandPlayerController::Input_AbilityInputReleased(const FGameplayTag 
 
 void AFatedBrandPlayerController::Input_AbilityInputHeld(const FGameplayTag InInputTag)
 {
-	if (bNebulaMenuOpen || bPauseMenuOpen || FatedBrandCharacter->IsHanging) return;
+	if (CanKeyInput() == false) return;
 
 	if (GetFatedBrandASC())
 	{
@@ -291,6 +310,7 @@ void AFatedBrandPlayerController::PlayerJump()
 	if (FatedBrandCharacter.IsValid())
 	{
 		if (FatedBrandCharacter->IsHanging) return;
+
 		if (!FatedBrandCharacter->GetCharacterMovement()->IsFalling())
 		{
 			FatedBrandCharacter->Jump();
@@ -345,6 +365,11 @@ void AFatedBrandPlayerController::PlayerJump()
 			}
 		}
 	}
+}
+
+void AFatedBrandPlayerController::ResetWallJump()
+{
+	bHasWallJumped = false;
 }
 
 void AFatedBrandPlayerController::PlayerJumpEnd()

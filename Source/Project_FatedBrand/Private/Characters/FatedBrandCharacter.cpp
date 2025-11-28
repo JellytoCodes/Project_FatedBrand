@@ -14,6 +14,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "HUD/FatedBrandHUD.h"
 #include "Kismet/GameplayStatics.h"
+#include "Project_FatedBrand/Project_FatedBrand.h"
 
 AFatedBrandCharacter::AFatedBrandCharacter()
 {
@@ -124,6 +125,12 @@ bool AFatedBrandCharacter::CanRopeSwing_Implementation(const bool IsCanGrab)
 {
 	IsHanging = IsCanGrab;
 	return IsHanging;
+}
+
+void AFatedBrandCharacter::SetCanRest_Implementation(const bool InCanRest, AActor* InActor)
+{
+	CanShit = InCanRest;
+	InteractActor = InActor;
 }
 
 void AFatedBrandCharacter::LoadProgress()
