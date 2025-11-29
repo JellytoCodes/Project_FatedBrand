@@ -163,6 +163,30 @@ void AFatedBrandCharacter::LoadProgress()
 	}
 }
 
+void AFatedBrandCharacter::InteractActorInApplyEffect(TSubclassOf<UGameplayEffect> EffectClass)
+{
+	if (!FatedBrandAbilitySystemComponent) return;
+
+	check(EffectClass);
+	FGameplayEffectContextHandle EffectContextHandle = FatedBrandAbilitySystemComponent->MakeEffectContext();
+	EffectContextHandle.AddSourceObject(this);
+	const FGameplayEffectSpecHandle EffectSpecHandle = FatedBrandAbilitySystemComponent->MakeOutgoingSpec(EffectClass, 1, EffectContextHandle);
+	const FActiveGameplayEffectHandle ActiveEffectHandle = FatedBrandAbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data);
+
+	InteractForActiveEffectHandle = ActiveEffectHandle;
+}
+
+void AFatedBrandCharacter::InteractActorInRemoveEffect()
+{
+	if (!FatedBrandAbilitySystemComponent) return;
+
+	if (InteractForActiveEffectHandle.IsValid())
+	{
+		FatedBrandAbilitySystemComponent->RemoveActiveGameplayEffect(InteractForActiveEffectHandle, 1);
+		InteractForActiveEffectHandle = FActiveGameplayEffectHandle();
+	}
+}
+
 void AFatedBrandCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);

@@ -42,6 +42,12 @@ public :
 
 	UAttributeSet* GetAttributeSet() const { return FatedBrandAttributeSet; }
 
+	UFUNCTION(BlueprintCallable)
+	void InteractActorInApplyEffect(TSubclassOf<UGameplayEffect>EffectClass);
+
+	UFUNCTION(BlueprintCallable)
+	void InteractActorInRemoveEffect();
+
 #pragma region CanState Definition
 	UPROPERTY(BlueprintReadWrite)
 	bool IsHanging = false;
@@ -54,7 +60,6 @@ public :
 
 protected :
 	virtual void PossessedBy(AController* NewController) override;
-
 	virtual void InitAbilityActorInfo() override;
 
 private :
@@ -63,4 +68,6 @@ private :
 
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TWeakObjectPtr<AActor> InteractActor;
+
+	FActiveGameplayEffectHandle InteractForActiveEffectHandle;
 };

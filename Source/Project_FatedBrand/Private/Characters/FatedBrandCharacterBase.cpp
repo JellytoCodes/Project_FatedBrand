@@ -33,7 +33,12 @@ AFatedBrandCharacterBase::AFatedBrandCharacterBase()
 
 UAbilitySystemComponent* AFatedBrandCharacterBase::GetAbilitySystemComponent() const
 {
-	return GetFatedBrandAbilitySystemComponent();
+	return CastChecked<UFatedBrandAbilitySystemComponent>(FatedBrandAbilitySystemComponent);
+}
+
+UFatedBrandAbilitySystemComponent* AFatedBrandCharacterBase::GetFatedBrandAbilitySystemComponent() const
+{
+	return CastChecked<UFatedBrandAbilitySystemComponent>(FatedBrandAbilitySystemComponent);
 }
 
 void AFatedBrandCharacterBase::SendWeaponEquippedDelegate(const bool bIsEquip) const
@@ -144,9 +149,9 @@ void AFatedBrandCharacterBase::AddCharacterAbilities() const
 	{
 		if (UDataAsset_StartUpDataBase* LoadedData = StartUpData.LoadSynchronous())
 		{
-			LoadedData->InitializeGameplayEffect(FatedBrandAbilitySystemComponent, StartUpCharacterName, 1);
-
 			UFatedBrandAbilitySystemComponent* FatedBrandASC = CastChecked<UFatedBrandAbilitySystemComponent>(FatedBrandAbilitySystemComponent);
+
+			LoadedData->InitializeGameplayEffect(FatedBrandASC, StartUpCharacterName, 1);
 			
 			FatedBrandASC->AddCharacterActivateAbilities(LoadedData->StartUpOffensiveAbilities);
 			FatedBrandASC->AddCharacterPassiveAbilities(LoadedData->StartUpPassiveAbilities);

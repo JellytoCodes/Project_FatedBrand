@@ -17,11 +17,16 @@
 #include "HUD/WidgetController/AttributeMenuWidgetController.h"
 #include "HUD/WidgetController/NebulaMenuWidgetController.h"
 #include "HUD/WidgetController/PauseMenuWidgetController.h"
+#include "Project_FatedBrand/Project_FatedBrand.h"
+
+AFatedBrandPlayerController::AFatedBrandPlayerController()
+{
+	PlayerTeamID = FGenericTeamId(0);
+}
 
 FGenericTeamId AFatedBrandPlayerController::GetGenericTeamId() const
 {
-	if (!PlayerCombatInterface.IsValid()) return FGenericTeamId(0);
-	return PlayerCombatInterface->IsDead() ? FGenericTeamId(1) : FGenericTeamId(0);
+	return PlayerTeamID;
 }
 
 void AFatedBrandPlayerController::BeginPlay()
@@ -65,7 +70,7 @@ void AFatedBrandPlayerController::Input_Move(const FInputActionValue &InputActio
 {
 	const FVector2D InputAxisVector = InputActionValue.Get<FVector2D>();
 
-	if (FatedBrandCharacter->GetFatedBrandAbilitySystemComponent()->HasMatchingGameplayTag(FatedBrandGameplayTags::Ability_Activate_VitalSurge)) return;
+	if (FatedBrandCharacter->GetAbilitySystemComponent()->HasMatchingGameplayTag(FatedBrandGameplayTags::Ability_Activate_VitalSurge)) return;
 
 	if (bNebulaMenuOpen)
 	{
@@ -103,7 +108,7 @@ void AFatedBrandPlayerController::Input_Move(const FInputActionValue &InputActio
 
 void AFatedBrandPlayerController::Input_InteractUpKeyPressed()
 {
-	if (FatedBrandCharacter->GetFatedBrandAbilitySystemComponent()->HasMatchingGameplayTag(FatedBrandGameplayTags::Ability_Activate_VitalSurge)) return;
+	if (FatedBrandCharacter->GetAbilitySystemComponent()->HasMatchingGameplayTag(FatedBrandGameplayTags::Ability_Activate_VitalSurge)) return;
 	if (bNebulaMenuOpen || bPauseMenuOpen || FatedBrandCharacter->IsHanging) return;
 
 	bool IsInteractUpKeyCanJump = true;

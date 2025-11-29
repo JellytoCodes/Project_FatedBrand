@@ -39,7 +39,7 @@ public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
 	UFUNCTION(BlueprintPure)
-	FORCEINLINE UFatedBrandAbilitySystemComponent* GetFatedBrandAbilitySystemComponent() const { return CastChecked<UFatedBrandAbilitySystemComponent>(FatedBrandAbilitySystemComponent); }
+	UFatedBrandAbilitySystemComponent* GetFatedBrandAbilitySystemComponent() const;
 
 	// -----------------------------
 	UPROPERTY(BlueprintAssignable, Category = "AbilitySystem")

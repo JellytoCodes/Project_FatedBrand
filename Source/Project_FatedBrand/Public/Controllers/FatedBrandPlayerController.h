@@ -21,6 +21,7 @@ class PROJECT_FATEDBRAND_API AFatedBrandPlayerController : public APlayerControl
 	GENERATED_BODY()
 
 public :
+	AFatedBrandPlayerController();
 	virtual FGenericTeamId GetGenericTeamId() const override;
 
 	UFatedBrandAbilitySystemComponent* GetFatedBrandASC();
@@ -38,6 +39,8 @@ public :
 	void AttributeMenuDisable();
 	void SetIsCanCreateSaveMenu(const bool InIsCan) { bCanOpenSaveMenu = InIsCan; }
 	void SetIsCanCreateAttributeMenu(const bool InIsCan) { bCanOpenAttributeMenu = InIsCan; }
+
+	FGenericTeamId PlayerTeamID;
 
 protected :
 	virtual void BeginPlay() override;

@@ -16,7 +16,6 @@ AFatedBrandEnemy::AFatedBrandEnemy()
 	bUseControllerRotationYaw = false;
 
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 720.f, 0.f);
-
 	GetCharacterMovement()->bUseControllerDesiredRotation = true;
 }
 
@@ -37,11 +36,19 @@ void AFatedBrandEnemy::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 
-	AddCharacterAbilities();
-
 	if (BehaviorTree)
 	{
 		FatedBrandAIController = Cast<AFatedBrandAIController>(NewController);
 		FatedBrandAIController->RunBehaviorTree(BehaviorTree);	
+	}
+}
+
+void AFatedBrandEnemy::BeginPlay()
+{
+	Super::BeginPlay();
+
+	if (FatedBrandAbilitySystemComponent)
+	{
+		AddCharacterAbilities();	
 	}
 }
