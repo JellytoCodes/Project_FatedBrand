@@ -17,6 +17,9 @@ class PROJECT_FATEDBRAND_API UFatedBrandInstance : public UGameInstance
 public :
 	virtual void Init() override;
 
+	UFUNCTION(BlueprintCallable)
+	void SetScalabilityLevel(const int32 Value);
+
 	UPROPERTY()
 	FName PlayerStartTag = FName();
 
@@ -31,4 +34,7 @@ public :
 
 	UPROPERTY()
 	bool IsPlayerTravelTrigger = false;
+
+	UPROPERTY()
+	int32 ScalabilityLevel = 2;
 };

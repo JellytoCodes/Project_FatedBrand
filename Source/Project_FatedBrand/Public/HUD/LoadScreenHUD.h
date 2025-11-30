@@ -16,17 +16,12 @@ class PROJECT_FATEDBRAND_API ALoadScreenHUD : public AHUD
 	GENERATED_BODY()
 
 public :
+#pragma region LoadScreen
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<ULoadScreenWidget> LoadScreenWidgetClass;
 
 	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<ULoadScreenWidget> LoadScreenWidget;
-
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UFatedBrandUserWidget> MainMenuWidgetClass;
-
-	UPROPERTY(BlueprintReadOnly)
-	TObjectPtr<UFatedBrandUserWidget> MainMenuWidget;
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UMVVM_LoadScreen> LoadScreenViewModelClass;
@@ -35,16 +30,40 @@ public :
 	TObjectPtr<UMVVM_LoadScreen> LoadScreenViewModel;
 
 	UFUNCTION(BlueprintCallable)
-	void ShowMainMenu();
-
-	UFUNCTION(BlueprintCallable)
-	void HideMainMenu();
-
-	UFUNCTION(BlueprintCallable)
 	void ShowLoadScreen();
 
 	UFUNCTION(BlueprintCallable)
 	void HideLoadScreen();
+
+#pragma endregion
+
+#pragma region MainMenu
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UFatedBrandUserWidget> MainMenuWidgetClass;
+
+	UPROPERTY(BlueprintReadOnly)
+	TObjectPtr<UFatedBrandUserWidget> MainMenuWidget;
+
+	UFUNCTION(BlueprintCallable)
+	void ShowMainMenu();
+
+	UFUNCTION(BlueprintCallable)
+	void HideMainMenu();
+#pragma endregion
+
+#pragma region SettingMenu
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UFatedBrandUserWidget> SettingMenuClass;
+
+	UPROPERTY(BlueprintReadOnly)
+	TObjectPtr<UFatedBrandUserWidget> SettingMenu;
+
+	UFUNCTION(BlueprintCallable)
+	void ShowSettingMenu();
+
+	UFUNCTION(BlueprintCallable)
+	void HideSettingMenu();
+#pragma endregion
 
 protected:
 	virtual void BeginPlay() override;

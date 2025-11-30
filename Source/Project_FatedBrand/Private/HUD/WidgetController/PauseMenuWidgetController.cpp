@@ -4,19 +4,20 @@
 
 #include "Controllers/FatedBrandPlayerController.h"
 #include "Game/FatedBrandGameModeBase.h"
-#include "Game/FatedBrandInstance.h"
-#include "Game/FatedBrandSaveGame.h"
 #include "Kismet/GameplayStatics.h"
 
 void UPauseMenuWidgetController::SetSelectMenu(int32 InAxisY)
 {
 	AxisY = FMath::Clamp(AxisY+InAxisY, 0, 3);
 
+	if ((AxisY != 0 || AxisY != 3) && SelectSound) UGameplayStatics::PlaySound2D(this, SelectSound);
+
 	SelectedMenuDelegate.Broadcast(AxisY);
 }
 
 void UPauseMenuWidgetController::EnteredInteraction()
 {
+	if (ConfirmSound) UGameplayStatics::PlaySound2D(this, ConfirmSound);
 	switch (AxisY)
 	{
 	case 0: // Resume
@@ -34,7 +35,7 @@ void UPauseMenuWidgetController::EnteredInteraction()
 		QuitGame();
 		break;
 
-		default: // Do Not Activate
+	default: // Do Not Activate
 		break;
 	}
 }

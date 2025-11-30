@@ -14,7 +14,6 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "HUD/FatedBrandHUD.h"
 #include "Kismet/GameplayStatics.h"
-#include "Project_FatedBrand/Project_FatedBrand.h"
 
 AFatedBrandCharacter::AFatedBrandCharacter()
 {

@@ -85,5 +85,11 @@ private :
 	int32 SelectSocketY = 0;
 	int32 SelectQuickSlotX = 0;
 
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<USoundBase> ConfirmSound;
+
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<USoundBase> SelectSound;
+
 	int32 Wrap1(const int32 V, const int32 Min, const int32 Max);
 };

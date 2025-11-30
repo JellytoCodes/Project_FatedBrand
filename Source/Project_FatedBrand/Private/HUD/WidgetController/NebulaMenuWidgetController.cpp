@@ -5,6 +5,7 @@
 #include "DataAssets/DataAsset_AbilityInfo.h"
 #include "AbilitySystem/FatedBrandAbilitySystemComponent.h"
 #include "GameplayAbilitySpec.h"
+#include "Kismet/GameplayStatics.h"
 #include "Project_FatedBrand/Project_FatedBrand.h"
 
 void UNebulaMenuWidgetController::BroadcastInitialValues()
@@ -71,6 +72,8 @@ void UNebulaMenuWidgetController::SetSelectSocketAxis(const int32 SocketX, const
 	    const int32 index = (SelectSocketY * 10) + SelectSocketX;
 		NebulaSelectSocket = static_cast<ENebulaSelectSocket>(index);
 
+		if (PrevNebulaSelectSocket != NebulaSelectSocket && SelectSound) UGameplayStatics::PlaySound2D(this, SelectSound);
+
 		SelectNebulaSocketDelegate.Broadcast(PrevNebulaSelectSocket, NebulaSelectSocket);
 	}
     else
@@ -79,6 +82,8 @@ void UNebulaMenuWidgetController::SetSelectSocketAxis(const int32 SocketX, const
 		SelectQuickSlotX = Wrap1(SelectQuickSlotX + SocketX, 0, 5);
 		NebulaHotBar = static_cast<ENebulaSelectSocket>(SelectQuickSlotX);
 
+		if (PrevNebulaSelectHotBar != NebulaHotBar && SelectSound) UGameplayStatics::PlaySound2D(this, SelectSound);
+
 	    SelectQuickSlotDelegate.Broadcast(PrevNebulaSelectHotBar, NebulaHotBar);
     }
 }
@@ -86,12 +91,16 @@ void UNebulaMenuWidgetController::SetSelectSocketAxis(const int32 SocketX, const
 void UNebulaMenuWidgetController::SelectSocketFocusingController()
 {
 	bIsSocketFocusing =! bIsSocketFocusing;
+	if (ConfirmSound) UGameplayStatics::PlaySound2D(this, ConfirmSound);
+
 	SocketFocusingDelegate.Broadcast(NebulaSelectSocket, bIsSocketFocusing);
 }
 
 void UNebulaMenuWidgetController::SelectSocketConfirm()
 {
 	bIsSocketFocusing = false;
+
+	if (ConfirmSound) UGameplayStatics::PlaySound2D(this, ConfirmSound);
 	OnAbilityEquip();
 }
 

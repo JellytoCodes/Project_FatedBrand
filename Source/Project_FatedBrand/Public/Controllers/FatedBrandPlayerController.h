@@ -65,6 +65,7 @@ private :
 
 	void Input_NebulaMenu();
 	void Input_PauseMenu();
+	void Input_KeyDescription();
 
 	void Input_AbilityInputPressed(const FGameplayTag InInputTag);
 	void Input_AbilityInputReleased(const FGameplayTag InInputTag);
@@ -83,6 +84,7 @@ private :
 
 	bool bNebulaMenuOpen = false;
 	bool bPauseMenuOpen = false;
+	bool bKeyDescriptionOpen = false;
 	bool bAttributeMenuOpen = false;
 
 	bool bIsWidgetSelect = false;

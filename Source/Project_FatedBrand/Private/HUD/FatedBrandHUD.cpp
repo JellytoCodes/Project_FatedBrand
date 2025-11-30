@@ -147,6 +147,8 @@ void AFatedBrandHUD::CreateSaveMenuWidget()
 
 	SaveScreenWidget = CreateWidget<ULoadScreenWidget>(GetWorld(), SaveScreenWidgetClass);
 	SaveScreenWidget->AddToViewport();
+	SaveScreenWidget->SetAlignmentInViewport(FVector2D(0.5f, 0.5f));
+	SaveScreenWidget->SetPositionInViewport(ViewportSize * 0.5f, true);
 	SaveScreenWidget->BlueprintInitializeWidget();
 
 	SaveScreenViewModel->LoadData();
@@ -168,5 +170,24 @@ void AFatedBrandHUD::RemoveAttributeMenuWidget()
 	if (AttributeWidget)
 	{
 		AttributeWidget->RemoveFromParent();
+	}
+}
+
+void AFatedBrandHUD::CreateKeyDescriptionWidget()
+{
+	if (KeyDescriptionWidget == nullptr)
+	{
+		KeyDescriptionWidget = CreateWidget<UFatedBrandUserWidget>(GetWorld(), KeyDescriptionWidgetClass);
+	}
+	KeyDescriptionWidget->AddToViewport();
+	KeyDescriptionWidget->SetAlignmentInViewport(FVector2D(0.5f, 0.5f));
+	KeyDescriptionWidget->SetPositionInViewport(ViewportSize * 0.5f, true);
+}
+
+void AFatedBrandHUD::RemoveKeyDescriptionWidget()
+{
+	if (KeyDescriptionWidget)
+	{
+		KeyDescriptionWidget->RemoveFromParent();
 	}
 }

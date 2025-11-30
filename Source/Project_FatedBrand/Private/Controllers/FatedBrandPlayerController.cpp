@@ -60,6 +60,7 @@ void AFatedBrandPlayerController::SetupInputComponent()
 	FatedBrandEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, FatedBrandGameplayTags::Input_Jump, ETriggerEvent::Completed, this, &ThisClass::Input_InteractUpKeyReleased);
 	FatedBrandEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, FatedBrandGameplayTags::Input_NebulaMenu, ETriggerEvent::Started, this, &ThisClass::Input_NebulaMenu);
 	FatedBrandEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, FatedBrandGameplayTags::Input_PauseMenu, ETriggerEvent::Started, this, &ThisClass::Input_PauseMenu);
+	FatedBrandEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, FatedBrandGameplayTags::Input_KeyDescription, ETriggerEvent::Started, this, &ThisClass::Input_KeyDescription);
 	FatedBrandEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, FatedBrandGameplayTags::Input_WidgetSelect, ETriggerEvent::Started, this, &ThisClass::Input_WidgetSelect);
 	FatedBrandEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, FatedBrandGameplayTags::Input_WidgetDeSelect, ETriggerEvent::Started, this, &ThisClass::Input_WidgetDeSelect);
 
@@ -68,6 +69,8 @@ void AFatedBrandPlayerController::SetupInputComponent()
 
 void AFatedBrandPlayerController::Input_Move(const FInputActionValue &InputActionValue)
 {
+	if (FatedBrandCharacter->IsRestState) return;
+
 	const FVector2D InputAxisVector = InputActionValue.Get<FVector2D>();
 
 	if (FatedBrandCharacter->GetAbilitySystemComponent()->HasMatchingGameplayTag(FatedBrandGameplayTags::Ability_Activate_VitalSurge)) return;
@@ -216,7 +219,7 @@ void AFatedBrandPlayerController::Input_WidgetDeSelect()
 
 void AFatedBrandPlayerController::Input_NebulaMenu()
 {
-	if (FatedBrandCharacter == nullptr || bPauseMenuOpen || FatedBrandCharacter->IsHanging) return;
+	if (FatedBrandCharacter == nullptr || bPauseMenuOpen || bKeyDescriptionOpen) return;
 
 	if (CachedFatedBrandHUD.IsValid())
 	{
@@ -240,7 +243,7 @@ void AFatedBrandPlayerController::Input_NebulaMenu()
 
 void AFatedBrandPlayerController::Input_PauseMenu()
 {
-	if (FatedBrandCharacter == nullptr || bNebulaMenuOpen || FatedBrandCharacter->IsHanging || FatedBrandCharacter->IsRestState) return;
+	if (FatedBrandCharacter == nullptr || bNebulaMenuOpen || bKeyDescriptionOpen) return;
 
 	if (CachedFatedBrandHUD.IsValid())
 	{
@@ -256,6 +259,24 @@ void AFatedBrandPlayerController::Input_PauseMenu()
 			CachedFatedBrandHUD->HidePauseMenu();
 			bPauseMenuOpen = false;
 			if (Subsystem) Subsystem->RemoveMappingContext(CachedFatedBrandHUD->GetWidgetMappingContext());
+		}
+	}
+}
+
+void AFatedBrandPlayerController::Input_KeyDescription()
+{
+	if (FatedBrandCharacter == nullptr || bNebulaMenuOpen || bPauseMenuOpen) return;
+	if (CachedFatedBrandHUD.IsValid())
+	{
+		if (!bKeyDescriptionOpen)
+		{
+			CachedFatedBrandHUD->CreateKeyDescriptionWidget();
+			bKeyDescriptionOpen = true;
+		}
+		else
+		{
+			CachedFatedBrandHUD->RemoveKeyDescriptionWidget();
+			bKeyDescriptionOpen = false;
 		}
 	}
 }

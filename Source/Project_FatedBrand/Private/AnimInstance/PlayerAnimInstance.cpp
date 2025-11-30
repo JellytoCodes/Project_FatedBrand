@@ -20,13 +20,14 @@ void UPlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);
 
-	if (CachedFatedBrandCharacter.IsValid()) return;
+	if (!CachedFatedBrandCharacter.IsValid()) return;
 	
 	Velocity = CachedFatedBrandCharacter.Get()->GetCharacterMovement()->Velocity;
 	GroundSpeed = UKismetMathLibrary::VSizeXY(Velocity);
 
 	ShouldMove = CachedFatedBrandCharacter.Get()->GetCharacterMovement()->GetCurrentAcceleration() != FVector::ZeroVector && GroundSpeed > 0.01f;
 
+	IsFalling = CachedFatedBrandCharacter.Get()->GetCharacterMovement()->IsFalling();
 	IsHanging = CachedFatedBrandCharacter.Get()->IsHanging;
 	IsRestState = CachedFatedBrandCharacter.Get()->IsRestState;
 }

@@ -47,6 +47,12 @@ public :
 
 	void RemoveAttributeMenuWidget();
 
+	UFUNCTION(BlueprintCallable)
+	void CreateKeyDescriptionWidget();
+
+	UFUNCTION(BlueprintCallable)
+	void RemoveKeyDescriptionWidget();
+
 	FORCEINLINE UInputMappingContext* GetWidgetMappingContext() { return WidgetMappingContext; }
 
 	UPROPERTY(EditDefaultsOnly)
@@ -121,5 +127,14 @@ private :
 
 	UPROPERTY(EditDefaultsOnly, Category = "WidgetClass")
 	TSubclassOf<UAttributeMenuWidgetController> AttributeMenuWidgetControllerClass;
-#pragma  endregion
+#pragma endregion
+
+#pragma region KeyDescriptionWidget
+	UPROPERTY()
+	TObjectPtr<UFatedBrandUserWidget> KeyDescriptionWidget;
+
+	UPROPERTY(EditDefaultsOnly, Category = "WidgetClass")
+	TSubclassOf<UFatedBrandUserWidget> KeyDescriptionWidgetClass;
+
+#pragma endregion
 };
