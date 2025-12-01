@@ -156,7 +156,7 @@ void AFatedBrandCharacter::LoadProgress()
 				UFatedBrandFunctionLibrary::InitializeDefaultAttributesFromSaveData(this, FatedBrandASC, SaveData);
 			}
 		}
-		// 경우에 상관없이 무조건적으로 false로 처리하여
+		// 경우에 상관없이 false로 처리하여
 		// 재시작 발생 시 불러오는 데이터가 꼬이는 것을 방지하기 위함.
 		FatedBrandInstance->IsPlayerTravelTrigger = false;
 	}

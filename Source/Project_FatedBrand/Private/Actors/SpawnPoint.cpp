@@ -4,6 +4,7 @@
 #include "Actors/SpawnPoint.h"
 
 #include "Components/BillboardComponent.h"
+#include "Components/SceneComponent.h"
 
 ASpawnPoint::ASpawnPoint()
 {
@@ -20,6 +21,9 @@ void ASpawnPoint::LoadActor_Implementation()
 {
 	if (bUsePersistence && bReached)
 	{
+		// 보스 스테이지 클리어 후 레벨을 넘나들기 위한 용도
+		SpawnedDestroyedDelegate.Broadcast();
+
 		Destroy();
 	}
 }
@@ -46,6 +50,9 @@ void ASpawnPoint::BeginPlay()
 
 void ASpawnPoint::OnSpawnedDestroyed(AActor* DestroyedActor)
 {
+	// 보스 스테이지 클리어 시 레벨 내 오브젝트와 상호작용
+	SpawnedDestroyedDelegate.Broadcast();
+
 	if (bUsePersistence) bReached = true;
 }
 

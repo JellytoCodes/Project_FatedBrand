@@ -2,6 +2,8 @@
 
 #include "Characters/FatedBrandEnemy.h"
 
+#include "AbilitySystem/FatedBrandAbilitySystemComponent.h"
+#include "AbilitySystem/FatedBrandAttributeSet.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Controllers/FatedBrandAIController.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -14,6 +16,9 @@ AFatedBrandEnemy::AFatedBrandEnemy()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
+
+	FatedBrandAbilitySystemComponent = CreateDefaultSubobject<UFatedBrandAbilitySystemComponent>("AbilitySystemComponent");
+	FatedBrandAttributeSet = CreateDefaultSubobject<UFatedBrandAttributeSet>("AttributeSet");
 
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 720.f, 0.f);
 	GetCharacterMovement()->bUseControllerDesiredRotation = true;
@@ -41,14 +46,16 @@ void AFatedBrandEnemy::PossessedBy(AController* NewController)
 		FatedBrandAIController = Cast<AFatedBrandAIController>(NewController);
 		FatedBrandAIController->RunBehaviorTree(BehaviorTree);	
 	}
+
+	if (FatedBrandAbilitySystemComponent)
+	{
+		AddCharacterAbilities();	
+	}
 }
 
 void AFatedBrandEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (FatedBrandAbilitySystemComponent)
-	{
-		AddCharacterAbilities();	
-	}
+
 }

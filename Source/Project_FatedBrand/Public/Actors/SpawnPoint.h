@@ -7,6 +7,11 @@
 #include "Interfaces/SaveInterface.h"
 #include "SpawnPoint.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSpawnedDestroyed);
+
+class USceneComponent;
+class UBillboardComponent;
+
 UCLASS()
 class PROJECT_FATEDBRAND_API ASpawnPoint : public AActor, public ISaveInterface
 {
@@ -17,6 +22,9 @@ public:
 
 	virtual void LoadActor_Implementation() override;
 
+	UPROPERTY(BlueprintAssignable)
+	FOnSpawnedDestroyed SpawnedDestroyedDelegate;
+
 	UPROPERTY(EditAnywhere)
 	TSoftClassPtr<AActor> SpawnClass;
 
@@ -26,6 +34,7 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	bool bUsePersistence = true;
 
+	UPROPERTY()
 	TWeakObjectPtr<AActor> Spawned;
 
 	UPROPERTY(VisibleDefaultsOnly)
@@ -36,6 +45,7 @@ public:
 
 protected :
 	virtual void BeginPlay() override;
+
 private :
 	UFUNCTION()
 	void OnSpawnedDestroyed(AActor* DestroyedActor);
