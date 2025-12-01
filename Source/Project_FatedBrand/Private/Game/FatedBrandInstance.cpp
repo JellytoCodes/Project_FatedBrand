@@ -17,5 +17,9 @@ void UFatedBrandInstance::Init()
 
 void UFatedBrandInstance::SetScalabilityLevel(const int32 Value)
 {
-	ScalabilityLevel = Value;
+	if (UGameUserSettings* Settings = GEngine->GetGameUserSettings())
+	{
+		Settings->SetOverallScalabilityLevel(Value);
+		Settings->ApplySettings(false);
+	}
 }
