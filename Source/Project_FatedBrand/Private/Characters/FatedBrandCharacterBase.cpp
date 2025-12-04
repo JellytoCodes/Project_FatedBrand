@@ -75,7 +75,7 @@ void AFatedBrandCharacterBase::PostEditChangeProperty(struct FPropertyChangedEve
 
 void AFatedBrandCharacterBase::ToggleCurrentCollision(const bool bShouldEnable, const EToggleDamageType ToggleDamageType)
 {
-	const ECollisionEnabled::Type CurrentCollisionType = bShouldEnable ? ECollisionEnabled::QueryOnly : ECollisionEnabled::NoCollision;
+	const ECollisionEnabled::Type CurrentCollisionType = bShouldEnable ? ECollisionEnabled::QueryAndPhysics : ECollisionEnabled::NoCollision;
 
 	CurrentDamageType = ToggleDamageType;
 
