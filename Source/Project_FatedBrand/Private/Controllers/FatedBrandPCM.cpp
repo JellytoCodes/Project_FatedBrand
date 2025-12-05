@@ -4,9 +4,13 @@
 
 void AFatedBrandPCM::UpdateViewTarget(FTViewTarget& OutVT, float DeltaTime)
 {
-	APawn* TargetPawn = Cast<APawn>(OutVT.Target);
+	if (bPlayCinematic)
+	{
+		Super::UpdateViewTarget(OutVT, DeltaTime);
+		return;
+	}
 
-	if (IsValid(TargetPawn))
+	if (IsValid(OutVT.Target))
 	{
 		OutVT.POV.Rotation = FRotator(0.0f, -90.0f, 0.0f);
 		OutVT.POV.FOV = 65.0f;
@@ -31,7 +35,7 @@ void AFatedBrandPCM::UpdateViewTarget(FTViewTarget& OutVT, float DeltaTime)
 
 		bool bZUpdate = false;
 
-		if (FMath::IsNearlyZero(TargetPawn->GetVelocity().Z))
+		if (FMath::IsNearlyZero(OutVT.Target->GetVelocity().Z))
 		{
 			bZUpdate = FMath::IsNearlyEqual(CurrentZ, CurrentCameraLocation.Z, 25.0f);
 
@@ -43,7 +47,7 @@ void AFatedBrandPCM::UpdateViewTarget(FTViewTarget& OutVT, float DeltaTime)
 			const FVector End = CurrentActorLocation + FVector(0.0f, 0.0f, -1000.0f);
 
 			FCollisionQueryParams QueryParams;
-			QueryParams.AddIgnoredActor(TargetPawn);
+			QueryParams.AddIgnoredActor(OutVT.Target);
 
 			bZUpdate = !GetWorld()->LineTraceSingleByChannel(OutHit, CurrentActorLocation, End, ECC_Visibility, QueryParams);
 		}
@@ -62,7 +66,7 @@ void AFatedBrandPCM::UpdateViewTarget(FTViewTarget& OutVT, float DeltaTime)
 			}
 			else 
 			{
-				CurrentZ = FMath::FInterpTo(CurrentZ, CurrentActorLocation.Z, DeltaTime, 2.0f);
+				CurrentZ = FMath::FInterpTo(CurrentZ, CurrentActorLocation.Z, DeltaTime, 8.0f);
 			}
 
 		}

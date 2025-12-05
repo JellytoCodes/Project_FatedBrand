@@ -65,3 +65,13 @@ enum class EEffectRemovalPolicy : uint8
 	RemoveOnEndOverlap,
 	DoNotRemove
 };
+
+UENUM()
+enum class EWidgetOpenState : uint8
+{
+	None,
+	NebulaMenu,
+	PauseMenu,
+	KeyDescription,
+	AttributeMenu,
+};

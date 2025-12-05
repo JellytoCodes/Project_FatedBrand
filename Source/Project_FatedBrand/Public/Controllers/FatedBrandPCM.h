@@ -13,7 +13,7 @@ class PROJECT_FATEDBRAND_API AFatedBrandPCM : public APlayerCameraManager
 	
 public:
 	virtual void UpdateViewTarget(FTViewTarget& OutVT, float DeltaTime) override;
-
+	
 	UPROPERTY(EditAnywhere, Category="Side Scrolling Camera", meta=(ClampMin=0, ClampMax=10000, Units="cm"))
 	float CurrentZoom = 1200.0f;
 
@@ -26,8 +26,12 @@ public:
 	UPROPERTY(EditAnywhere, Category="Side Scrolling Camera", meta=(ClampMin=-100000, ClampMax=100000, Units="cm"))
 	float CameraXMaxBounds = 6000.0f;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Side Scrolling Camera")
+	bool bPlayCinematic = false;
+
 protected:
 	float CurrentZ = 0.0f;
 
-	bool bSetup = true;	
+	bool bSetup = true;
+	
 };

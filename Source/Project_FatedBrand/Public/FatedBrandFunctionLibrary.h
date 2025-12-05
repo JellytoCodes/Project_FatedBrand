@@ -16,7 +16,6 @@ class AFatedBrandCharacter;
 class UDataAsset_AbilityInfo;
 class UNebulaMenuWidgetController;
 class UOverlayWidgetController;
-
 class AFatedBrandHUD;
 struct FWidgetControllerParams;
 
