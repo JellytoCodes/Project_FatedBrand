@@ -17,7 +17,7 @@ FDamageEffectParams UFatedBrandGameplayAbility::CauseDamage(AActor* TargetActor)
 	return CauseDamageParams;
 }
 
-FDamageEffectParams UFatedBrandGameplayAbility::MakeDamageEffectParamsFromClassDefaults(AActor* TargetActor)
+FDamageEffectParams UFatedBrandGameplayAbility::MakeDamageEffectParamsFromClassDefaults(AActor* TargetActor) const
 {
 	FDamageEffectParams Params;
 

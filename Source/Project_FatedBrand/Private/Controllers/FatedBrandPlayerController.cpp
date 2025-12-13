@@ -17,7 +17,6 @@
 #include "HUD/WidgetController/AttributeMenuWidgetController.h"
 #include "HUD/WidgetController/NebulaMenuWidgetController.h"
 #include "HUD/WidgetController/PauseMenuWidgetController.h"
-#include "Project_FatedBrand/Project_FatedBrand.h"
 
 AFatedBrandPlayerController::AFatedBrandPlayerController()
 {
@@ -75,26 +74,9 @@ void AFatedBrandPlayerController::Input_Move(const FInputActionValue &InputActio
 
 	if (FatedBrandCharacter->GetAbilitySystemComponent()->HasMatchingGameplayTag(FatedBrandGameplayTags::Ability_Activate_VitalSurge)) return;
 
-	if (bNebulaMenuOpen)
+	switch (WidgetOpenState)
 	{
-		UNebulaMenuWidgetController* NebulaMenuWidgetController = UFatedBrandFunctionLibrary::GetNebulaMenuWidgetController(this);
-		NebulaMenuWidgetController->SetSelectSocketAxis(InputAxisVector.X, InputAxisVector.Y);
-	}
-
-	else if (bPauseMenuOpen)
-	{
-		UPauseMenuWidgetController* PauseMenuWidgetController = UFatedBrandFunctionLibrary::GetPauseMenuWidgetController(this);
-		PauseMenuWidgetController->SetSelectMenu(InputAxisVector.Y);
-	}
-
-	else if (bAttributeMenuOpen)
-	{
-		UAttributeMenuWidgetController* AttributeWidgetController = UFatedBrandFunctionLibrary::GetAttributeMenuWidgetController(this);
-		AttributeWidgetController->WidgetAxisControl(InputAxisVector.X, InputAxisVector.Y);
-	}
-
-	else
-	{
+	case EWidgetOpenState::None :
 		if (!bHasWallJumped)
 		{
 			ActionValueY = InputAxisVector.Y;
@@ -105,14 +87,27 @@ void AFatedBrandPlayerController::Input_Move(const FInputActionValue &InputActio
 			{
 				ControlledPawn->AddMovementInput(MoveDir, InputAxisVector.Y);
 			}
-		}	
+		}
+		break;
+
+	case EWidgetOpenState::NebulaMenu :
+		UFatedBrandFunctionLibrary::GetNebulaMenuWidgetController(this)->SetSelectSocketAxis(InputAxisVector.X, InputAxisVector.Y);
+		break;
+
+	case EWidgetOpenState::PauseMenu :
+		UFatedBrandFunctionLibrary::GetPauseMenuWidgetController(this)->SetSelectMenu(InputAxisVector.Y);
+		break;
+
+	case EWidgetOpenState::AttributeMenu :
+		UFatedBrandFunctionLibrary::GetAttributeMenuWidgetController(this)->WidgetAxisControl(InputAxisVector.X, InputAxisVector.Y);
+		break;
 	}
 }
 
 void AFatedBrandPlayerController::Input_InteractUpKeyPressed()
 {
 	if (FatedBrandCharacter->GetAbilitySystemComponent()->HasMatchingGameplayTag(FatedBrandGameplayTags::Ability_Activate_VitalSurge)) return;
-	if (bNebulaMenuOpen || bPauseMenuOpen || FatedBrandCharacter->IsHanging) return;
+	if (WidgetOpenState != EWidgetOpenState::None || FatedBrandCharacter->IsHanging) return;
 
 	bool IsInteractUpKeyCanJump = true;
 
@@ -124,25 +119,25 @@ void AFatedBrandPlayerController::Input_InteractUpKeyPressed()
 
 void AFatedBrandPlayerController::CanOpenWidget(bool& IsCanJump)
 {
-	if (bCanOpenSaveMenu)
-	{
-		if (CachedFatedBrandHUD.IsValid())
-		{
-			CachedFatedBrandHUD->CreateSaveMenuWidget();
-		}
-		IsCanJump = false;
-	}
+	if (!CachedFatedBrandHUD.IsValid()) return;
 
-	if (bCanOpenAttributeMenu)
+	auto* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
+
+	switch (CanCreateWidget)
 	{
-		if (CachedFatedBrandHUD.IsValid())
-		{
-			auto* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
-			CachedFatedBrandHUD->CreateAttributeMenuWidget();
-			bAttributeMenuOpen = true;
-			if (Subsystem) Subsystem->AddMappingContext(CachedFatedBrandHUD->GetWidgetMappingContext(), 1);
-		}
-		IsCanJump = false;  
+	case ECanCreateWidget::None :
+		IsCanJump = true;
+		break;
+	case ECanCreateWidget::SaveMenu :
+		CachedFatedBrandHUD->CreateSaveMenuWidget();
+		IsCanJump = false;
+		break;
+	case ECanCreateWidget::AttributeMenu :
+		CachedFatedBrandHUD->CreateAttributeMenuWidget();
+		WidgetOpenState = EWidgetOpenState::AttributeMenu;
+		IsCanJump = false;
+		Subsystem->AddMappingContext(CachedFatedBrandHUD->GetWidgetMappingContext(), 1);
+		break;
 	}
 }
 
@@ -159,16 +154,16 @@ void AFatedBrandPlayerController::RestStateControl(bool& IsCanJump)
 
 bool AFatedBrandPlayerController::CanKeyInput() const
 {
-	if (bNebulaMenuOpen || bPauseMenuOpen || bCanOpenSaveMenu || bCanOpenAttributeMenu) return false;
-	if (FatedBrandCharacter->IsHanging) return false;
-	if (FatedBrandCharacter->IsRestState) return false;
+	if (WidgetOpenState != EWidgetOpenState::None) return true;
+	if (FatedBrandCharacter->IsHanging) return true;
+	if (FatedBrandCharacter->IsRestState) return true;
 
-	return true;
+	return false;
 }
 
 void AFatedBrandPlayerController::Input_InteractUpKeyReleased()
 {
-	if (CanKeyInput() == false) return;
+	if (CanKeyInput()) return;
 
 	PlayerJumpEnd();
 }
@@ -176,8 +171,10 @@ void AFatedBrandPlayerController::Input_InteractUpKeyReleased()
 void AFatedBrandPlayerController::Input_WidgetSelect()
 {
 	UNebulaMenuWidgetController* NebulaMenuWidgetController = UFatedBrandFunctionLibrary::GetNebulaMenuWidgetController(this);
-	if (bNebulaMenuOpen)
+
+	switch (WidgetOpenState)
 	{
+	case EWidgetOpenState::NebulaMenu :
 		if (!bIsWidgetSelect)
 		{
 			NebulaMenuWidgetController->SelectSocketFocusingController();
@@ -187,18 +184,13 @@ void AFatedBrandPlayerController::Input_WidgetSelect()
 			NebulaMenuWidgetController->SelectSocketConfirm();
 		}
 		bIsWidgetSelect = !bIsWidgetSelect;	
-	}
-
-	else if (bPauseMenuOpen)
-	{
-		UPauseMenuWidgetController* PauseMenuWidgetController = UFatedBrandFunctionLibrary::GetPauseMenuWidgetController(this);
-		PauseMenuWidgetController->EnteredInteraction();		
-	}
-
-	else if (bAttributeMenuOpen)
-	{
-		UAttributeMenuWidgetController* AttributeMenuWidgetController = UFatedBrandFunctionLibrary::GetAttributeMenuWidgetController(this);
-		AttributeMenuWidgetController->InteractEnterDelegate.Broadcast();
+		break;
+	case EWidgetOpenState::PauseMenu :
+		UFatedBrandFunctionLibrary::GetPauseMenuWidgetController(this)->EnteredInteraction();
+		break;
+	case EWidgetOpenState::AttributeMenu :
+		UFatedBrandFunctionLibrary::GetAttributeMenuWidgetController(this)->InteractEnterDelegate.Broadcast();
+		break;
 	}
 }
 
@@ -206,7 +198,7 @@ void AFatedBrandPlayerController::Input_WidgetDeSelect()
 {
 	if (FatedBrandCharacter == nullptr) return;
 
-	if (bNebulaMenuOpen && bIsWidgetSelect)
+	if (WidgetOpenState == EWidgetOpenState::NebulaMenu && bIsWidgetSelect)
 	{
 		UNebulaMenuWidgetController* NebulaMenuWidgetController = UFatedBrandFunctionLibrary::GetNebulaMenuWidgetController(this);
 		NebulaMenuWidgetController->SelectSocketFocusingController();
@@ -219,22 +211,22 @@ void AFatedBrandPlayerController::Input_WidgetDeSelect()
 
 void AFatedBrandPlayerController::Input_NebulaMenu()
 {
-	if (FatedBrandCharacter == nullptr || bPauseMenuOpen || bKeyDescriptionOpen) return;
+	if (FatedBrandCharacter == nullptr || (WidgetOpenState != EWidgetOpenState::None && WidgetOpenState != EWidgetOpenState::NebulaMenu)) return;
 
 	if (CachedFatedBrandHUD.IsValid())
 	{
 		auto* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
 		
-		if (!bNebulaMenuOpen)
+		if (WidgetOpenState != EWidgetOpenState::NebulaMenu)
 		{
 			CachedFatedBrandHUD->VisibleNebulaMenu(this, FatedBrandCharacter->GetAbilitySystemComponent(), FatedBrandCharacter->GetAttributeSet());
-			bNebulaMenuOpen = true;
+			WidgetOpenState = EWidgetOpenState::NebulaMenu;
 			if (Subsystem) Subsystem->AddMappingContext(CachedFatedBrandHUD->GetWidgetMappingContext(), 1);
 		}
 		else
 		{
 			CachedFatedBrandHUD->HideNebulaMenu();
-			bNebulaMenuOpen = false;
+			WidgetOpenState = EWidgetOpenState::None;
 			bIsWidgetSelect = false;
 			if (Subsystem) Subsystem->RemoveMappingContext(CachedFatedBrandHUD->GetWidgetMappingContext());
 		}
@@ -243,21 +235,21 @@ void AFatedBrandPlayerController::Input_NebulaMenu()
 
 void AFatedBrandPlayerController::Input_PauseMenu()
 {
-	if (FatedBrandCharacter == nullptr || bNebulaMenuOpen || bKeyDescriptionOpen) return;
+	if (FatedBrandCharacter == nullptr || (WidgetOpenState != EWidgetOpenState::None && WidgetOpenState != EWidgetOpenState::PauseMenu)) return;
 
 	if (CachedFatedBrandHUD.IsValid())
 	{
 		auto* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
-		if (!bPauseMenuOpen)
+		if (WidgetOpenState != EWidgetOpenState::PauseMenu)
 		{
 			CachedFatedBrandHUD->VisiblePauseMenu(this, FatedBrandCharacter->GetAbilitySystemComponent(), FatedBrandCharacter->GetAttributeSet());
-			bPauseMenuOpen = true;
+			WidgetOpenState = EWidgetOpenState::PauseMenu;
 			if (Subsystem) Subsystem->AddMappingContext(CachedFatedBrandHUD->GetWidgetMappingContext(), 1);
 		}
 		else
 		{
 			CachedFatedBrandHUD->HidePauseMenu();
-			bPauseMenuOpen = false;
+			WidgetOpenState = EWidgetOpenState::None;
 			if (Subsystem) Subsystem->RemoveMappingContext(CachedFatedBrandHUD->GetWidgetMappingContext());
 		}
 	}
@@ -265,45 +257,45 @@ void AFatedBrandPlayerController::Input_PauseMenu()
 
 void AFatedBrandPlayerController::Input_KeyDescription()
 {
-	if (FatedBrandCharacter == nullptr || bNebulaMenuOpen || bPauseMenuOpen) return;
+	if (FatedBrandCharacter == nullptr || (WidgetOpenState != EWidgetOpenState::None && WidgetOpenState != EWidgetOpenState::KeyDescription)) return;
 	if (CachedFatedBrandHUD.IsValid())
 	{
-		if (!bKeyDescriptionOpen)
+		if (WidgetOpenState != EWidgetOpenState::KeyDescription)
 		{
 			CachedFatedBrandHUD->CreateKeyDescriptionWidget();
-			bKeyDescriptionOpen = true;
+			WidgetOpenState = EWidgetOpenState::KeyDescription;
 		}
 		else
 		{
 			CachedFatedBrandHUD->RemoveKeyDescriptionWidget();
-			bKeyDescriptionOpen = false;
+			WidgetOpenState = EWidgetOpenState::None;
 		}
 	}
 }
 
 void AFatedBrandPlayerController::PauseMenuDisable()
 {
-	if (!bPauseMenuOpen || ! CachedFatedBrandHUD.IsValid()) return;
+	if (WidgetOpenState != EWidgetOpenState::PauseMenu || ! CachedFatedBrandHUD.IsValid()) return;
 
 	auto* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
 	CachedFatedBrandHUD->HidePauseMenu();
-	bPauseMenuOpen = false;
+	WidgetOpenState = EWidgetOpenState::None;
 	if (Subsystem) Subsystem->RemoveMappingContext(CachedFatedBrandHUD->GetWidgetMappingContext());
 }
 
 void AFatedBrandPlayerController::AttributeMenuDisable()
 {
-	if (!bAttributeMenuOpen || ! CachedFatedBrandHUD.IsValid()) return;
+	if (WidgetOpenState != EWidgetOpenState::AttributeMenu || ! CachedFatedBrandHUD.IsValid()) return;
 
 	auto* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
 	CachedFatedBrandHUD->RemoveAttributeMenuWidget();
-	bAttributeMenuOpen = false;
+	WidgetOpenState = EWidgetOpenState::None;
 	if (Subsystem) Subsystem->RemoveMappingContext(CachedFatedBrandHUD->GetWidgetMappingContext());
 }
 
 void AFatedBrandPlayerController::Input_AbilityInputPressed(const FGameplayTag InInputTag)
 {
-	if (CanKeyInput() == false) return;
+	if (CanKeyInput()) return;
 
 	if (GetFatedBrandASC())
 	{
@@ -313,7 +305,7 @@ void AFatedBrandPlayerController::Input_AbilityInputPressed(const FGameplayTag I
 
 void AFatedBrandPlayerController::Input_AbilityInputReleased(const FGameplayTag InInputTag)
 {
-	if (CanKeyInput() == false) return;
+	if (CanKeyInput()) return;
 
 	if (GetFatedBrandASC())
 	{
@@ -323,7 +315,7 @@ void AFatedBrandPlayerController::Input_AbilityInputReleased(const FGameplayTag 
 
 void AFatedBrandPlayerController::Input_AbilityInputHeld(const FGameplayTag InInputTag)
 {
-	if (CanKeyInput() == false) return;
+	if (CanKeyInput()) return;
 
 	if (GetFatedBrandASC())
 	{

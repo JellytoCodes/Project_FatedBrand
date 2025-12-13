@@ -29,13 +29,12 @@ public :
 	virtual void UpdateAbilities_Implementation(const FGameplayTag& AbilityTag) override;
 	virtual void SaveProgress_Implementation(const FName& CheckPointTag) override;
 	virtual float GetVitalSurgeGage_Implementation() override;
-	virtual void InteractSavePoint_Implementation(const bool IsInteraction) override;
-	virtual void CanUpgradeAttribute_Implementation(const bool IsInteraction) override;
 	virtual AFatedBrandPlayerState* GetPlayerState_Implementation() override;
 	virtual void PlayerHideHUD_Implementation() override;
 	virtual void ChangeToTravelState_Implementation() override;
 	virtual bool CanRopeSwing_Implementation(const bool IsCanGrab) override;
 	virtual void SetCanRest_Implementation(const bool InCanRest, AActor* InActor) override;
+	void CanCreatePlayerWidget_Implementation(const ECanCreateWidget InWidget) override;
 #pragma endregion
 
 	void LoadProgress();

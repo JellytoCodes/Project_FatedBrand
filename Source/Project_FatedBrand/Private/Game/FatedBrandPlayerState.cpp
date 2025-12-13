@@ -6,7 +6,6 @@
 #include "AbilitySystem/FatedBrandAbilitySystemComponent.h"
 #include "AbilitySystem/FatedBrandAttributeSet.h"
 #include "Game/FatedBrandInstance.h"
-#include "Project_FatedBrand/Project_FatedBrand.h"
 
 AFatedBrandPlayerState::AFatedBrandPlayerState()
 {

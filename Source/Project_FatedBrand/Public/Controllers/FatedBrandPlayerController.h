@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "FatedBrandEnumTypes.h"
 #include "GameplayTagContainer.h"
 #include "GenericTeamAgentInterface.h"
 #include "GameFramework/PlayerController.h"
@@ -37,8 +38,7 @@ public :
 
 	void PauseMenuDisable();
 	void AttributeMenuDisable();
-	void SetIsCanCreateSaveMenu(const bool InIsCan) { bCanOpenSaveMenu = InIsCan; }
-	void SetIsCanCreateAttributeMenu(const bool InIsCan) { bCanOpenAttributeMenu = InIsCan; }
+	void SetCanCreateWidget(const ECanCreateWidget InCreateWidget) { CanCreateWidget = InCreateWidget; }
 
 	FGenericTeamId PlayerTeamID;
 
@@ -82,12 +82,10 @@ private :
 	bool bCanOpenSaveMenu = false;
 	bool bCanOpenAttributeMenu = false;
 
-	bool bNebulaMenuOpen = false;
-	bool bPauseMenuOpen = false;
-	bool bKeyDescriptionOpen = false;
-	bool bAttributeMenuOpen = false;
-
 	bool bIsWidgetSelect = false;
+
+	EWidgetOpenState WidgetOpenState = EWidgetOpenState::None;
+	ECanCreateWidget CanCreateWidget = ECanCreateWidget::None;
 
 	UPROPERTY(EditDefaultsOnly, Category="Input|Jump")
 	float WallJumpTraceDistance = 200.0f;

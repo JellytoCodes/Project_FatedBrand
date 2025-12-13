@@ -10,6 +10,7 @@
 class AFatedBrandEnemy;
 class UFatedBrandAbilitySystemComponent;
 class AFatedBrandCharacter;
+
 UCLASS()
 class PROJECT_FATEDBRAND_API UFatedBrandGameplayAbility : public UGameplayAbility
 {
@@ -22,7 +23,7 @@ public :
 	FDamageEffectParams CauseDamage(AActor* TargetActor);
 
 	UFUNCTION(BlueprintCallable)
-	FDamageEffectParams MakeDamageEffectParamsFromClassDefaults(AActor* TargetActor = nullptr);
+	FDamageEffectParams MakeDamageEffectParamsFromClassDefaults(AActor* TargetActor = nullptr) const;
 
 	UFUNCTION(BlueprintCallable)
 	void ExecuteGameplayCue(const UAbilitySystemComponent* TargetASC, const FGameplayTag& GameplayTagCue);

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "FatedBrandEnumTypes.h"
 #include "UObject/Interface.h"
 #include "PlayerInterface.generated.h"
 
@@ -38,12 +39,6 @@ public:
 	float GetVitalSurgeGage();
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	void InteractSavePoint(const bool IsInteraction);
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	void CanUpgradeAttribute(const bool IsInteraction);
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	AFatedBrandPlayerState* GetPlayerState();
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
@@ -63,4 +58,7 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void RestStateInKey();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void CanCreatePlayerWidget(const ECanCreateWidget InWidget);
 };

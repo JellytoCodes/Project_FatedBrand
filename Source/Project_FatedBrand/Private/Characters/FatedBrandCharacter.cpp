@@ -86,16 +86,6 @@ float AFatedBrandCharacter::GetVitalSurgeGage_Implementation()
 	return CurrentValue > 0.f ? CurrentValue : 0.f;
 }
 
-void AFatedBrandCharacter::InteractSavePoint_Implementation(const bool IsInteraction)
-{
-	if (PlayerController.IsValid()) PlayerController->SetIsCanCreateSaveMenu(IsInteraction);
-}
-
-void AFatedBrandCharacter::CanUpgradeAttribute_Implementation(const bool IsInteraction)
-{
-	if (PlayerController.IsValid()) PlayerController->SetIsCanCreateAttributeMenu(IsInteraction);
-}
-
 AFatedBrandPlayerState* AFatedBrandCharacter::GetPlayerState_Implementation()
 {
 	return PlayerController->GetPlayerState<AFatedBrandPlayerState>();
@@ -130,6 +120,11 @@ void AFatedBrandCharacter::SetCanRest_Implementation(const bool InCanRest, AActo
 {
 	CanShit = InCanRest;
 	InteractActor = InActor;
+}
+
+void AFatedBrandCharacter::CanCreatePlayerWidget_Implementation(const ECanCreateWidget InWidget)
+{
+	if (PlayerController.IsValid()) PlayerController->SetCanCreateWidget(InWidget);
 }
 
 void AFatedBrandCharacter::LoadProgress()

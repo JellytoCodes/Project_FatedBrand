@@ -50,7 +50,6 @@ enum ENebulaSelectSocket : uint8
 	NebulaSocket40
 };
 
-
 UENUM(BlueprintType)
 enum class EEffectApplicationPolicy : uint8
 {
@@ -66,7 +65,7 @@ enum class EEffectRemovalPolicy : uint8
 	DoNotRemove
 };
 
-UENUM()
+UENUM(BlueprintType)
 enum class EWidgetOpenState : uint8
 {
 	None,
@@ -74,4 +73,14 @@ enum class EWidgetOpenState : uint8
 	PauseMenu,
 	KeyDescription,
 	AttributeMenu,
+	SaveMenu,
+};
+
+UENUM(BlueprintType)
+enum class ECanCreateWidget : uint8
+{
+	None,
+	NebulaMenu,
+	AttributeMenu,
+	SaveMenu,
 };
