@@ -9,7 +9,6 @@
 #include "HUD/ViewModel/MVVM_LoadScreen.h"
 #include "HUD/WidgetController/AttributeMenuWidgetController.h"
 #include "HUD/WidgetController/PauseMenuWidgetController.h"
-#include "Project_FatedBrand/Project_FatedBrand.h"
 
 UOverlayWidgetController* AFatedBrandHUD::GetOverlayWidgetController(const FWidgetControllerParams& WCParams)
 {

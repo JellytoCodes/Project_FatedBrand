@@ -5,7 +5,6 @@
 #include "FatedBrandGameplayTags.h"
 #include "AbilitySystem/FatedBrandAttributeSet.h"
 #include "DataAssets/DataAsset_AbilityInfo.h"
-#include "Project_FatedBrand/Project_FatedBrand.h"
 
 void UOverlayWidgetController::BroadcastInitialValues()
 {

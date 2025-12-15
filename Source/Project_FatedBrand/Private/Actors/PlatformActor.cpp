@@ -1,13 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Actors/PlatformActor.h"
 
 #include "Components/BillboardComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/SceneComponent.h"
 #include "Kismet/KismetMathLibrary.h"
-#include "Project_FatedBrand/Project_FatedBrand.h"
 
 APlatformActor::APlatformActor()
 {

@@ -4,7 +4,6 @@
 
 #include "FatedBrandGameplayTags.h"
 #include "AbilitySystem/FatedBrandAttributeSet.h"
-#include "Project_FatedBrand/Project_FatedBrand.h"
 
 struct FFatedBrandDamageStatics
 {

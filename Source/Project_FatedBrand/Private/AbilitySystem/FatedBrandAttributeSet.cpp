@@ -8,7 +8,6 @@
 #include "GameplayEffectExtension.h"
 #include "Game/FatedBrandPlayerState.h"
 #include "Interfaces/CombatInterface.h"
-#include "Project_FatedBrand/Project_FatedBrand.h"
 
 UFatedBrandAttributeSet::UFatedBrandAttributeSet()
 {

@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "FatedBrandFunctionLibrary.h"
 
 #include "AbilitySystemBlueprintLibrary.h"
@@ -16,7 +15,6 @@
 #include "HUD/FatedBrandHUD.h"
 #include "HUD/WidgetController/FatedBrandWidgetController.h"
 #include "Kismet/GameplayStatics.h"
-#include "Project_FatedBrand/Project_FatedBrand.h"
 
 bool UFatedBrandFunctionLibrary::MakeWidgetControllerParams(const UObject* WorldContextObject, FWidgetControllerParams& OutWCParams, AFatedBrandHUD*& OutFatedBrandHUD)
 {

@@ -128,10 +128,12 @@ void AFatedBrandPlayerController::CanOpenWidget(bool& IsCanJump)
 	case ECanCreateWidget::None :
 		IsCanJump = true;
 		break;
+
 	case ECanCreateWidget::SaveMenu :
 		CachedFatedBrandHUD->CreateSaveMenuWidget();
 		IsCanJump = false;
 		break;
+
 	case ECanCreateWidget::AttributeMenu :
 		CachedFatedBrandHUD->CreateAttributeMenuWidget();
 		WidgetOpenState = EWidgetOpenState::AttributeMenu;
@@ -185,9 +187,11 @@ void AFatedBrandPlayerController::Input_WidgetSelect()
 		}
 		bIsWidgetSelect = !bIsWidgetSelect;	
 		break;
+
 	case EWidgetOpenState::PauseMenu :
 		UFatedBrandFunctionLibrary::GetPauseMenuWidgetController(this)->EnteredInteraction();
 		break;
+
 	case EWidgetOpenState::AttributeMenu :
 		UFatedBrandFunctionLibrary::GetAttributeMenuWidgetController(this)->InteractEnterDelegate.Broadcast();
 		break;

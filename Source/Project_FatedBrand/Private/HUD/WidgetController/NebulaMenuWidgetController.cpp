@@ -6,7 +6,6 @@
 #include "AbilitySystem/FatedBrandAbilitySystemComponent.h"
 #include "GameplayAbilitySpec.h"
 #include "Kismet/GameplayStatics.h"
-#include "Project_FatedBrand/Project_FatedBrand.h"
 
 void UNebulaMenuWidgetController::BroadcastInitialValues()
 {

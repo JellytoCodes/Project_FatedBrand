@@ -11,7 +11,6 @@
 #include "Game/FatedBrandPlayerState.h"
 #include "Game/FatedBrandSaveGame.h"
 #include "Interfaces/PlayerInterface.h"
-#include "Project_FatedBrand/Project_FatedBrand.h"
 
 UFatedBrandAbilitySystemComponent::UFatedBrandAbilitySystemComponent()
 {

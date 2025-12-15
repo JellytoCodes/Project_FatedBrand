@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "HUD/ViewModel/MVVM_LoadSlot.h"
 
 void UMVVM_LoadSlot::SetLoadSlotName(FString InLoadSlotName)

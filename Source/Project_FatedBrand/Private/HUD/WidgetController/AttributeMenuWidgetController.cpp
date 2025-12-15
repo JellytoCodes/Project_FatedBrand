@@ -1,13 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "HUD/WidgetController/AttributeMenuWidgetController.h"
 
 #include "FatedBrandGameplayTags.h"
 #include "AbilitySystem/FatedBrandAttributeSet.h"
 #include "Controllers/FatedBrandPlayerController.h"
-#include "HUD/FatedBrandHUD.h"
-#include "Project_FatedBrand/Project_FatedBrand.h"
 
 void UAttributeMenuWidgetController::BroadcastInitialValues()
 {

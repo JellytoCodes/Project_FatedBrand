@@ -6,7 +6,6 @@
 #include "AbilitySystem/FatedBrandAttributeSet.h"
 #include "Controllers/FatedBrandPlayerController.h"
 #include "DataAssets/DataAsset_AbilityInfo.h"
-#include "Project_FatedBrand/Project_FatedBrand.h"
 
 void UFatedBrandWidgetController::SetWidgetControllerParams(const FWidgetControllerParams& WCParams)
 {

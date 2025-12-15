@@ -1,15 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Actors/FatedBrandProjectileActor.h"
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 #include "FatedBrandFunctionLibrary.h"
 #include "FatedBrandGameplayTags.h"
-#include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
-#include "Project_FatedBrand/Project_FatedBrand.h"
 
 AFatedBrandProjectileActor::AFatedBrandProjectileActor()
 {
